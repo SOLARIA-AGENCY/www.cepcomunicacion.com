@@ -1,0 +1,38 @@
+# BullBoard Dockerfile - Queue Monitoring UI
+# Standalone BullMQ monitoring dashboard
+
+FROM node:20-alpine
+
+# Install dependencies
+RUN apk add --no-cache tini wget
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+WORKDIR /app
+
+# Install BullBoard and dependencies
+RUN npm install --save \
+    @bull-board/api@5 \
+    @bull-board/express@5 \
+    express@4 \
+    bullmq@5 \
+    ioredis@5 \
+    express-basic-auth@1
+
+# Create app file
+COPY infra/docker/bullboard/server.js ./server.js
+
+# Change ownership
+RUN chown -R nodejs:nodejs /app
+
+USER nodejs
+
+EXPOSE 3010
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3010 || exit 1
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["node", "server.js"]

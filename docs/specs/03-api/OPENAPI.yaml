@@ -1,0 +1,1917 @@
+openapi: 3.0.3
+
+info:
+  title: CEPComunicacion v2 API
+  description: |
+    ## REST API Specification for CEPComunicacion.com v2
+
+    **Powered by Payload CMS** - Complete educational platform API for course management,
+    lead capture, campaigns, and content management.
+
+    ### Features:
+    - **Authentication**: JWT-based with access + refresh tokens
+    - **Authorization**: 5-role RBAC (admin, gestor, marketing, asesor, lectura)
+    - **Rate Limiting**: Per-endpoint limits based on user role
+    - **RGPD Compliance**: Consent tracking, data export, right to erasure
+    - **Pagination**: Cursor-based pagination for all collection endpoints
+    - **Filtering**: Advanced query syntax with MongoDB-style operators
+    - **Full-Text Search**: PostgreSQL full-text search on indexed fields
+
+    ### Related Documentation:
+    - [Product Requirements Document](../00-prd/PRD.md)
+    - [Architecture Specification](../01-architecture/ARCHITECTURE.md)
+    - [Database Schema](../02-database/DATABASE_SCHEMA.md)
+    - [Security & RGPD](../07-security/SECURITY.md)
+
+  version: 1.0.0
+  contact:
+    name: SOLARIA AGENCY - Dirección de Tecnología
+    email: tech@solaria.agency
+    url: https://www.solaria.agency
+
+  license:
+    name: Proprietary
+    url: https://cepcomunicacion.com/terminos-condiciones
+
+servers:
+  - url: https://api.cepcomunicacion.com/api/v1
+    description: Production server
+  - url: https://staging-api.cepcomunicacion.com/api/v1
+    description: Staging server
+  - url: http://localhost:3001/api/v1
+    description: Local development server
+
+tags:
+  - name: Authentication
+    description: User authentication and token management
+  - name: Courses
+    description: Course catalog management
+  - name: Course Runs
+    description: Course convocations (convocatorias)
+  - name: Cycles
+    description: Formación Profesional (FP) cycles
+  - name: Campuses
+    description: Physical campus locations (sedes)
+  - name: Campaigns
+    description: Marketing campaigns with UTM tracking
+  - name: Ads Templates
+    description: LLM-powered ad generation templates
+  - name: Leads
+    description: Prospective student lead management
+  - name: Blog Posts
+    description: Blog content management
+  - name: Pages
+    description: Static page content management
+  - name: Settings
+    description: Global application settings (singleton)
+  - name: Events
+    description: Analytics event tracking
+  - name: Audit Log
+    description: RGPD compliance audit trail
+  - name: GDPR
+    description: GDPR/RGPD data subject rights endpoints
+
+#───────────────────────────────────────────────────────────────────────────────
+# PATHS
+#───────────────────────────────────────────────────────────────────────────────
+
+paths:
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # AUTHENTICATION
+  #─────────────────────────────────────────────────────────────────────────────
+
+  /users/login:
+    post:
+      summary: User login
+      description: |
+        Authenticate user with email and password. Returns access token (15min TTL)
+        and refresh token (7 days TTL).
+
+        **Rate Limit:** 5 attempts per 15 minutes per IP + email combination.
+      operationId: login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: gestor@cepformacion.com
+                password:
+                  type: string
+                  format: password
+                  example: SecurePassword123!
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /users/refresh:
+    post:
+      summary: Refresh access token
+      description: |
+        Exchange refresh token for a new access token + refresh token.
+        Implements token rotation - old refresh token is invalidated.
+      operationId: refreshToken
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                expired:
+                  value:
+                    error: Refresh token expired
+                reuse:
+                  value:
+                    error: Token reuse detected - all sessions revoked
+
+  /users/logout:
+    post:
+      summary: Logout user
+      description: Revoke current refresh token and invalidate session.
+      operationId: logout
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/logout-all:
+    post:
+      summary: Logout from all sessions
+      description: Revoke all refresh tokens for current user (global logout).
+      operationId: logoutAll
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: All sessions logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All sessions logged out successfully
+                  sessionsRevoked:
+                    type: integer
+                    example: 3
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/password-reset:
+    post:
+      summary: Request password reset
+      description: |
+        Send password reset email with time-limited token (1 hour expiry).
+
+        **Rate Limit:** 3 requests per 60 minutes per IP.
+      operationId: requestPasswordReset
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: |
+            Password reset email sent (or email doesn't exist - same response to prevent enumeration)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: If the email exists, a password reset link has been sent
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /users/password-reset/{userId}/{token}:
+    post:
+      summary: Reset password
+      description: Complete password reset using token from email.
+      operationId: resetPassword
+      tags:
+        - Authentication
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - newPassword
+              properties:
+                newPassword:
+                  type: string
+                  format: password
+                  minLength: 12
+                  example: NewSecurePassword456!
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password reset successful - all sessions have been logged out
+        '400':
+          description: Invalid token or password validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                invalidToken:
+                  value:
+                    error: Invalid or expired reset token
+                weakPassword:
+                  value:
+                    error: Password validation failed
+                    details:
+                      - Password must be at least 12 characters long
+                      - Password must include at least one uppercase letter
+                passwordReuse:
+                  value:
+                    error: Cannot reuse a recent password
+
+  /users/me:
+    get:
+      summary: Get current user
+      description: Retrieve authenticated user's profile information.
+      operationId: getCurrentUser
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # COURSES
+  #─────────────────────────────────────────────────────────────────────────────
+
+  /courses:
+    get:
+      summary: List courses
+      description: |
+        Retrieve paginated list of courses with filtering, sorting, and search.
+
+        **Permissions:** All roles can read courses.
+        **Rate Limit:** 100 req/min (authenticated), 30 req/min (anonymous).
+      operationId: listCourses
+      tags:
+        - Courses
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/Where'
+        - name: search
+          in: query
+          description: Full-text search on title, summary, objectives
+          schema:
+            type: string
+            example: "gestión de proyectos"
+        - name: offerType
+          in: query
+          description: Filter by offer type
+          schema:
+            $ref: '#/components/schemas/OfferType'
+        - name: status
+          in: query
+          description: Filter by status
+          schema:
+            $ref: '#/components/schemas/ContentStatus'
+      responses:
+        '200':
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Course'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Create course
+      description: |
+        Create a new course.
+
+        **Permissions:** admin, gestor
+        **Rate Limit:** 50 req/min
+      operationId: createCourse
+      tags:
+        - Courses
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInput'
+      responses:
+        '201':
+          description: Course created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /courses/{id}:
+    get:
+      summary: Get course by ID
+      description: Retrieve a single course by its UUID.
+      operationId: getCourse
+      tags:
+        - Courses
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Update course
+      description: |
+        Update an existing course (partial update).
+
+        **Permissions:** admin, gestor
+      operationId: updateCourse
+      tags:
+        - Courses
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInput'
+      responses:
+        '200':
+          description: Course updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete course
+      description: |
+        Delete a course (soft delete - sets status to 'archived').
+
+        **Permissions:** admin, gestor
+      operationId: deleteCourse
+      tags:
+        - Courses
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Course deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Course archived successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # COURSE RUNS
+  #─────────────────────────────────────────────────────────────────────────────
+
+  /course-runs:
+    get:
+      summary: List course runs
+      description: |
+        Retrieve paginated list of course convocations with filtering.
+
+        **Permissions:** All roles can read.
+      operationId: listCourseRuns
+      tags:
+        - Course Runs
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Sort'
+        - name: courseId
+          in: query
+          description: Filter by parent course ID
+          schema:
+            type: string
+            format: uuid
+        - name: campusId
+          in: query
+          description: Filter by campus ID
+          schema:
+            type: string
+            format: uuid
+        - name: modality
+          in: query
+          description: Filter by modality
+          schema:
+            $ref: '#/components/schemas/Modality'
+        - name: status
+          in: query
+          description: Filter by status
+          schema:
+            $ref: '#/components/schemas/ContentStatus'
+        - name: startDateAfter
+          in: query
+          description: Filter course runs starting after this date
+          schema:
+            type: string
+            format: date
+            example: "2025-01-01"
+      responses:
+        '200':
+          description: List of course runs
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CourseRun'
+
+    post:
+      summary: Create course run
+      description: |
+        Create a new course convocation.
+
+        **Permissions:** admin, gestor
+      operationId: createCourseRun
+      tags:
+        - Course Runs
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRunInput'
+      responses:
+        '201':
+          description: Course run created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/CourseRun'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /course-runs/{id}:
+    get:
+      summary: Get course run by ID
+      operationId: getCourseRun
+      tags:
+        - Course Runs
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Course run details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Update course run
+      operationId: updateCourseRun
+      tags:
+        - Course Runs
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRunInput'
+      responses:
+        '200':
+          description: Course run updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/CourseRun'
+
+    delete:
+      summary: Delete course run
+      operationId: deleteCourseRun
+      tags:
+        - Course Runs
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Course run deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # LEADS
+  #─────────────────────────────────────────────────────────────────────────────
+
+  /leads:
+    get:
+      summary: List leads
+      description: |
+        Retrieve paginated list of leads with role-based filtering.
+
+        **Row-Level Security:**
+        - admin, gestor, marketing, lectura: See all leads
+        - asesor: Only see leads assigned to them
+      operationId: listLeads
+      tags:
+        - Leads
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Sort'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/LeadStatus'
+        - name: assignedTo
+          in: query
+          description: Filter by assigned user ID
+          schema:
+            type: string
+            format: uuid
+        - name: campaignId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: courseRunId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of leads
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Lead'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Create lead (admin only)
+      description: |
+        Manually create a lead (admin only).
+
+        **Note:** Public lead capture uses webhooks, not this endpoint.
+      operationId: createLead
+      tags:
+        - Leads
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadInput'
+      responses:
+        '201':
+          description: Lead created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/Lead'
+
+  /leads/{id}:
+    get:
+      summary: Get lead by ID
+      description: |
+        Retrieve a single lead.
+
+        **Row-Level Security:** Asesor users can only access leads assigned to them.
+      operationId: getLead
+      tags:
+        - Leads
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Lead details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+        '403':
+          description: |
+            Forbidden - asesor trying to access lead assigned to another user
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Update lead
+      description: |
+        Update lead details.
+
+        **Field-Level Permissions:**
+        - admin: Can update all fields
+        - marketing: Can update `assignedTo` only
+        - asesor: Can update `notes`, `status`, `tags` (only for assigned leads)
+      operationId: updateLead
+      tags:
+        - Leads
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadInput'
+      responses:
+        '200':
+          description: Lead updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/Lead'
+
+    delete:
+      summary: Delete lead (admin only)
+      description: |
+        Delete a lead (RGPD right to erasure).
+
+        **Permissions:** admin only
+      operationId: deleteLead
+      tags:
+        - Leads
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Lead deleted (anonymized)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lead anonymized successfully
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # CAMPAIGNS
+  #─────────────────────────────────────────────────────────────────────────────
+
+  /campaigns:
+    get:
+      summary: List campaigns
+      operationId: listCampaigns
+      tags:
+        - Campaigns
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/CampaignStatus'
+      responses:
+        '200':
+          description: List of campaigns
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Campaign'
+
+    post:
+      summary: Create campaign
+      operationId: createCampaign
+      tags:
+        - Campaigns
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignInput'
+      responses:
+        '201':
+          description: Campaign created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  doc:
+                    $ref: '#/components/schemas/Campaign'
+
+  /campaigns/{id}:
+    get:
+      summary: Get campaign by ID
+      operationId: getCampaign
+      tags:
+        - Campaigns
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Campaign details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # GDPR ENDPOINTS
+  #─────────────────────────────────────────────────────────────────────────────
+
+  /gdpr/access:
+    get:
+      summary: Right to access (GDPR Art. 15)
+      description: |
+        Retrieve all personal data associated with the current user.
+
+        Returns data from all collections: users, leads, events, audit logs.
+      operationId: gdprAccess
+      tags:
+        - GDPR
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: All user data in JSON format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+                      leads:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Lead'
+                      events:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Event'
+                      auditLog:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AuditLogEntry'
+                  format:
+                    type: string
+                    example: JSON
+                  exportedAt:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /gdpr/export:
+    get:
+      summary: Right to data portability (GDPR Art. 20)
+      description: |
+        Export all user data in machine-readable format (JSON).
+
+        Same as `/gdpr/access` but formatted for data portability.
+      operationId: gdprExport
+      tags:
+        - GDPR
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User data export
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: 'attachment; filename="user_data_550e8400_1729504800000.json"'
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+  /gdpr/erasure:
+    post:
+      summary: Right to erasure / "Right to be forgotten" (GDPR Art. 17)
+      description: |
+        Anonymize all personal data for the current user.
+
+        **Note:** Data is anonymized (not deleted) to maintain audit trail.
+        Cannot delete if user has active course enrollments.
+      operationId: gdprErasure
+      tags:
+        - GDPR
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Account anonymized successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Account anonymized successfully
+        '400':
+          description: Cannot delete due to active enrollments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Cannot delete account with active course enrollments
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+#───────────────────────────────────────────────────────────────────────────────
+# COMPONENTS
+#───────────────────────────────────────────────────────────────────────────────
+
+components:
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # SECURITY SCHEMES
+  #─────────────────────────────────────────────────────────────────────────────
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT access token obtained from `/users/login` or `/users/refresh`.
+
+        **Format:** `Authorization: Bearer <access_token>`
+
+        **Token Expiry:** 15 minutes
+
+        **Refresh:** Use `/users/refresh` endpoint with refresh token before expiry.
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # PARAMETERS
+  #─────────────────────────────────────────────────────────────────────────────
+
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: UUID of the resource
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+
+    Page:
+      name: page
+      in: query
+      description: Page number (1-indexed)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+        example: 1
+
+    Limit:
+      name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+        example: 10
+
+    Sort:
+      name: sort
+      in: query
+      description: |
+        Sort field and order.
+
+        **Format:** `field` (ascending) or `-field` (descending)
+
+        **Examples:**
+        - `sort=createdAt` (oldest first)
+        - `sort=-createdAt` (newest first)
+        - `sort=title` (A-Z)
+      schema:
+        type: string
+        example: "-createdAt"
+
+    Where:
+      name: where
+      in: query
+      description: |
+        MongoDB-style query filter (JSON-encoded).
+
+        **Example:** `where={"status":{"equals":"published"}}`
+
+        **Operators:**
+        - `equals`, `not_equals`
+        - `in`, `not_in`
+        - `like`, `contains`
+        - `greater_than`, `less_than`
+      schema:
+        type: string
+        example: '{"status":{"equals":"published"}}'
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # SCHEMAS
+  #─────────────────────────────────────────────────────────────────────────────
+
+  schemas:
+
+    #───────────────────────────────────────────────────────────────────────────
+    # AUTHENTICATION
+    #───────────────────────────────────────────────────────────────────────────
+
+    AuthResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+        - user
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token (15min TTL)
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NTBlODQwMC1lMjliLTQxZDQtYTcxNi00NDY2NTU0NDAwMDAiLCJlbWFpbCI6Imdlc3RvckBjZXBmb3JtYWNpb24uY29tIiwicm9sZSI6Imdlc3RvciIsInBlcm1pc3Npb25zIjpbImNvdXJzZXM6cmVhZCIsImNvdXJzZXM6d3JpdGUiXSwiaWF0IjoxNzI5NTA0ODAwLCJleHAiOjE3Mjk1MDU3MDB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        refreshToken:
+          type: string
+          description: JWT refresh token (7 days TTL)
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NTBlODQwMC1lMjliLTQxZDQtYTcxNi00NDY2NTU0NDAwMDAiLCJ0b2tlbkZhbWlseSI6ImEzZjk4YmNkLTEyMzQtNTY3OC05YWJjLWRlZjEyMzQ1Njc4OSIsImlhdCI6MTcyOTUwNDgwMCwiZXhwIjoxNzMwMTA5NjAwfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        user:
+          $ref: '#/components/schemas/User'
+        expiresIn:
+          type: integer
+          description: Access token expiry in seconds
+          example: 900
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - role
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        email:
+          type: string
+          format: email
+          example: gestor@cepformacion.com
+        name:
+          type: string
+          example: María García
+        role:
+          $ref: '#/components/schemas/UserRole'
+        phone:
+          type: string
+          nullable: true
+          example: "+34612345678"
+        totpEnabled:
+          type: boolean
+          description: Whether 2FA is enabled
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserRole:
+      type: string
+      enum:
+        - admin
+        - gestor
+        - marketing
+        - asesor
+        - lectura
+      description: |
+        User role for RBAC:
+        - **admin**: Full system access
+        - **gestor**: Course management
+        - **marketing**: Campaigns and ads
+        - **asesor**: Lead follow-up
+        - **lectura**: Read-only access
+
+    #───────────────────────────────────────────────────────────────────────────
+    # COURSES
+    #───────────────────────────────────────────────────────────────────────────
+
+    Course:
+      type: object
+      required:
+        - id
+        - slug
+        - title
+        - offerType
+        - summary
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+          example: curso-gestion-proyectos-pmp
+        title:
+          type: string
+          example: Curso de Gestión de Proyectos (PMP)
+        offerType:
+          $ref: '#/components/schemas/OfferType'
+        summary:
+          type: string
+          description: SEO description (160-320 characters)
+          example: Domina la gestión de proyectos profesionales con metodologías ágiles y tradicionales. Prepárate para la certificación PMP.
+        objectives:
+          type: array
+          items:
+            type: string
+          minItems: 3
+          maxItems: 8
+          example:
+            - Aplicar metodologías ágiles (Scrum, Kanban)
+            - Gestionar presupuestos y riesgos
+            - Liderar equipos multidisciplinares
+        fullDescription:
+          type: object
+          description: Rich text content (Lexical JSON)
+          additionalProperties: true
+        curriculum:
+          type: array
+          items:
+            type: object
+            properties:
+              moduleNumber:
+                type: integer
+              title:
+                type: string
+              topics:
+                type: array
+                items:
+                  type: string
+        price:
+          type: number
+          format: float
+          nullable: true
+          example: 1200.00
+        duration:
+          type: string
+          nullable: true
+          example: "120 horas"
+        status:
+          $ref: '#/components/schemas/ContentStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CourseInput:
+      type: object
+      required:
+        - slug
+        - title
+        - offerType
+        - summary
+        - objectives
+      properties:
+        slug:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+        title:
+          type: string
+          minLength: 10
+          maxLength: 200
+        offerType:
+          $ref: '#/components/schemas/OfferType'
+        summary:
+          type: string
+          minLength: 160
+          maxLength: 320
+        objectives:
+          type: array
+          items:
+            type: string
+          minItems: 3
+          maxItems: 8
+        fullDescription:
+          type: object
+          additionalProperties: true
+        curriculum:
+          type: array
+          items:
+            type: object
+        price:
+          type: number
+          format: float
+          minimum: 0
+        duration:
+          type: string
+        status:
+          $ref: '#/components/schemas/ContentStatus'
+
+    OfferType:
+      type: string
+      enum:
+        - telematico
+        - ocupados
+        - desempleados
+        - privados
+        - ciclo-medio
+        - ciclo-superior
+      description: |
+        Course offer type:
+        - **telematico**: Online courses (SEPE-bonificado)
+        - **ocupados**: For employed workers
+        - **desempleados**: For unemployed workers
+        - **privados**: Private paid courses
+        - **ciclo-medio**: Vocational training (middle level)
+        - **ciclo-superior**: Vocational training (advanced level)
+
+    ContentStatus:
+      type: string
+      enum:
+        - draft
+        - review
+        - published
+        - archived
+      default: draft
+
+    #───────────────────────────────────────────────────────────────────────────
+    # COURSE RUNS
+    #───────────────────────────────────────────────────────────────────────────
+
+    CourseRun:
+      type: object
+      required:
+        - id
+        - course
+        - campus
+        - modality
+        - startDate
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        course:
+          $ref: '#/components/schemas/Course'
+        campus:
+          $ref: '#/components/schemas/Campus'
+        modality:
+          $ref: '#/components/schemas/Modality'
+        schedule:
+          type: string
+          nullable: true
+          example: "Lunes a Viernes, 18:00-21:00"
+        startDate:
+          type: string
+          format: date
+          example: "2025-02-01"
+        endDate:
+          type: string
+          format: date
+          nullable: true
+          example: "2025-05-31"
+        maxCapacity:
+          type: integer
+          nullable: true
+          example: 25
+        currentEnrollment:
+          type: integer
+          default: 0
+          example: 12
+        status:
+          $ref: '#/components/schemas/ContentStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CourseRunInput:
+      type: object
+      required:
+        - courseId
+        - campusId
+        - modality
+        - startDate
+      properties:
+        courseId:
+          type: string
+          format: uuid
+        campusId:
+          type: string
+          format: uuid
+        modality:
+          $ref: '#/components/schemas/Modality'
+        schedule:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        maxCapacity:
+          type: integer
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/ContentStatus'
+
+    Modality:
+      type: string
+      enum:
+        - presencial
+        - online-directo
+        - online-diferido
+        - hibrido
+      description: |
+        Course modality:
+        - **presencial**: In-person classes
+        - **online-directo**: Live online (videoconference)
+        - **online-diferido**: Self-paced online (recorded)
+        - **hibrido**: Hybrid (in-person + online)
+
+    Campus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: CEP Madrid Centro
+        address:
+          type: string
+          example: Calle Gran Vía 45, 28013 Madrid
+        city:
+          type: string
+          example: Madrid
+        postalCode:
+          type: string
+          example: "28013"
+
+    #───────────────────────────────────────────────────────────────────────────
+    # LEADS
+    #───────────────────────────────────────────────────────────────────────────
+
+    Lead:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - phone
+        - courseRun
+        - status
+        - consentGiven
+        - consentTimestamp
+        - consentIp
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        phone:
+          type: string
+        courseRun:
+          $ref: '#/components/schemas/CourseRun'
+        campaign:
+          $ref: '#/components/schemas/Campaign'
+          nullable: true
+        status:
+          $ref: '#/components/schemas/LeadStatus'
+        assignedTo:
+          $ref: '#/components/schemas/User'
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["vip", "urgente"]
+        consentGiven:
+          type: boolean
+          example: true
+        consentTimestamp:
+          type: string
+          format: date-time
+        consentIp:
+          type: string
+          example: "192.168.1.100"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    LeadInput:
+      type: object
+      required:
+        - email
+        - name
+        - phone
+        - courseRunId
+        - consentGiven
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        phone:
+          type: string
+          pattern: '^\+?[0-9]{9,15}$'
+        courseRunId:
+          type: string
+          format: uuid
+        campaignId:
+          type: string
+          format: uuid
+          nullable: true
+        message:
+          type: string
+          maxLength: 1000
+        consentGiven:
+          type: boolean
+        assignedTo:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          $ref: '#/components/schemas/LeadStatus'
+        notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    LeadStatus:
+      type: string
+      enum:
+        - new
+        - contacted
+        - qualified
+        - enrolled
+        - rejected
+        - archived
+      default: new
+
+    #───────────────────────────────────────────────────────────────────────────
+    # CAMPAIGNS
+    #───────────────────────────────────────────────────────────────────────────
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Campaña Ciclos FP 2025"
+        description:
+          type: string
+        relatedCourses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+        utmCampaign:
+          type: string
+          example: "fp_2025_q1"
+        utmSource:
+          type: string
+          example: "facebook"
+        utmMedium:
+          type: string
+          example: "cpc"
+        budget:
+          type: number
+          format: float
+          nullable: true
+          example: 5000.00
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+        metrics:
+          type: object
+          properties:
+            impressions:
+              type: integer
+            clicks:
+              type: integer
+            leads:
+              type: integer
+            conversions:
+              type: integer
+            cost:
+              type: number
+              format: float
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CampaignInput:
+      type: object
+      required:
+        - name
+        - utmCampaign
+        - utmSource
+        - utmMedium
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        relatedCourses:
+          type: array
+          items:
+            type: string
+            format: uuid
+        utmCampaign:
+          type: string
+        utmSource:
+          type: string
+        utmMedium:
+          type: string
+        budget:
+          type: number
+          format: float
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+
+    CampaignStatus:
+      type: string
+      enum:
+        - draft
+        - active
+        - paused
+        - completed
+        - archived
+      default: draft
+
+    #───────────────────────────────────────────────────────────────────────────
+    # ANALYTICS
+    #───────────────────────────────────────────────────────────────────────────
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          example: "page_view"
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+        sessionId:
+          type: string
+          format: uuid
+        properties:
+          type: object
+          additionalProperties: true
+          example:
+            page: "/cursos/gestion-proyectos"
+            referrer: "https://google.com"
+        timestamp:
+          type: string
+          format: date-time
+
+    AuditLogEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          example: "course_updated"
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+        collection:
+          type: string
+          example: "courses"
+        documentId:
+          type: string
+          format: uuid
+        changes:
+          type: object
+          properties:
+            before:
+              type: object
+              additionalProperties: true
+            after:
+              type: object
+              additionalProperties: true
+        ipAddress:
+          type: string
+          example: "192.168.1.100"
+        userAgent:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+
+    #───────────────────────────────────────────────────────────────────────────
+    # PAGINATION
+    #───────────────────────────────────────────────────────────────────────────
+
+    PaginatedResponse:
+      type: object
+      required:
+        - docs
+        - totalDocs
+        - limit
+        - page
+        - totalPages
+        - hasNextPage
+        - hasPrevPage
+      properties:
+        docs:
+          type: array
+          items:
+            type: object
+        totalDocs:
+          type: integer
+          description: Total number of documents
+          example: 150
+        limit:
+          type: integer
+          description: Number of docs per page
+          example: 10
+        page:
+          type: integer
+          description: Current page (1-indexed)
+          example: 1
+        totalPages:
+          type: integer
+          description: Total number of pages
+          example: 15
+        hasNextPage:
+          type: boolean
+          example: true
+        hasPrevPage:
+          type: boolean
+          example: false
+        nextPage:
+          type: integer
+          nullable: true
+          example: 2
+        prevPage:
+          type: integer
+          nullable: true
+          example: null
+        pagingCounter:
+          type: integer
+          description: Starting doc number on this page
+          example: 1
+
+    #───────────────────────────────────────────────────────────────────────────
+    # ERRORS
+    #───────────────────────────────────────────────────────────────────────────
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: Something went wrong
+
+    ValidationError:
+      type: object
+      required:
+        - error
+        - details
+      properties:
+        error:
+          type: string
+          example: Validation failed
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: email
+              message:
+                type: string
+                example: Invalid email address
+          example:
+            - field: email
+              message: Invalid email address
+            - field: password
+              message: Password must be at least 12 characters
+
+  #─────────────────────────────────────────────────────────────────────────────
+  # RESPONSES
+  #─────────────────────────────────────────────────────────────────────────────
+
+  responses:
+    Unauthorized:
+      description: Unauthorized - invalid or missing access token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Forbidden - you do not have permission to perform this action
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Resource not found
+
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+    RateLimitExceeded:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          description: Request limit per time window
+          schema:
+            type: integer
+            example: 5
+        X-RateLimit-Remaining:
+          description: Remaining requests in current window
+          schema:
+            type: integer
+            example: 0
+        X-RateLimit-Reset:
+          description: Unix timestamp when rate limit resets
+          schema:
+            type: integer
+            example: 1729505700
+        Retry-After:
+          description: Seconds until you can retry
+          schema:
+            type: integer
+            example: 900
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Too many requests, please try again after 15 minutes

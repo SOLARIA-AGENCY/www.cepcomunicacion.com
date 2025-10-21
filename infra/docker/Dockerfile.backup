@@ -1,0 +1,35 @@
+# Backup Service Dockerfile
+# Automated PostgreSQL backups to MinIO S3
+
+FROM alpine:3.19
+
+# Install dependencies
+RUN apk add --no-cache \
+    bash \
+    postgresql-client \
+    aws-cli \
+    curl \
+    tini \
+    # Cron for scheduling
+    dcron
+
+# Create backup user
+RUN addgroup -g 1001 -S backup && \
+    adduser -S backup -u 1001
+
+# Create directories
+RUN mkdir -p /backups /scripts /var/log/backup && \
+    chown -R backup:backup /backups /scripts /var/log/backup
+
+# Copy backup scripts
+COPY infra/backup/scripts/ /scripts/
+RUN chmod +x /scripts/*.sh
+
+# Setup cron
+COPY infra/backup/crontab /etc/crontabs/backup
+RUN chown backup:backup /etc/crontabs/backup
+
+USER backup
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["/scripts/entrypoint.sh"]

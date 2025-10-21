@@ -1,0 +1,100 @@
+# Worker Dockerfile - BullMQ Background Workers
+# Shared image for all worker types (automation, llm, stats)
+
+# ========================================
+# STAGE 1: Dependencies
+# ========================================
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS deps
+
+# Install build dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY workers/ ./workers/
+COPY packages/ ./packages/
+
+# Install all worker dependencies
+RUN npm ci --workspaces --include-workspace-root
+
+# ========================================
+# STAGE 2: Builder
+# ========================================
+FROM node:${NODE_VERSION}-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/workers ./workers
+COPY --from=deps /app/packages ./packages
+
+# Copy source code
+COPY tsconfig.json ./
+
+# Build all workers
+WORKDIR /app/workers/automation
+RUN npm run build
+
+WORKDIR /app/workers/llm
+RUN npm run build
+
+WORKDIR /app/workers/stats
+RUN npm run build
+
+# ========================================
+# STAGE 3: Production
+# ========================================
+FROM node:${NODE_VERSION}-alpine
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    tini \
+    wget \
+    curl \
+    postgresql-client \
+    # For PDF parsing
+    poppler-utils \
+    # For image processing (optional)
+    imagemagick
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+WORKDIR /app
+
+# Copy production dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/workers ./workers
+COPY --from=deps /app/packages ./packages
+
+# Copy built workers
+COPY --from=builder /app/workers/automation/dist ./workers/automation/dist
+COPY --from=builder /app/workers/llm/dist ./workers/llm/dist
+COPY --from=builder /app/workers/stats/dist ./workers/stats/dist
+
+# Create necessary directories
+RUN mkdir -p /app/uploads /backups && \
+    chown -R nodejs:nodejs /app
+
+# Switch to non-root user
+USER nodejs
+
+# Expose health check ports
+# Each worker will expose different port
+# automation: 3001, llm: 3002, stats: 3003
+EXPOSE 3001 3002 3003
+
+# Use tini to handle signals properly
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Default command (will be overridden in docker-compose)
+CMD ["node", "workers/automation/dist/index.js"]

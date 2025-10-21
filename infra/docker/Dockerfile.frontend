@@ -1,0 +1,82 @@
+# Frontend Dockerfile - React SPA with Vite
+# Multi-stage build for optimized production image
+
+# ========================================
+# STAGE 1: Build
+# ========================================
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY apps/web/package*.json ./apps/web/
+COPY packages/ ./packages/
+
+# Install dependencies
+RUN npm ci --workspace=web --include-workspace-root
+
+# Copy application source
+COPY apps/web ./apps/web
+COPY tsconfig.json ./
+
+# Build arguments for environment variables
+ARG VITE_API_URL
+ARG VITE_ENABLE_ANALYTICS=false
+ARG VITE_GA4_ID
+ARG VITE_PLAUSIBLE_DOMAIN
+ARG VITE_HCAPTCHA_SITE_KEY
+ARG VITE_ENABLE_LLM=false
+ARG VITE_ENABLE_WHATSAPP=false
+
+# Build the application
+WORKDIR /app/apps/web
+RUN npm run build
+
+# ========================================
+# STAGE 2: Production Server
+# ========================================
+FROM node:${NODE_VERSION}-alpine
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    tini \
+    wget
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Install serve for SPA hosting
+RUN npm install -g serve@14
+
+# Copy built assets from builder
+COPY --from=builder --chown=nodejs:nodejs /app/apps/web/dist ./dist
+
+# Switch to non-root user
+USER nodejs
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3000 || exit 1
+
+# Use tini to handle signals properly
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start the application
+CMD ["serve", "-s", "dist", "-l", "3000", "--no-request-logging"]

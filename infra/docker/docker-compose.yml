@@ -1,0 +1,605 @@
+# CEPComunicacion v2 - Production Docker Compose
+# 100% Self-Contained, Portable Deployment
+# No External Dependencies Required
+
+version: '3.9'
+
+# ========================================
+# NETWORKS
+# ========================================
+networks:
+  # External network - services exposed to internet
+  external:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+  # Internal network - isolated backend services
+  internal:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+# ========================================
+# VOLUMES - All data persisted here
+# ========================================
+volumes:
+  # Database volumes
+  postgres-data:
+    driver: local
+  postgres-backup:
+    driver: local
+
+  # Cache and queue
+  redis-data:
+    driver: local
+
+  # Object storage (S3-compatible)
+  minio-data:
+    driver: local
+
+  # Email storage
+  mailhog-data:
+    driver: local
+
+  # Media uploads
+  cms-uploads:
+    driver: local
+
+  # SSL certificates
+  ssl-certs:
+    driver: local
+
+  # Nginx cache
+  nginx-cache:
+    driver: local
+
+# ========================================
+# SERVICES
+# ========================================
+services:
+
+  # ========================================
+  # NGINX - Reverse Proxy + SSL Termination
+  # ========================================
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: cep-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"     # HTTP
+      - "443:443"   # HTTPS
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ssl-certs:/etc/letsencrypt:ro
+      - nginx-cache:/var/cache/nginx
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - frontend
+      - cms
+      - minio
+    networks:
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.cepcomunicacion.service=nginx"
+      - "com.cepcomunicacion.role=edge"
+
+  # ========================================
+  # FRONTEND - React SPA
+  # ========================================
+  frontend:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.frontend
+      args:
+        NODE_VERSION: "20"
+    container_name: cep-frontend
+    restart: unless-stopped
+    environment:
+      # API endpoint (internal network)
+      - VITE_API_URL=${VITE_API_URL:-http://cms:3000/api}
+
+      # Analytics (optional)
+      - VITE_ENABLE_ANALYTICS=${VITE_ENABLE_ANALYTICS:-false}
+      - VITE_GA4_ID=${VITE_GA4_ID:-}
+      - VITE_PLAUSIBLE_DOMAIN=${VITE_PLAUSIBLE_DOMAIN:-}
+
+      # Captcha (optional)
+      - VITE_HCAPTCHA_SITE_KEY=${VITE_HCAPTCHA_SITE_KEY:-}
+
+      # Feature flags
+      - VITE_ENABLE_LLM=${VITE_ENABLE_LLM:-false}
+      - VITE_ENABLE_WHATSAPP=${VITE_ENABLE_WHATSAPP:-false}
+    networks:
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.cepcomunicacion.service=frontend"
+      - "com.cepcomunicacion.role=presentation"
+
+  # ========================================
+  # CMS - Payload CMS Backend
+  # ========================================
+  cms:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.cms
+      args:
+        NODE_VERSION: "20"
+    container_name: cep-cms
+    restart: unless-stopped
+    environment:
+      # Node environment
+      - NODE_ENV=${NODE_ENV:-production}
+
+      # Database
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cepadmin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-cepcomunicacion}
+      - DATABASE_POOL_MIN=${DATABASE_POOL_MIN:-2}
+      - DATABASE_POOL_MAX=${DATABASE_POOL_MAX:-10}
+
+      # Redis (queue + cache)
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-}@redis:6379/0
+
+      # Payload CMS secrets
+      - PAYLOAD_SECRET=${PAYLOAD_SECRET}
+      - PAYLOAD_CONFIG_PATH=./apps/cms/src/payload.config.ts
+
+      # Server configuration
+      - PORT=3000
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost,https://cepcomunicacion.com}
+
+      # File storage (MinIO S3-compatible)
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
+      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BUCKET=${S3_BUCKET:-cep-uploads}
+      - S3_REGION=${S3_REGION:-us-east-1}
+
+      # Email (MailHog SMTP)
+      - SMTP_HOST=${SMTP_HOST:-mailhog}
+      - SMTP_PORT=${SMTP_PORT:-1025}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM=${SMTP_FROM:-noreply@cepcomunicacion.com}
+
+      # External APIs (optional - graceful degradation)
+      - META_APP_ID=${META_APP_ID:-}
+      - META_APP_SECRET=${META_APP_SECRET:-}
+      - META_ACCESS_TOKEN=${META_ACCESS_TOKEN:-}
+      - META_PIXEL_ID=${META_PIXEL_ID:-}
+
+      - MAILCHIMP_API_KEY=${MAILCHIMP_API_KEY:-}
+      - MAILCHIMP_SERVER_PREFIX=${MAILCHIMP_SERVER_PREFIX:-}
+      - MAILCHIMP_LIST_ID=${MAILCHIMP_LIST_ID:-}
+
+      - WHATSAPP_PHONE_ID=${WHATSAPP_PHONE_ID:-}
+      - WHATSAPP_ACCESS_TOKEN=${WHATSAPP_ACCESS_TOKEN:-}
+
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+
+      # Feature flags
+      - ENABLE_META_INTEGRATION=${ENABLE_META_INTEGRATION:-false}
+      - ENABLE_MAILCHIMP_INTEGRATION=${ENABLE_MAILCHIMP_INTEGRATION:-false}
+      - ENABLE_WHATSAPP_INTEGRATION=${ENABLE_WHATSAPP_INTEGRATION:-false}
+      - ENABLE_LLM_INTEGRATION=${ENABLE_LLM_INTEGRATION:-false}
+    volumes:
+      - cms-uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - external
+      - internal
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "com.cepcomunicacion.service=cms"
+      - "com.cepcomunicacion.role=backend"
+
+  # ========================================
+  # WORKER: Automation (Leads, Campaigns)
+  # ========================================
+  worker-automation:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        NODE_VERSION: "20"
+    container_name: cep-worker-automation
+    restart: unless-stopped
+    command: npm run worker:automation
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cepadmin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-cepcomunicacion}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-}@redis:6379/0
+
+      # SMTP for notifications
+      - SMTP_HOST=${SMTP_HOST:-mailhog}
+      - SMTP_PORT=${SMTP_PORT:-1025}
+      - SMTP_FROM=${SMTP_FROM:-noreply@cepcomunicacion.com}
+
+      # External APIs (optional)
+      - META_APP_ID=${META_APP_ID:-}
+      - META_APP_SECRET=${META_APP_SECRET:-}
+      - MAILCHIMP_API_KEY=${MAILCHIMP_API_KEY:-}
+      - WHATSAPP_ACCESS_TOKEN=${WHATSAPP_ACCESS_TOKEN:-}
+
+      # Feature flags
+      - ENABLE_META_INTEGRATION=${ENABLE_META_INTEGRATION:-false}
+      - ENABLE_MAILCHIMP_INTEGRATION=${ENABLE_MAILCHIMP_INTEGRATION:-false}
+      - ENABLE_WHATSAPP_INTEGRATION=${ENABLE_WHATSAPP_INTEGRATION:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.cepcomunicacion.service=worker-automation"
+      - "com.cepcomunicacion.role=worker"
+
+  # ========================================
+  # WORKER: LLM Content Generation
+  # ========================================
+  worker-llm:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        NODE_VERSION: "20"
+    container_name: cep-worker-llm
+    restart: unless-stopped
+    command: npm run worker:llm
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cepadmin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-cepcomunicacion}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-}@redis:6379/0
+
+      # MinIO for file access
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
+      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BUCKET=${S3_BUCKET:-cep-uploads}
+
+      # LLM APIs (optional)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - LLM_PROVIDER=${LLM_PROVIDER:-none}
+
+      # Feature flags
+      - ENABLE_LLM_INTEGRATION=${ENABLE_LLM_INTEGRATION:-false}
+    volumes:
+      - cms-uploads:/app/uploads:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3002/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.cepcomunicacion.service=worker-llm"
+      - "com.cepcomunicacion.role=worker"
+
+  # ========================================
+  # WORKER: Statistics & Reporting
+  # ========================================
+  worker-stats:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.worker
+      args:
+        NODE_VERSION: "20"
+    container_name: cep-worker-stats
+    restart: unless-stopped
+    command: npm run worker:stats
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cepadmin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-cepcomunicacion}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-}@redis:6379/0
+
+      # MinIO for backups
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
+      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BACKUP_BUCKET=${S3_BACKUP_BUCKET:-cep-backups}
+    volumes:
+      - postgres-backup:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3003/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.cepcomunicacion.service=worker-stats"
+      - "com.cepcomunicacion.role=worker"
+
+  # ========================================
+  # POSTGRESQL 16 - Primary Database
+  # ========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: cep-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-cepcomunicacion}
+      - POSTGRES_USER=${POSTGRES_USER:-cepadmin}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=es_ES.UTF-8 --lc-ctype=es_ES.UTF-8
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-backup:/backups
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - internal
+    command: >
+      postgres
+      -c max_connections=100
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=2621kB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c max_worker_processes=4
+      -c max_parallel_workers_per_gather=2
+      -c max_parallel_workers=4
+      -c max_parallel_maintenance_workers=2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cepadmin} -d ${POSTGRES_DB:-cepcomunicacion}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    labels:
+      - "com.cepcomunicacion.service=postgres"
+      - "com.cepcomunicacion.role=database"
+
+  # ========================================
+  # REDIS 7 - Queue + Cache
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    container_name: cep-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - redis-data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    labels:
+      - "com.cepcomunicacion.service=redis"
+      - "com.cepcomunicacion.role=cache-queue"
+
+  # ========================================
+  # MINIO - S3-Compatible Object Storage
+  # ========================================
+  minio:
+    image: minio/minio:latest
+    container_name: cep-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BROWSER_REDIRECT_URL=${MINIO_BROWSER_REDIRECT_URL:-http://localhost:9001}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    networks:
+      - external
+      - internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.cepcomunicacion.service=minio"
+      - "com.cepcomunicacion.role=storage"
+
+  # ========================================
+  # MINIO CLIENT - Bucket Initialization
+  # ========================================
+  minio-init:
+    image: minio/mc:latest
+    container_name: cep-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set minio http://minio:9000 ${MINIO_ROOT_USER:-minioadmin} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb --ignore-existing minio/${S3_BUCKET:-cep-uploads};
+      /usr/bin/mc mb --ignore-existing minio/${S3_BACKUP_BUCKET:-cep-backups};
+      /usr/bin/mc anonymous set download minio/${S3_BUCKET:-cep-uploads};
+      /usr/bin/mc anonymous set none minio/${S3_BACKUP_BUCKET:-cep-backups};
+      exit 0;
+      "
+    networks:
+      - internal
+    labels:
+      - "com.cepcomunicacion.service=minio-init"
+      - "com.cepcomunicacion.role=init"
+
+  # ========================================
+  # MAILHOG - SMTP Server + Web UI
+  # Development/Testing Email Service
+  # Replace with Postfix for production
+  # ========================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cep-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+    volumes:
+      - mailhog-data:/data
+    networks:
+      - internal
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8025"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    labels:
+      - "com.cepcomunicacion.service=mailhog"
+      - "com.cepcomunicacion.role=smtp"
+      - "com.cepcomunicacion.note=Replace with Postfix for production"
+
+  # ========================================
+  # BULLBOARD - Queue Monitoring UI
+  # ========================================
+  bullboard:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.bullboard
+    container_name: cep-bullboard
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-}@redis:6379/0
+      - PORT=3010
+      - BASIC_AUTH_USER=${BULLBOARD_USER:-admin}
+      - BASIC_AUTH_PASSWORD=${BULLBOARD_PASSWORD}
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3010"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "com.cepcomunicacion.service=bullboard"
+      - "com.cepcomunicacion.role=monitoring"
+
+  # ========================================
+  # BACKUP SERVICE - Automated Backups
+  # ========================================
+  backup:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile.backup
+    container_name: cep-backup
+    restart: unless-stopped
+    environment:
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 3 * * *}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=${POSTGRES_DB:-cepcomunicacion}
+      - POSTGRES_USER=${POSTGRES_USER:-cepadmin}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
+      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BACKUP_BUCKET=${S3_BACKUP_BUCKET:-cep-backups}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-30}
+    volumes:
+      - postgres-backup:/backups
+      - ./backup/scripts:/scripts:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - internal
+    labels:
+      - "com.cepcomunicacion.service=backup"
+      - "com.cepcomunicacion.role=maintenance"
+
+# ========================================
+# RESOURCE LIMITS (for 3.8GB RAM VPS)
+# ========================================
+# Total RAM allocation: ~3.2GB (leaving 600MB for system)
+#
+# nginx:          128MB
+# frontend:       256MB
+# cms:            768MB (main application)
+# worker-auto:    256MB
+# worker-llm:     512MB (LLM processing)
+# worker-stats:   128MB
+# postgres:       768MB (256MB shared_buffers)
+# redis:          512MB
+# minio:          256MB
+# mailhog:        64MB
+# bullboard:      64MB
+# backup:         64MB
+# ========================================
