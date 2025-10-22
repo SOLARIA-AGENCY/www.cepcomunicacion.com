@@ -12,7 +12,7 @@ import { Courses } from './collections/Courses/Courses';
 import { Leads } from './collections/Leads/Leads';
 import { Campaigns } from './collections/Campaigns/Campaigns';
 // import { CourseRuns } from './collections/CourseRuns/CourseRuns';
-// import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
+import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 // import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 // import { FAQs } from './collections/FAQs/FAQs';
 // import { Media } from './collections/Media/Media';
@@ -41,7 +41,7 @@ export default buildConfig({
 
     // Marketing
     Campaigns, // ✅ Marketing campaign tracking with UTM & analytics
-    // AdsTemplates,
+    AdsTemplates, // ✅ Reusable ad templates (email, social, display ads)
     Leads, // ✅ Phase 1: Implemented with GDPR compliance
 
     // Content
