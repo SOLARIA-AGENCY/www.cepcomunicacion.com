@@ -30,6 +30,7 @@ export { Campuses } from './Campuses';
 export { Courses } from './Courses';
 export { CourseRuns } from './CourseRuns/CourseRuns';
 export { Leads } from './Leads';
+export { Enrollments } from './Enrollments/Enrollments';
 // ... more collections to come
 
 export const collections = [
