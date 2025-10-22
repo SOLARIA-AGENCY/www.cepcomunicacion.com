@@ -5,9 +5,9 @@ import { s3Storage } from '@payloadcms/storage-s3';
 import path from 'path';
 
 // Import collections (will be implemented next with TDD methodology)
-// import { Cycles } from './collections/Cycles/Cycles';
-// import { Campuses } from './collections/Campuses/Campuses';
-// import { Users } from './collections/Users/Users';
+import { Cycles } from './collections/Cycles/Cycles';
+import { Campuses } from './collections/Campuses/Campuses';
+import { Users } from './collections/Users/Users';
 // import { Courses } from './collections/Courses/Courses';
 // import { CourseRuns } from './collections/CourseRuns/CourseRuns';
 // import { Campaigns } from './collections/Campaigns/Campaigns';
@@ -22,7 +22,7 @@ import path from 'path';
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
   admin: {
-    // user: Users.slug, // Will be enabled after Users collection is implemented
+    user: Users.slug, // CRITICAL: Specify auth collection
     meta: {
       titleSuffix: '- CEP Comunicación',
       favicon: '/favicon.ico',
@@ -31,9 +31,9 @@ export default buildConfig({
   collections: [
     // Collections will be added here as they are implemented following TDD methodology
     // Core entities
-    // Cycles,
-    // Campuses,
-    // Users,
+    Users, // IMPORTANT: Users collection MUST be first for auth to work properly
+    Cycles,
+    Campuses,
 
     // Courses
     // Courses,

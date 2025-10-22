@@ -23,9 +23,12 @@
  */
 
 // Collections will be exported here as they are implemented
-// Example:
-// export { Cycles } from './Cycles/Cycles';
-// export { Campuses } from './Campuses/Campuses';
+// IMPORTANT: Users MUST be exported first for auth to work properly
+export { Users } from './Users';
+export { Cycles } from './Cycles';
+export { Campuses } from './Campuses';
+// export { Courses } from './Courses';
+// ... more collections to come
 
 export const collections = [
   // Collections will be added here as they are implemented

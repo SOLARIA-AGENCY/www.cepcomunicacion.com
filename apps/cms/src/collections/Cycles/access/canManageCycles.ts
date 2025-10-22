@@ -1,5 +1,5 @@
-import { Access } from 'payload';
-import { ROLES } from '../../../access/roles';
+import type { Access } from 'payload';
+import { hasMinimumRole } from '../../../access/roles';
 
 /**
  * Access control for managing Cycles
@@ -9,11 +9,13 @@ import { ROLES } from '../../../access/roles';
  * - Gestor: Full access
  *
  * All other roles: Read-only access
+ *
+ * Uses role hierarchy for clean permission checks.
  */
 export const canManageCycles: Access = ({ req: { user } }) => {
   // Not authenticated
   if (!user) return false;
 
-  // Admin and Gestor can manage cycles
-  return user.role === ROLES.ADMIN || user.role === ROLES.GESTOR;
+  // Admin and Gestor can manage cycles (using role hierarchy)
+  return hasMinimumRole(user.role, 'gestor');
 };
