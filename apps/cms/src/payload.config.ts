@@ -1,4 +1,4 @@
-import { buildConfig } from 'payload/config';
+import { buildConfig } from 'payload';
 import { postgresAdapter } from '@payloadcms/db-postgres';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { s3Storage } from '@payloadcms/storage-s3';
@@ -10,8 +10,8 @@ import { Campuses } from './collections/Campuses/Campuses';
 import { Users } from './collections/Users/Users';
 import { Courses } from './collections/Courses/Courses';
 import { Leads } from './collections/Leads/Leads';
+import { Campaigns } from './collections/Campaigns/Campaigns';
 // import { CourseRuns } from './collections/CourseRuns/CourseRuns';
-// import { Campaigns } from './collections/Campaigns/Campaigns';
 // import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 // import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 // import { FAQs } from './collections/FAQs/FAQs';
@@ -40,7 +40,7 @@ export default buildConfig({
     // CourseRuns,
 
     // Marketing
-    // Campaigns,
+    Campaigns, // ✅ Marketing campaign tracking with UTM & analytics
     // AdsTemplates,
     Leads, // ✅ Phase 1: Implemented with GDPR compliance
 

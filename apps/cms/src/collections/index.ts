@@ -31,6 +31,7 @@ export { Courses } from './Courses';
 export { CourseRuns } from './CourseRuns/CourseRuns';
 export { Leads } from './Leads';
 export { Enrollments } from './Enrollments/Enrollments';
+export { default as Campaigns } from './Campaigns';
 // ... more collections to come
 
 export const collections = [
