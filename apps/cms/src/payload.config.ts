@@ -8,7 +8,7 @@ import path from 'path';
 import { Cycles } from './collections/Cycles/Cycles';
 import { Campuses } from './collections/Campuses/Campuses';
 import { Users } from './collections/Users/Users';
-// import { Courses } from './collections/Courses/Courses';
+import { Courses } from './collections/Courses/Courses';
 // import { CourseRuns } from './collections/CourseRuns/CourseRuns';
 // import { Campaigns } from './collections/Campaigns/Campaigns';
 // import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
@@ -36,7 +36,7 @@ export default buildConfig({
     Campuses,
 
     // Courses
-    // Courses,
+    Courses,
     // CourseRuns,
 
     // Marketing

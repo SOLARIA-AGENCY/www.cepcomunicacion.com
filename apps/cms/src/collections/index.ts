@@ -27,7 +27,7 @@
 export { Users } from './Users';
 export { Cycles } from './Cycles';
 export { Campuses } from './Campuses';
-// export { Courses } from './Courses';
+export { Courses } from './Courses';
 // ... more collections to come
 
 export const collections = [
