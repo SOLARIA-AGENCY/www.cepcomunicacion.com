@@ -1,0 +1,32 @@
+/**
+ * Collection exports
+ *
+ * Each collection will be implemented following TDD methodology:
+ * 1. Write tests first (RED)
+ * 2. Implement collection config (GREEN)
+ * 3. Add validation, hooks, access control (REFACTOR)
+ *
+ * Collections to be implemented:
+ * - Cycles: Educational cycle types (FP Básica, Grado Medio, Grado Superior)
+ * - Campuses: Physical training locations
+ * - Users: CMS users with role-based access control
+ * - Courses: Course catalog
+ * - CourseRuns: Scheduled course instances
+ * - Campaigns: Marketing campaigns
+ * - AdsTemplates: Ad creative templates
+ * - Leads: Lead submissions (GDPR compliant)
+ * - BlogPosts: Content management
+ * - FAQs: Frequently asked questions
+ * - Media: File uploads
+ * - SEOMetadata: SEO optimization data
+ * - AuditLogs: GDPR audit trail
+ */
+
+// Collections will be exported here as they are implemented
+// Example:
+// export { Cycles } from './Cycles/Cycles';
+// export { Campuses } from './Campuses/Campuses';
+
+export const collections = [
+  // Collections will be added here as they are implemented
+];

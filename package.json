@@ -1,0 +1,51 @@
+{
+  "name": "cepcomunicacion-v2",
+  "version": "2.0.0",
+  "description": "Lead management and marketing automation platform for CEP FORMACIÓN Y COMUNICACIÓN S.L.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm --recursive build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:cms": "vitest run --project=cms",
+    "test:web": "vitest run --project=web",
+    "test:workers": "vitest run --project=workers",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "tsc --noEmit",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:clean": "docker compose down -v && docker system prune -af",
+    "db:migrate": "cd infra/postgres && ./apply_migrations.sh",
+    "db:seed": "psql -h localhost -U cepcomunicacion -d cepcomunicacion -f infra/postgres/seeds/001_initial_data.sql",
+    "db:reset": "docker compose down postgres && docker volume rm cepcomunicacion-v2_postgres-data && docker compose up -d postgres && pnpm db:migrate && pnpm db:seed",
+    "prepare": "husky install || true"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/ui": "^2.1.8",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.4"
+}

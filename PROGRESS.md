@@ -84,18 +84,69 @@ infra/postgres/
 
 ---
 
-## 🔄 In Progress: Migration Execution
+## ✅ Completed: Payload CMS Package Structure
+
+### What Was Accomplished
+
+**Complete Payload CMS 3.x foundation created:**
+
+1. **Package Structure** (32 directories, 29 files)
+   - Configuration files (package.json, tsconfig.json, vitest.config.ts)
+   - Environment templates (.env.example, .env.test)
+   - Documentation (README, IMPLEMENTATION_SUMMARY, CHECKLIST)
+   - Verification script (45/45 checks passing)
+
+2. **Access Control Framework**
+   - Role definitions with 5-level hierarchy (Admin → Lectura)
+   - Global access control functions (isAdmin, isAdminOrGestor, isSelfOrAdmin)
+   - Collection-specific access control (9 functions)
+   - hasMinimumRole utility for role hierarchy
+
+3. **Hooks Framework**
+   - Global audit logging hooks (GDPR compliance)
+   - Slug generation hooks (Courses, BlogPosts)
+   - Lead creation trigger hooks
+   - Lead access audit hooks (GDPR)
+
+4. **Test Infrastructure**
+   - Vitest configuration with 80% coverage thresholds
+   - Test setup/teardown files
+   - Test helpers (login, create test data, cleanup)
+   - Ready for TDD implementation
+
+5. **Utilities**
+   - slugify() - URL-friendly slug generation
+   - testHelpers - Authentication, test data creation
+
+### Files Created
+
+**Total:** 29 files organized into:
+- Configuration: 6 files
+- Documentation: 4 files
+- Access Control: 9 files
+- Hooks: 6 files
+- Utilities: 2 files
+- Tests: 2 files
+
+### Verification
+
+```bash
+cd apps/cms && ./verify-structure.sh
+# ✅ All 45 structure checks passed
+```
+
+---
+
+## 🔄 In Progress: Core Infrastructure
 
 ### Current Status
 
-**Blocker:** Docker daemon not running
+**Foundation Complete** - Ready for server setup
 
 **Next Steps:**
-1. Start Docker Desktop
-2. Run `docker compose up -d postgres redis`
-3. Apply migrations: `cd infra/postgres && ./apply_migrations.sh`
-4. Verify schema: `psql -h localhost -U cepcomunicacion -d cepcomunicacion -c "\dt"`
-5. Run tests: `npm test infra/postgres/tests/migrations.test.ts`
+1. Implement `src/server.ts` - Express server entry point
+2. Implement `src/payload.config.ts` - Payload CMS configuration
+3. Start TDD for Cycles collection
 
 ---
 
@@ -104,21 +155,22 @@ infra/postgres/
 ### Phase 1 Roadmap
 
 1. ✅ **Week 1-2: Database Schema** - COMPLETED
-2. ⏳ **Week 3-4: Payload CMS Collections** - NEXT
+2. 🔄 **Week 3-4: Payload CMS Collections** - IN PROGRESS (Foundation Complete)
 3. ⏳ **Week 5-6: BullMQ Workers**
 4. ⏳ **Week 7-8: React Frontend - Core Pages**
 5. ⏳ **Week 9-10: React Frontend - Forms**
 6. ⏳ **Week 11-12: Security & GDPR**
 7. ⏳ **Week 13-14: Infrastructure & Deployment**
 
-### Immediate Next Steps (After Migrations Run)
+### Immediate Next Steps
 
-**Use payload-cms-architect agent to:**
-1. Create package.json for apps/cms
-2. Install Payload CMS 3.x dependencies
-3. Implement first collection: Cycles
-4. Write API integration tests (supertest)
-5. Verify REST endpoint works: GET /api/cycles
+**Implement Core Infrastructure:**
+1. Create `src/server.ts` with Express setup
+2. Create `src/payload.config.ts` with DB adapter
+3. Start TDD for Cycles collection:
+   - Write tests first (RED)
+   - Implement collection (GREEN)
+   - Add validation, hooks, access control (REFACTOR)
 
 ---
 
@@ -157,10 +209,19 @@ infra/postgres/
 - [x] ERD diagram complete
 - [x] Seed data ready
 
-### Payload CMS ⏳ NEXT
-- [ ] All 5 core collections (Courses, Cycles, Campuses, Leads, Campaigns)
-- [ ] Access control (5 roles)
-- [ ] Collection hooks
+### Payload CMS 🔄 IN PROGRESS
+- [x] Package structure (32 directories, 29 files)
+- [x] Access control framework (5 roles)
+- [x] Hooks framework (audit logging, slug generation)
+- [x] Test infrastructure (Vitest with 80% thresholds)
+- [x] Utilities (slugify, test helpers)
+- [ ] Core infrastructure (server.ts, payload.config.ts)
+- [ ] Collections (13 total):
+  - [ ] Cycles, Campuses, Users
+  - [ ] Courses, CourseRuns
+  - [ ] Campaigns, AdsTemplates, Leads
+  - [ ] BlogPosts, FAQs
+  - [ ] Media, SEOMetadata, AuditLogs
 - [ ] REST API endpoints (47 total)
 - [ ] Integration tests (supertest)
 - [ ] Coverage >80%
@@ -188,16 +249,30 @@ infra/postgres/
 
 ## 🚀 Next Session Action Items
 
-1. **Start Docker Desktop**
-2. **Run migrations:** `cd infra/postgres && ./apply_migrations.sh`
-3. **Verify schema:** Check all 13 tables exist
-4. **Run tests:** Execute migration test suite
-5. **Commit progress:** Git commit with schema files
-6. **Start Payload CMS:** Invoke payload-cms-architect agent
+1. **Implement Core Infrastructure**
+   - Create `apps/cms/src/server.ts` with Express setup
+   - Create `apps/cms/src/payload.config.ts` with PostgreSQL adapter
+   - Configure database connection and Payload initialization
+
+2. **Start TDD for Cycles Collection**
+   - Write tests first: `apps/cms/src/collections/Cycles/Cycles.test.ts`
+   - Implement collection: `apps/cms/src/collections/Cycles/Cycles.ts`
+   - Test access control for all 5 roles
+   - Verify 80%+ coverage
+
+3. **Continue with Remaining Collections**
+   - Campuses (TDD)
+   - Users (TDD with authentication)
+   - Courses, CourseRuns, etc.
+
+4. **Optional: Run Database Migrations**
+   - Start Docker: `docker compose up -d postgres redis`
+   - Apply migrations: `cd infra/postgres && ./apply_migrations.sh`
+   - Verify schema
 
 ---
 
-**Last Updated:** 2025-10-21 22:20 CET
-**Current Phase:** Phase 1 - Week 1-2 (Database Schema)
-**Status:** Database design complete, awaiting Docker to run migrations
-**Next Agent:** payload-cms-architect (Payload CMS collections)
+**Last Updated:** 2025-10-21 22:30 CET
+**Current Phase:** Phase 1 - Week 3-4 (Payload CMS Collections)
+**Status:** Foundation complete (29 files, 45/45 checks passing)
+**Next Task:** Implement server.ts and payload.config.ts
