@@ -9,10 +9,10 @@ import { Cycles } from './collections/Cycles/Cycles';
 import { Campuses } from './collections/Campuses/Campuses';
 import { Users } from './collections/Users/Users';
 import { Courses } from './collections/Courses/Courses';
+import { Leads } from './collections/Leads/Leads';
 // import { CourseRuns } from './collections/CourseRuns/CourseRuns';
 // import { Campaigns } from './collections/Campaigns/Campaigns';
 // import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
-// import { Leads } from './collections/Leads/Leads';
 // import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 // import { FAQs } from './collections/FAQs/FAQs';
 // import { Media } from './collections/Media/Media';
@@ -42,7 +42,7 @@ export default buildConfig({
     // Marketing
     // Campaigns,
     // AdsTemplates,
-    // Leads,
+    Leads, // ✅ Phase 1: Implemented with GDPR compliance
 
     // Content
     // BlogPosts,

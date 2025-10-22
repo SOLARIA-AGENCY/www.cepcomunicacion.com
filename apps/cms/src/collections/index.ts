@@ -28,6 +28,7 @@ export { Users } from './Users';
 export { Cycles } from './Cycles';
 export { Campuses } from './Campuses';
 export { Courses } from './Courses';
+export { Leads } from './Leads';
 // ... more collections to come
 
 export const collections = [
