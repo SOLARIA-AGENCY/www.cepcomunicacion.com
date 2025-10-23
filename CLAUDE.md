@@ -13,19 +13,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **specification-first repository**. The extensive technical documentation exists before any implementation code. All architectural decisions, technology choices, and system designs are documented in detail before development begins.
 
-## Technology Stack (Planned)
+## Technology Stack (UPDATED 2025-10-23)
 
-### Frontend
-- **Framework:** React 18+ with TypeScript
-- **Build Tool:** Vite
-- **Styling:** TailwindCSS with Montserrat typography
+### Frontend ✅ IMPLEMENTED
+- **Framework:** React 19.1.0 with TypeScript 5.9.3
+- **Build Tool:** Vite 7.1.12
+- **Styling:** TailwindCSS 4.0 with Montserrat typography
 - **State Management:** React Context + Hooks
+- **Routing:** React Router 7.9.4
+- **Status:** Week 4 Complete - Production Ready
 
-### Backend
-- **CMS/API:** Payload CMS (Node.js + Express + TypeScript)
+### Backend 🔄 IN MIGRATION
+- **CMS/API:** **Strapi 4.x** (Node.js + Express + TypeScript) - **CHANGED FROM PAYLOAD**
 - **Database:** PostgreSQL 16+
 - **Job Queue:** BullMQ + Redis
-- **Authentication:** Payload built-in with RBAC (5 roles)
+- **Authentication:** Strapi built-in with RBAC (5 roles)
+- **Migration:** In Progress (ADR-001 approved 2025-10-23)
+- **Reason:** Payload 3.x requires Next.js (not wanted), Payload 2.x EOL soon
 
 ### Infrastructure
 - **Containerization:** Docker + Docker Compose
