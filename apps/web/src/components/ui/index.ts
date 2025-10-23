@@ -27,3 +27,6 @@ export type { AlertProps } from './Alert';
 
 export { CourseCard } from './CourseCard';
 export type { CourseCardProps } from './CourseCard';
+
+export { Skeleton, SkeletonText, SkeletonCard } from './Skeleton';
+export type { SkeletonProps } from './Skeleton';

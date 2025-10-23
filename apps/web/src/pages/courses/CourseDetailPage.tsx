@@ -6,7 +6,8 @@
 
 import { useParams } from 'react-router-dom';
 import { useCourse } from '@hooks/useCourses';
-import { Loading, Alert, Button } from '@components/ui';
+import { Alert } from '@components/ui';
+import { CourseDetailSkeleton } from './skeletons';
 
 export default function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -14,11 +15,7 @@ export default function CourseDetailPage() {
 
   // Loading state
   if (courseState.status === 'loading') {
-    return (
-      <div className="container py-12">
-        <Loading size="lg" text="Cargando información del curso..." />
-      </div>
-    );
+    return <CourseDetailSkeleton />;
   }
 
   // Error state

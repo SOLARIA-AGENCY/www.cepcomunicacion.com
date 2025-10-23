@@ -5,7 +5,8 @@
  */
 
 import { useCourses } from '@hooks/useCourses';
-import { CourseCard, Loading, Alert } from '@components/ui';
+import { CourseCard, Alert } from '@components/ui';
+import { CourseCardSkeleton } from '@pages/courses/skeletons';
 
 export default function HomePage() {
   // Fetch featured courses only
@@ -48,7 +49,11 @@ export default function HomePage() {
 
           {/* Loading State */}
           {featuredCoursesState.status === 'loading' && (
-            <Loading size="lg" text="Cargando cursos destacados..." />
+            <div className="grid md:grid-cols-3 gap-8">
+              <CourseCardSkeleton />
+              <CourseCardSkeleton />
+              <CourseCardSkeleton />
+            </div>
           )}
 
           {/* Error State */}

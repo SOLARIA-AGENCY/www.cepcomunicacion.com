@@ -8,7 +8,8 @@ import { useState } from 'react';
 import { useCourses } from '@hooks/useCourses';
 import { useCampuses } from '@hooks/useCampuses';
 import { useCycles } from '@hooks/useCycles';
-import { CourseCard, Loading, Alert } from '@components/ui';
+import { CourseCard, Alert } from '@components/ui';
+import { CourseListSkeleton } from './skeletons';
 import type { CourseFilters } from '@types/index';
 
 export default function CoursesPage() {
@@ -147,9 +148,7 @@ export default function CoursesPage() {
         </div>
 
         {/* Loading State */}
-        {coursesState.status === 'loading' && (
-          <Loading size="lg" text="Cargando cursos..." />
-        )}
+        {coursesState.status === 'loading' && <CourseListSkeleton count={6} />}
 
         {/* Error State */}
         {coursesState.status === 'error' && (

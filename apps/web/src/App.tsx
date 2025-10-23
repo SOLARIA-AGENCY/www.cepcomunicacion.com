@@ -5,6 +5,7 @@
  */
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { PageErrorBoundary } from '@components/boundaries';
 
 // Pages
 import HomePage from '@pages/home/HomePage';
@@ -56,13 +57,62 @@ function App() {
         {/* Main Content */}
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/cursos/:slug" element={<CourseDetailPage />} />
-            <Route path="/cursos" element={<CoursesPage />} />
-            <Route path="/contacto" element={<ContactPage />} />
-            <Route path="/sobre-nosotros" element={<AboutPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/faq" element={<FAQPage />} />
+            <Route
+              path="/"
+              element={
+                <PageErrorBoundary>
+                  <HomePage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/cursos/:slug"
+              element={
+                <PageErrorBoundary>
+                  <CourseDetailPage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/cursos"
+              element={
+                <PageErrorBoundary>
+                  <CoursesPage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/contacto"
+              element={
+                <PageErrorBoundary>
+                  <ContactPage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/sobre-nosotros"
+              element={
+                <PageErrorBoundary>
+                  <AboutPage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/blog"
+              element={
+                <PageErrorBoundary>
+                  <BlogPage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
+              path="/faq"
+              element={
+                <PageErrorBoundary>
+                  <FAQPage />
+                </PageErrorBoundary>
+              }
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
