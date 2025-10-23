@@ -75,3 +75,11 @@ secrets/
 # Development tools
 .conductor/
 .specify/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Backup files
+*.bak
+*.bak2
+*.bak3
