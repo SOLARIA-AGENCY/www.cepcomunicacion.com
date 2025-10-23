@@ -3,11 +3,13 @@
  *
  * Loading skeleton that matches the structure of CourseCard component.
  * Used while course data is being fetched.
+ * Optimized with React.memo to prevent unnecessary re-renders.
  */
 
+import { memo } from 'react';
 import { Skeleton } from '@components/ui';
 
-export function CourseCardSkeleton() {
+export const CourseCardSkeleton = memo(function CourseCardSkeleton() {
   return (
     <div className="card">
       {/* Featured Image Skeleton */}
@@ -47,12 +49,13 @@ export function CourseCardSkeleton() {
       </div>
     </div>
   );
-}
+});
 
 /**
  * CourseListSkeleton - Grid of CourseCardSkeleton
+ * Optimized with React.memo
  */
-export function CourseListSkeleton({ count = 6 }: { count?: number }) {
+export const CourseListSkeleton = memo(function CourseListSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, index) => (
@@ -60,4 +63,4 @@ export function CourseListSkeleton({ count = 6 }: { count?: number }) {
       ))}
     </div>
   );
-}
+});

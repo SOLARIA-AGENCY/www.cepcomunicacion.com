@@ -3,11 +3,13 @@
  *
  * Loading skeleton for CourseDetailPage.
  * Matches the layout structure: hero section + main content + sidebar.
+ * Optimized with React.memo to prevent unnecessary re-renders.
  */
 
+import { memo } from 'react';
 import { Skeleton } from '@components/ui';
 
-export function CourseDetailSkeleton() {
+export const CourseDetailSkeleton = memo(function CourseDetailSkeleton() {
   return (
     <div className="course-detail-page">
       {/* Hero Section Skeleton */}
@@ -103,4 +105,4 @@ export function CourseDetailSkeleton() {
       </section>
     </div>
   );
-}
+});

@@ -3,11 +3,14 @@
  *
  * Base skeleton component for loading states with pulse animation.
  * Provides visual feedback while content is loading.
+ * Optimized with React.memo to prevent unnecessary re-renders.
  *
  * @example
  * <Skeleton width="100%" height="24px" />
  * <Skeleton className="w-32 h-8 rounded-lg" />
  */
+
+import { memo } from 'react';
 
 export interface SkeletonProps {
   /**
@@ -40,8 +43,9 @@ export interface SkeletonProps {
 
 /**
  * Skeleton component for loading states
+ * Memoized to prevent unnecessary re-renders
  */
-export function Skeleton({
+export const Skeleton = memo(function Skeleton({
   width,
   height,
   rounded = 'default',
@@ -85,12 +89,13 @@ export function Skeleton({
       <span className="sr-only">Cargando...</span>
     </div>
   );
-}
+});
 
 /**
  * Skeleton Text - Pre-configured for text lines
+ * Memoized to prevent unnecessary re-renders
  */
-export function SkeletonText({
+export const SkeletonText = memo(function SkeletonText({
   lines = 1,
   className = '',
 }: {
@@ -108,12 +113,13 @@ export function SkeletonText({
       ))}
     </div>
   );
-}
+});
 
 /**
  * Skeleton Card - Pre-configured for card layouts
+ * Memoized to prevent unnecessary re-renders
  */
-export function SkeletonCard({ className = '' }: { className?: string }) {
+export const SkeletonCard = memo(function SkeletonCard({ className = '' }: { className?: string }) {
   return (
     <div className={`card ${className}`}>
       {/* Image placeholder */}
@@ -135,4 +141,4 @@ export function SkeletonCard({ className = '' }: { className?: string }) {
       </div>
     </div>
   );
-}
+});

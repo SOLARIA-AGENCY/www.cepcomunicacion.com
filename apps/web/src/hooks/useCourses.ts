@@ -4,16 +4,29 @@
  * Custom hook for fetching courses with filtering
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { api } from '@api/client';
 import type { Course, CourseFilters, LoadingState } from '@types/index';
 
-export function useCourses(filters?: CourseFilters) {
+export function useCourses(filters?: CourseFilters): LoadingState<Course[]> {
   const [state, setState] = useState<LoadingState<Course[]>>({
     status: 'idle',
     data: null,
     error: null,
   });
+
+  // Memoize filters to prevent unnecessary re-fetches
+  // Only re-compute when individual filter values change
+  const memoizedFilters = useMemo(
+    () => filters,
+    [
+      filters?.cycle,
+      filters?.campus,
+      filters?.modality,
+      filters?.featured,
+      filters?.search,
+    ]
+  );
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -26,21 +39,21 @@ export function useCourses(filters?: CourseFilters) {
         };
 
         // Add filters if provided
-        if (filters?.cycle) {
-          params['where[cycle][equals]'] = filters.cycle;
+        if (memoizedFilters?.cycle) {
+          params['where[cycle][equals]'] = memoizedFilters.cycle;
         }
-        if (filters?.campus) {
-          params['where[campuses][contains]'] = filters.campus;
+        if (memoizedFilters?.campus) {
+          params['where[campuses][contains]'] = memoizedFilters.campus;
         }
-        if (filters?.modality) {
-          params['where[modality][equals]'] = filters.modality;
+        if (memoizedFilters?.modality) {
+          params['where[modality][equals]'] = memoizedFilters.modality;
         }
-        if (filters?.featured !== undefined) {
-          params['where[featured][equals]'] = filters.featured;
+        if (memoizedFilters?.featured !== undefined) {
+          params['where[featured][equals]'] = memoizedFilters.featured;
         }
-        if (filters?.search) {
-          params['where[or][0][title][contains]'] = filters.search;
-          params['where[or][1][description][contains]'] = filters.search;
+        if (memoizedFilters?.search) {
+          params['where[or][0][title][contains]'] = memoizedFilters.search;
+          params['where[or][1][description][contains]'] = memoizedFilters.search;
         }
 
         const response = await api.courses.getAll(params);
@@ -60,7 +73,7 @@ export function useCourses(filters?: CourseFilters) {
     };
 
     fetchCourses();
-  }, [filters?.cycle, filters?.campus, filters?.modality, filters?.featured, filters?.search]);
+  }, [memoizedFilters]);
 
   return state;
 }
@@ -70,7 +83,7 @@ export function useCourses(filters?: CourseFilters) {
  *
  * Fetch single course by slug
  */
-export function useCourse(slug: string) {
+export function useCourse(slug: string): LoadingState<Course> {
   const [state, setState] = useState<LoadingState<Course>>({
     status: 'idle',
     data: null,

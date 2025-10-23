@@ -2,8 +2,11 @@
  * CourseCard Component
  *
  * Reusable card for displaying course information
+ * Optimized with React.memo and useMemo/useCallback hooks
  */
 
+import { memo, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Course } from '@types/index';
 
 export interface CourseCardProps {
@@ -11,9 +14,18 @@ export interface CourseCardProps {
   onClick?: () => void;
 }
 
-export function CourseCard({ course, onClick }: CourseCardProps) {
-  // Extract image URL - handle both Media object and string ID
-  const getImageUrl = () => {
+// Modality labels (moved outside component to prevent recreation)
+const MODALITY_LABELS = {
+  presencial: 'Presencial',
+  online: 'Online',
+  hibrido: 'Semipresencial',
+} as const;
+
+export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCardProps) {
+  const navigate = useNavigate();
+
+  // Extract image URL - memoized to prevent recalculation
+  const imageUrl = useMemo(() => {
     if (!course.featured_image) return null;
 
     if (typeof course.featured_image === 'string') {
@@ -22,12 +34,10 @@ export function CourseCard({ course, onClick }: CourseCardProps) {
 
     // If it's a Media object with sizes
     return course.featured_image.sizes?.card?.url || course.featured_image.url;
-  };
+  }, [course.featured_image]);
 
-  const imageUrl = getImageUrl();
-
-  // Get cycle name - handle both Cycle object and string ID
-  const getCycleName = () => {
+  // Get cycle name - memoized to prevent recalculation
+  const cycleName = useMemo(() => {
     if (!course.cycle) return null;
 
     if (typeof course.cycle === 'string') {
@@ -35,25 +45,17 @@ export function CourseCard({ course, onClick }: CourseCardProps) {
     }
 
     return course.cycle.name;
-  };
+  }, [course.cycle]);
 
-  const cycleName = getCycleName();
-
-  // Format modality
-  const modalityLabels = {
-    presencial: 'Presencial',
-    online: 'Online',
-    hibrido: 'Semipresencial',
-  };
-
-  const handleClick = () => {
+  // Handle click - memoized to prevent recreation
+  const handleClick = useCallback(() => {
     if (onClick) {
       onClick();
     } else {
-      // Default behavior: navigate to course detail
-      window.location.href = `/cursos/${course.slug}`;
+      // SPA navigation (no full page reload)
+      navigate(`/cursos/${course.slug}`);
     }
-  };
+  }, [onClick, navigate, course.slug]);
 
   return (
     <div
@@ -121,7 +123,7 @@ export function CourseCard({ course, onClick }: CourseCardProps) {
           <div className="flex items-center gap-2">
             {/* Modality */}
             <span className="text-primary font-semibold">
-              {modalityLabels[course.modality]}
+              {MODALITY_LABELS[course.modality]}
             </span>
 
             {/* Duration */}
@@ -153,4 +155,4 @@ export function CourseCard({ course, onClick }: CourseCardProps) {
       </div>
     </div>
   );
-}
+});
