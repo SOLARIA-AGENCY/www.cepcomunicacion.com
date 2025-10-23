@@ -1,16 +1,12 @@
 /**
  * Contact Page Component
  *
- * Contact form with GDPR compliance
+ * Contact form with GDPR compliance using LeadForm component
  */
 
-export default function ContactPage() {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Form submission logic will be implemented
-    console.log('Form submitted');
-  };
+import { LeadForm } from '@components/forms';
 
+export default function ContactPage() {
   return (
     <div className="contact-page py-12">
       <div className="container max-w-4xl">
@@ -18,81 +14,7 @@ export default function ContactPage() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
-          <div className="card">
-            <h2 className="text-2xl font-semibold mb-6">Solicita Información</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="form-label">Nombre *</label>
-                <input type="text" className="form-input" required />
-              </div>
-
-              <div className="mb-4">
-                <label className="form-label">Apellidos *</label>
-                <input type="text" className="form-input" required />
-              </div>
-
-              <div className="mb-4">
-                <label className="form-label">Email *</label>
-                <input type="email" className="form-input" required />
-              </div>
-
-              <div className="mb-4">
-                <label className="form-label">Teléfono *</label>
-                <input type="tel" className="form-input" required />
-              </div>
-
-              <div className="mb-4">
-                <label className="form-label">Curso de interés</label>
-                <select className="form-input">
-                  <option>Selecciona un curso</option>
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label className="form-label">Mensaje</label>
-                <textarea className="form-input" rows={4}></textarea>
-              </div>
-
-              {/* GDPR Compliance */}
-              <div className="mb-4">
-                <label className="flex items-start">
-                  <input
-                    type="checkbox"
-                    className="mt-1 mr-2"
-                    required
-                  />
-                  <span className="text-sm">
-                    Acepto la{' '}
-                    <a href="/politica-privacidad" className="text-primary hover:underline">
-                      política de privacidad
-                    </a>{' '}
-                    *
-                  </span>
-                </label>
-              </div>
-
-              <div className="mb-6">
-                <label className="flex items-start">
-                  <input
-                    type="checkbox"
-                    className="mt-1 mr-2"
-                    required
-                  />
-                  <span className="text-sm">
-                    Consiento el tratamiento de mis datos para recibir información sobre cursos *
-                  </span>
-                </label>
-              </div>
-
-              <button type="submit" className="btn-primary w-full">
-                Enviar Solicitud
-              </button>
-
-              <p className="text-xs text-neutral-500 mt-4">
-                * Campos obligatorios
-              </p>
-            </form>
-          </div>
+          <LeadForm />
 
           {/* Contact Info */}
           <div>
