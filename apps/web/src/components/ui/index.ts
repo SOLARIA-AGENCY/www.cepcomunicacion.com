@@ -24,3 +24,6 @@ export type { LoadingProps } from './Loading';
 
 export { Alert } from './Alert';
 export type { AlertProps } from './Alert';
+
+export { CourseCard } from './CourseCard';
+export type { CourseCardProps } from './CourseCard';

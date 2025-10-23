@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Pages
 import HomePage from '@pages/home/HomePage';
 import CoursesPage from '@pages/courses/CoursesPage';
+import CourseDetailPage from '@pages/courses/CourseDetailPage';
 import ContactPage from '@pages/contact/ContactPage';
 
 // Placeholder pages (will be implemented)
@@ -56,6 +57,7 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/cursos/:slug" element={<CourseDetailPage />} />
             <Route path="/cursos" element={<CoursesPage />} />
             <Route path="/contacto" element={<ContactPage />} />
             <Route path="/sobre-nosotros" element={<AboutPage />} />
