@@ -35,7 +35,7 @@ function normalizeSpanishChars(str: string): string {
     Ú: 'u',
     Ñ: 'n',
     Ü: 'u',
-    ¿: '',
+    '¿': '',
     '¡': '',
     '?': '',
     '!': '',
