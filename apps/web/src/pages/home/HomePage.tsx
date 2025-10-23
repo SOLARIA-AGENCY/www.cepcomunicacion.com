@@ -4,6 +4,7 @@
  * Main landing page with hero section, featured courses, and CTA
  */
 
+import { Link } from 'react-router-dom';
 import { useCourses } from '@hooks/useCourses';
 import { CourseCard, Alert } from '@components/ui';
 import { CourseCardSkeleton } from '@pages/courses/skeletons';
@@ -26,12 +27,12 @@ export default function HomePage() {
               para el empleo con ayudas disponibles.
             </p>
             <div className="flex gap-4 flex-wrap">
-              <a href="/cursos" className="btn-primary bg-white text-primary hover:bg-neutral-100">
+              <Link to="/cursos" className="btn-primary bg-white text-primary hover:bg-neutral-100">
                 Ver Cursos
-              </a>
-              <a href="/contacto" className="btn-secondary border-white text-white hover:bg-white hover:text-primary">
+              </Link>
+              <Link to="/contacto" className="btn-secondary border-white text-white hover:bg-white hover:text-primary">
                 Solicitar Información
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -102,9 +103,9 @@ export default function HomePage() {
                   <p className="text-neutral-600">
                     No hay cursos destacados disponibles en este momento.
                   </p>
-                  <a href="/cursos" className="mt-4 inline-block text-primary hover:underline">
+                  <Link to="/cursos" className="mt-4 inline-block text-primary hover:underline">
                     Ver todos los cursos disponibles
-                  </a>
+                  </Link>
                 </div>
               )}
             </>
@@ -198,9 +199,9 @@ export default function HomePage() {
             Contacta con nosotros y te ayudaremos a encontrar el curso perfecto para
             impulsar tu carrera profesional
           </p>
-          <a href="/contacto" className="btn-primary bg-white text-secondary hover:bg-neutral-100">
+          <Link to="/contacto" className="btn-primary bg-white text-secondary hover:bg-neutral-100">
             Solicitar Información
-          </a>
+          </Link>
         </div>
       </section>
     </div>

@@ -4,7 +4,7 @@
  * Displays detailed information about a single course
  */
 
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useCourse } from '@hooks/useCourses';
 import { Alert } from '@components/ui';
 import { CourseDetailSkeleton } from './skeletons';
@@ -26,9 +26,9 @@ export default function CourseDetailPage() {
           {courseState.error}
         </Alert>
         <div className="mt-6 text-center">
-          <a href="/cursos" className="text-primary hover:underline font-semibold">
+          <Link to="/cursos" className="text-primary hover:underline font-semibold">
             ← Volver a cursos
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -56,9 +56,9 @@ export default function CourseDetailPage() {
           <p className="text-neutral-600 mb-6">
             El curso que buscas no existe o ha sido eliminado.
           </p>
-          <a href="/cursos" className="btn-primary">
+          <Link to="/cursos" className="btn-primary">
             Ver todos los cursos
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -97,13 +97,13 @@ export default function CourseDetailPage() {
           <div className="max-w-4xl">
             {/* Breadcrumb */}
             <nav className="mb-4 text-sm opacity-90">
-              <a href="/" className="hover:underline">
+              <Link to="/" className="hover:underline">
                 Inicio
-              </a>
+              </Link>
               <span className="mx-2">/</span>
-              <a href="/cursos" className="hover:underline">
+              <Link to="/cursos" className="hover:underline">
                 Cursos
-              </a>
+              </Link>
               <span className="mx-2">/</span>
               <span>{course.title}</span>
             </nav>
@@ -238,9 +238,9 @@ export default function CourseDetailPage() {
                 )}
 
                 {/* CTA Button */}
-                <a href="/contacto" className="btn-primary w-full mb-3">
+                <Link to="/contacto" className="btn-primary w-full mb-3">
                   Solicitar Información
-                </a>
+                </Link>
 
                 <p className="text-xs text-neutral-500 text-center">
                   Te responderemos en menos de 24 horas

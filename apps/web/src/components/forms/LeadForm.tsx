@@ -13,6 +13,7 @@
  */
 
 import { useState, FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { Input, TextArea, Select, Checkbox, Button, Alert } from '@components/ui';
 import { useLeadSubmit, validateLeadForm } from '@hooks/useLeadSubmit';
 import { useCourses } from '@hooks/useCourses';
@@ -282,9 +283,9 @@ export function LeadForm({ defaultCourseId, defaultCampusId, onSuccess }: LeadFo
             Tus datos personales serán tratados de acuerdo con nuestra política de privacidad.
             Tienes derecho de acceso, rectificación, supresión, limitación, portabilidad y
             oposición. Para más información, consulta nuestra{' '}
-            <a href="/politica-privacidad" className="text-primary hover:underline">
+            <Link to="/politica-privacidad" className="text-primary hover:underline">
               política de privacidad
-            </a>
+            </Link>
             .
           </p>
         </div>

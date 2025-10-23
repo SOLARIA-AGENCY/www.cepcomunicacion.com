@@ -11,6 +11,7 @@
  */
 
 import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { ErrorBoundary } from './ErrorBoundary';
 
 export interface PageErrorBoundaryProps {
@@ -108,9 +109,9 @@ export function PageErrorBoundary({ children, resetKeys }: PageErrorBoundaryProp
           <div className="mt-8 pt-8 border-t border-neutral-200">
             <p className="text-sm text-neutral-500">
               Si el problema persiste, por favor{' '}
-              <a href="/contacto" className="text-primary hover:underline font-semibold">
+              <Link to="/contacto" className="text-primary hover:underline font-semibold">
                 contáctanos
-              </a>{' '}
+              </Link>{' '}
               y te ayudaremos a resolverlo.
             </p>
           </div>

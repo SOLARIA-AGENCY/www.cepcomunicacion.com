@@ -4,7 +4,7 @@
  * Defines all routes and layout structure for the CEP Formación website
  */
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { PageErrorBoundary } from '@components/boundaries';
 
 // Pages
@@ -12,11 +12,12 @@ import HomePage from '@pages/home/HomePage';
 import CoursesPage from '@pages/courses/CoursesPage';
 import CourseDetailPage from '@pages/courses/CourseDetailPage';
 import ContactPage from '@pages/contact/ContactPage';
+import AboutPage from '@pages/about/AboutPage';
+import FAQPage from '@pages/faq/FAQPage';
+import BlogPage from '@pages/blog/BlogPage';
+import BlogDetailPage from '@pages/blog/BlogDetailPage';
 
-// Placeholder pages (will be implemented)
-const AboutPage = () => <div className="container py-12"><h1 className="text-4xl font-bold">Sobre Nosotros</h1></div>;
-const BlogPage = () => <div className="container py-12"><h1 className="text-4xl font-bold">Blog</h1></div>;
-const FAQPage = () => <div className="container py-12"><h1 className="text-4xl font-bold">Preguntas Frecuentes</h1></div>;
+// 404 page
 const NotFoundPage = () => <div className="container py-12 text-center"><h1 className="text-4xl font-bold">404 - Página no encontrada</h1></div>;
 
 function App() {
@@ -27,28 +28,28 @@ function App() {
         <header className="bg-white shadow-md sticky top-0 z-50">
           <nav className="container py-4">
             <div className="flex items-center justify-between">
-              <a href="/" className="text-2xl font-bold text-primary">
+              <Link to="/" className="text-2xl font-bold text-primary">
                 CEP Formación
-              </a>
+              </Link>
               <div className="flex gap-6">
-                <a href="/" className="text-neutral-700 hover:text-primary transition-colors">
+                <Link to="/" className="text-neutral-700 hover:text-primary transition-colors">
                   Inicio
-                </a>
-                <a href="/cursos" className="text-neutral-700 hover:text-primary transition-colors">
+                </Link>
+                <Link to="/cursos" className="text-neutral-700 hover:text-primary transition-colors">
                   Cursos
-                </a>
-                <a href="/sobre-nosotros" className="text-neutral-700 hover:text-primary transition-colors">
+                </Link>
+                <Link to="/sobre-nosotros" className="text-neutral-700 hover:text-primary transition-colors">
                   Sobre Nosotros
-                </a>
-                <a href="/blog" className="text-neutral-700 hover:text-primary transition-colors">
+                </Link>
+                <Link to="/blog" className="text-neutral-700 hover:text-primary transition-colors">
                   Blog
-                </a>
-                <a href="/faq" className="text-neutral-700 hover:text-primary transition-colors">
+                </Link>
+                <Link to="/faq" className="text-neutral-700 hover:text-primary transition-colors">
                   FAQ
-                </a>
-                <a href="/contacto" className="btn-primary py-2 px-4 text-sm">
+                </Link>
+                <Link to="/contacto" className="btn-primary py-2 px-4 text-sm">
                   Contacto
-                </a>
+                </Link>
               </div>
             </div>
           </nav>
@@ -98,6 +99,14 @@ function App() {
               }
             />
             <Route
+              path="/blog/:slug"
+              element={
+                <PageErrorBoundary>
+                  <BlogDetailPage />
+                </PageErrorBoundary>
+              }
+            />
+            <Route
               path="/blog"
               element={
                 <PageErrorBoundary>
@@ -130,18 +139,18 @@ function App() {
               <div>
                 <h4 className="font-semibold mb-4">Enlaces Rápidos</h4>
                 <ul className="space-y-2">
-                  <li><a href="/cursos" className="text-neutral-400 hover:text-white transition-colors">Cursos</a></li>
-                  <li><a href="/sobre-nosotros" className="text-neutral-400 hover:text-white transition-colors">Sobre Nosotros</a></li>
-                  <li><a href="/blog" className="text-neutral-400 hover:text-white transition-colors">Blog</a></li>
-                  <li><a href="/contacto" className="text-neutral-400 hover:text-white transition-colors">Contacto</a></li>
+                  <li><Link to="/cursos" className="text-neutral-400 hover:text-white transition-colors">Cursos</Link></li>
+                  <li><Link to="/sobre-nosotros" className="text-neutral-400 hover:text-white transition-colors">Sobre Nosotros</Link></li>
+                  <li><Link to="/blog" className="text-neutral-400 hover:text-white transition-colors">Blog</Link></li>
+                  <li><Link to="/contacto" className="text-neutral-400 hover:text-white transition-colors">Contacto</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold mb-4">Legal</h4>
                 <ul className="space-y-2">
-                  <li><a href="/politica-privacidad" className="text-neutral-400 hover:text-white transition-colors">Política de Privacidad</a></li>
-                  <li><a href="/aviso-legal" className="text-neutral-400 hover:text-white transition-colors">Aviso Legal</a></li>
-                  <li><a href="/cookies" className="text-neutral-400 hover:text-white transition-colors">Política de Cookies</a></li>
+                  <li><Link to="/politica-privacidad" className="text-neutral-400 hover:text-white transition-colors">Política de Privacidad</Link></li>
+                  <li><Link to="/aviso-legal" className="text-neutral-400 hover:text-white transition-colors">Aviso Legal</Link></li>
+                  <li><Link to="/cookies" className="text-neutral-400 hover:text-white transition-colors">Política de Cookies</Link></li>
                 </ul>
               </div>
               <div>

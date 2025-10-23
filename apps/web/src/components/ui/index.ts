@@ -30,3 +30,9 @@ export type { CourseCardProps } from './CourseCard';
 
 export { Skeleton, SkeletonText, SkeletonCard } from './Skeleton';
 export type { SkeletonProps } from './Skeleton';
+
+export { Accordion } from './Accordion';
+export type { AccordionProps } from './Accordion';
+
+export { BlogPostCard } from './BlogPostCard';
+export type { BlogPostCardProps, BlogPost } from './BlogPostCard';
