@@ -36,6 +36,7 @@ export { default as Campaigns } from './Campaigns';
 export { default as AdsTemplates } from './AdsTemplates';
 export { BlogPosts } from './BlogPosts/BlogPosts';
 export { FAQs } from './FAQs/FAQs';
+export { Media } from './Media/Media';
 // ... more collections to come
 
 export const collections = [

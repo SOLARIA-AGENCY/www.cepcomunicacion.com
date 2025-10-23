@@ -9,13 +9,15 @@ import { Cycles } from './collections/Cycles/Cycles';
 import { Campuses } from './collections/Campuses/Campuses';
 import { Users } from './collections/Users/Users';
 import { Courses } from './collections/Courses/Courses';
+import { CourseRuns } from './collections/CourseRuns/CourseRuns';
+import { Enrollments } from './collections/Enrollments/Enrollments';
+import { Students } from './collections/Students/Students';
 import { Leads } from './collections/Leads/Leads';
 import { Campaigns } from './collections/Campaigns/Campaigns';
-// import { CourseRuns } from './collections/CourseRuns/CourseRuns';
 import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
-// import { Media } from './collections/Media/Media';
+import { Media } from './collections/Media/Media';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 // import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 
@@ -37,7 +39,9 @@ export default buildConfig({
 
     // Courses
     Courses,
-    // CourseRuns,
+    CourseRuns, // ✅ Scheduled course instances
+    Students, // ✅ Learner profiles with PII protection
+    Enrollments, // ✅ Student registrations in course runs
 
     // Marketing
     Campaigns, // ✅ Marketing campaign tracking with UTM & analytics
@@ -47,7 +51,7 @@ export default buildConfig({
     // Content
     BlogPosts, // ✅ Blog content with SEO optimization
     FAQs, // ✅ Frequently Asked Questions
-    // Media,
+    Media, // ✅ File uploads with S3 storage
 
     // Metadata & Compliance
     // SEOMetadata,
