@@ -14,7 +14,7 @@ import { Campaigns } from './collections/Campaigns/Campaigns';
 // import { CourseRuns } from './collections/CourseRuns/CourseRuns';
 import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 import { BlogPosts } from './collections/BlogPosts/BlogPosts';
-// import { FAQs } from './collections/FAQs/FAQs';
+import { FAQs } from './collections/FAQs/FAQs';
 // import { Media } from './collections/Media/Media';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 // import { AuditLogs } from './collections/AuditLogs/AuditLogs';
@@ -46,7 +46,7 @@ export default buildConfig({
 
     // Content
     BlogPosts, // ✅ Blog content with SEO optimization
-    // FAQs,
+    FAQs, // ✅ Frequently Asked Questions
     // Media,
 
     // Metadata & Compliance

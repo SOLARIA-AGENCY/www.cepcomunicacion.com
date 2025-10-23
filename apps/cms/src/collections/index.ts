@@ -35,6 +35,7 @@ export { Students } from './Students/Students';
 export { default as Campaigns } from './Campaigns';
 export { default as AdsTemplates } from './AdsTemplates';
 export { BlogPosts } from './BlogPosts/BlogPosts';
+export { FAQs } from './FAQs/FAQs';
 // ... more collections to come
 
 export const collections = [
