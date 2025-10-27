@@ -10,7 +10,7 @@ import { useCampuses } from '@hooks/useCampuses';
 import { useCycles } from '@hooks/useCycles';
 import { CourseCard, Alert } from '@components/ui';
 import { CourseListSkeleton } from './skeletons';
-import type { CourseFilters } from '@types/index';
+import type { CourseFilters } from '../../types';
 
 export default function CoursesPage() {
   // Filter state
@@ -28,7 +28,7 @@ export default function CoursesPage() {
 
   // Handle filter changes
   const handleFilterChange = (key: keyof CourseFilters, value: string) => {
-    setFilters((prev) => ({
+    setFilters((prev: CourseFilters) => ({
       ...prev,
       [key]: value || undefined,
     }));
@@ -38,7 +38,7 @@ export default function CoursesPage() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // Debounce search (simple implementation)
-    setFilters((prev) => ({
+    setFilters((prev: CourseFilters) => ({
       ...prev,
       search: value || undefined,
     }));

@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { api } from '@api/client';
-import type { LeadFormData, LeadFormErrors } from '@types/index';
+import type { LeadFormData, LeadFormErrors } from '../types';
 
 interface SubmitState {
   isSubmitting: boolean;

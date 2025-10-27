@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@api/client';
-import type { Cycle, LoadingState } from '@types/index';
+import type { Cycle, LoadingState } from '../types';
 
 export function useCycles() {
   const [state, setState] = useState<LoadingState<Cycle[]>>({

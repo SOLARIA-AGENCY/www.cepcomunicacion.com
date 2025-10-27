@@ -12,13 +12,14 @@
  * - Loading states
  */
 
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, TextArea, Select, Checkbox, Button, Alert } from '@components/ui';
 import { useLeadSubmit, validateLeadForm } from '@hooks/useLeadSubmit';
 import { useCourses } from '@hooks/useCourses';
 import { useCampuses } from '@hooks/useCampuses';
-import type { LeadFormData, LeadFormErrors } from '@types/index';
+import type { LeadFormData, LeadFormErrors } from '../../types';
 
 export interface LeadFormProps {
   defaultCourseId?: string;

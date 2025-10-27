@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@api/client';
-import type { Campus, LoadingState } from '@types/index';
+import type { Campus, LoadingState } from '../types';
 
 export function useCampuses() {
   const [state, setState] = useState<LoadingState<Campus[]>>({

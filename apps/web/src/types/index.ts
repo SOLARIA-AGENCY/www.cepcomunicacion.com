@@ -123,7 +123,7 @@ export interface BlogPost {
   title: string;
   slug: string;
   excerpt: string;
-  content: any; // Lexical editor content
+  content: unknown; // Lexical editor content (JSON structure)
   featured_image?: Media | string;
   author: User | string;
   status: 'draft' | 'published';
@@ -275,7 +275,7 @@ export interface CourseFilters {
  */
 export type Status = 'idle' | 'loading' | 'success' | 'error';
 
-export interface LoadingState<T = any> {
+export interface LoadingState<T = unknown> {
   status: Status;
   data: T | null;
   error: string | null;
