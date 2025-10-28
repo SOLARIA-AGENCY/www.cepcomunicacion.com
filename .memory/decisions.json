@@ -1,0 +1,175 @@
+{
+  "adrs": [
+    {
+      "id": "ADR-001",
+      "title": "Migration from Payload CMS to Strapi 4.x",
+      "status": "ACCEPTED",
+      "date": "2025-10-23",
+      "context": "Payload 3.x requires Next.js (not wanted), Payload 2.x approaching EOL. Strapi 4.x is mature, has large ecosystem, and doesn't impose frontend framework.",
+      "decision": "Migrate to Strapi 4.x for CMS backend",
+      "consequences": {
+        "positive": [
+          "No Next.js dependency",
+          "Mature ecosystem with plugins",
+          "Better documentation and community",
+          "Production-ready Docker support"
+        ],
+        "negative": [
+          "Different API patterns than Payload",
+          "Learning curve for team",
+          "Migration effort from existing Payload code"
+        ]
+      },
+      "implementation_status": "COMPLETE - Strapi 4.25.24 running in Docker"
+    },
+    {
+      "id": "ADR-002",
+      "title": "Docker-First Development Approach",
+      "status": "ACCEPTED",
+      "date": "2025-10-26",
+      "context": "macOS-specific issues with @swc/core native bindings causing Strapi admin UI build failures. Platform-specific binary issues are common in Node.js ecosystem.",
+      "decision": "Develop all backend services inside Docker containers from day 1",
+      "consequences": {
+        "positive": [
+          "Eliminates platform-specific binary issues",
+          "Production-ready from development",
+          "Consistent across all developer machines",
+          "Easier onboarding for new developers"
+        ],
+        "negative": [
+          "Slightly slower hot-reload (volume mounts)",
+          "Docker knowledge required",
+          "Additional setup complexity"
+        ]
+      },
+      "implementation_status": "COMPLETE - Docker Compose operational"
+    },
+    {
+      "id": "ADR-003",
+      "title": "Fluid Responsive Design System",
+      "status": "ACCEPTED",
+      "date": "2025-10-28",
+      "context": "Discrete Tailwind breakpoints (sm:/md:/lg:) only adapt at specific widths. Users resize windows to arbitrary sizes (950px, 1350px, etc.), causing awkward layouts.",
+      "decision": "Use CSS Grid auto-fit + clamp() for truly fluid responsive design",
+      "consequences": {
+        "positive": [
+          "Smooth adaptation at ANY viewport width",
+          "Cleaner code (fewer breakpoint classes)",
+          "Better user experience (no layout jumps)",
+          "Future-proof (works on any screen size)"
+        ],
+        "negative": [
+          "Requires CSS Grid knowledge",
+          "Less familiar pattern than Tailwind breakpoints",
+          "Browser support: IE11 not supported (acceptable)"
+        ]
+      },
+      "implementation_status": "COMPLETE - All pages use fluid design"
+    },
+    {
+      "id": "ADR-004",
+      "title": "MANDATORY API Verification Protocol (PAT-006)",
+      "status": "ACCEPTED",
+      "date": "2025-10-28",
+      "context": "Learned from BRIK-64 project: Speculation-driven API design causes 30-50 compilation errors and wastes 2+ hours. Reading APIs first prevents all these errors.",
+      "decision": "PAT-006 protocol is MANDATORY before any integration work",
+      "consequences": {
+        "positive": [
+          "Zero speculation errors",
+          "Code works first time",
+          "~2 hours saved per integration phase",
+          "High confidence in designs"
+        ],
+        "negative": [
+          "30 minutes upfront investment",
+          "Requires discipline to follow process"
+        ]
+      },
+      "implementation_status": "ADOPTED - Part of SOLARIA methodology",
+      "roi": "2+ hours saved for 30 minutes investment = 400% ROI"
+    },
+    {
+      "id": "ADR-005",
+      "title": "Multi-Agent Specialized Architecture",
+      "status": "ACCEPTED",
+      "date": "2025-10-28",
+      "context": "Single-agent approach requires CTO micromanagement and lacks domain expertise. Need specialized agents for backend, frontend, infra, security, testing.",
+      "decision": "Implement 10-agent system with project-coordinator as orchestrator",
+      "consequences": {
+        "positive": [
+          "CTO focuses on strategic decisions (70% time savings)",
+          "Domain expertise in each area",
+          "Parallel execution of independent tasks",
+          "Consistent quality (security audit mandatory)",
+          "Better documentation (each agent documents work)"
+        ],
+        "negative": [
+          "Initial setup cost (agent creation)",
+          "Coordination overhead",
+          "Learning curve for team"
+        ]
+      },
+      "implementation_status": "IN PROGRESS - 3 agents created (coordinator, backend, testing)",
+      "agents_created": [
+        "project-coordinator",
+        "strapi-cms-architect",
+        "testing-automation-specialist"
+      ],
+      "agents_existing": [
+        "react-frontend-dev",
+        "infra-devops-architect",
+        "postgresql-schema-architect",
+        "security-gdpr-compliance",
+        "bullmq-worker-automation"
+      ]
+    },
+    {
+      "id": "ADR-006",
+      "title": "Zero Technical Debt Policy",
+      "status": "ACCEPTED",
+      "date": "2025-10-28",
+      "context": "Technical debt compounds exponentially. BRIK-64 project achieved 0 technical debt through immediate fixing. Small debts become blockers later.",
+      "decision": "Adopt Zero Technical Debt policy - fix immediately, never defer",
+      "consequences": {
+        "positive": [
+          "Code always in maintainable state",
+          "No surprises later",
+          "Easy to modify and extend",
+          "High team morale (no legacy debt)"
+        ],
+        "negative": [
+          "Slower short-term progress (stop to fix)",
+          "Requires discipline",
+          "May feel inefficient in moment"
+        ]
+      },
+      "implementation_status": "ADOPTED - Part of SOLARIA methodology",
+      "protocol": "STOP → AUDIT → ROOT CAUSE → FIX → DOCUMENT → LEARN"
+    },
+    {
+      "id": "ADR-007",
+      "title": "TDD-First with 80% Coverage Target",
+      "status": "ACCEPTED",
+      "date": "2025-10-28",
+      "context": "Current test coverage <20%. Regression risks high. TDD prevents bugs before they exist. Industry standard is 80%+ for critical systems.",
+      "decision": "Adopt TDD workflow with 80% minimum coverage target",
+      "consequences": {
+        "positive": [
+          "Bugs caught at design time",
+          "Regression protection",
+          "Better architecture (testable code)",
+          "Documentation via tests",
+          "CI/CD confidence"
+        ],
+        "negative": [
+          "Slower initial development",
+          "Learning curve for TDD",
+          "More code to maintain (test code)"
+        ]
+      },
+      "implementation_status": "ADOPTED - testing-automation-specialist agent created",
+      "current_coverage": "Frontend <20%, Backend 0%",
+      "target": "80%+ for all new code"
+    }
+  ]
+}

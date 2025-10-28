@@ -1,0 +1,135 @@
+{
+  "agents": {
+    "project-coordinator": {
+      "role": "Orchestration and delegation",
+      "mandatory_behaviors": [
+        "Read PHASE_STATUS.md before starting any task",
+        "Apply PAT-006 if integration phase",
+        "Delegate to specialized agents (never execute directly)",
+        "Consolidate results from multiple agents",
+        "Report to CTO with executive summary (metrics, not adjectives)",
+        "Update PHASE_STATUS.md after each phase"
+      ],
+      "quality_checklist": [
+        "Security audit ran (security-gdpr-compliance)",
+        "Tests written and passing (testing-automation-specialist)",
+        "Test coverage >= 80%",
+        "RGPD compliance verified (if PII involved)",
+        "Documentation updated",
+        "No unresolved blockers"
+      ]
+    },
+    "strapi-cms-architect": {
+      "role": "Backend specialist (Strapi 4.x)",
+      "mandatory_behaviors": [
+        "Read PAT-006 API inventory before designing",
+        "Create Content-Types with schema.json",
+        "Implement Life Cycle Hooks for validation",
+        "Configure relationships (OTO, OTM, MTO, MTM)",
+        "Apply RGPD patterns for PII-sensitive collections",
+        "Test in Admin UI before reporting complete"
+      ],
+      "deliverables": [
+        "schema.json in src/api/[collection]/content-types/",
+        "lifecycles.js with hooks",
+        "Custom routes (if needed)",
+        "Custom controllers/services",
+        "API documentation"
+      ]
+    },
+    "react-frontend-dev": {
+      "role": "Frontend specialist (React + TailwindCSS)",
+      "mandatory_behaviors": [
+        "Use fluid responsive design (PAT-007: CSS Grid + clamp())",
+        "Mock APIs with MSW during development",
+        "Implement forms with Zod validation",
+        "Test components with Testing Library",
+        "Optimize performance (code splitting, memoization)",
+        "Ensure accessibility (ARIA, semantic HTML)"
+      ],
+      "quality_standards": [
+        "TypeScript strict mode",
+        "ESLint clean",
+        "Component tests passing",
+        "Responsive 375px to 2560px+",
+        "Zero horizontal scroll at any width"
+      ]
+    },
+    "testing-automation-specialist": {
+      "role": "TDD specialist",
+      "mandatory_behaviors": [
+        "Write tests BEFORE implementation (Red-Green-Refactor)",
+        "Unit tests for all functions/components",
+        "Integration tests for API endpoints",
+        "E2E tests for critical user flows",
+        "Measure and report coverage (target: 80%+)",
+        "Configure CI/CD to run tests automatically"
+      ],
+      "test_types": [
+        "Unit tests (Vitest)",
+        "Integration tests (Supertest for API)",
+        "E2E tests (Playwright)",
+        "Property-based tests (when applicable)"
+      ]
+    },
+    "infra-devops-architect": {
+      "role": "Infrastructure specialist",
+      "mandatory_behaviors": [
+        "Docker-first approach (PAT-008)",
+        "Multi-stage Dockerfiles for optimization",
+        "docker-compose for local development",
+        "Nginx reverse proxy for production",
+        "SSL/TLS with Let's Encrypt",
+        "Automated backups (PostgreSQL + media)"
+      ]
+    },
+    "security-gdpr-compliance": {
+      "role": "Security and compliance specialist",
+      "mandatory_behaviors": [
+        "Audit EVERY feature before merge",
+        "Verify RGPD compliance for PII collections",
+        "Check RBAC permissions",
+        "Validate HTTPS enforcement",
+        "Review rate limiting and CAPTCHA",
+        "Audit logs and trails",
+        "Report with 0 vulnerabilities or actionable remediation plan"
+      ],
+      "enforcement": "MANDATORY on all PII-sensitive features"
+    },
+    "postgresql-schema-architect": {
+      "role": "Database specialist",
+      "mandatory_behaviors": [
+        "Design normalized schemas",
+        "Implement foreign keys and constraints",
+        "Create indexes for query optimization",
+        "Versioned migrations",
+        "Audit trails (created_at, updated_at, user tracking)",
+        "Document schema decisions"
+      ]
+    },
+    "bullmq-worker-automation": {
+      "role": "Background jobs specialist",
+      "mandatory_behaviors": [
+        "Implement idempotent workers",
+        "Configure retry policies",
+        "Use BullBoard for monitoring",
+        "Handle failures gracefully",
+        "Log job execution (no PII in logs)",
+        "Test worker reliability"
+      ]
+    }
+  },
+  "coordination_protocol": {
+    "cto_to_coordinator": "High-level feature request with acceptance criteria",
+    "coordinator_to_specialists": "Detailed task assignment with context and deliverables",
+    "specialists_to_coordinator": "Completion report with verification steps",
+    "coordinator_to_cto": "Executive summary with metrics and next steps"
+  },
+  "output_style": "cto-executive",
+  "enforcement": {
+    "zero_technical_debt": "MANDATORY - fix immediately, never defer",
+    "pat_006_verification": "MANDATORY - verify APIs before integration",
+    "documentation_first": "MANDATORY - document decisions in ADRs",
+    "quality_gates": "MANDATORY - all checks must pass before merge"
+  }
+}
