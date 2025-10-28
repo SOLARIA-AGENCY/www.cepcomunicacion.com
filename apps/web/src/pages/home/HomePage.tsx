@@ -15,22 +15,22 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Hero Section */}
-      <section className="hero bg-gradient-to-r from-primary to-primary-light text-white py-20">
+      {/* Hero Section - Fluid Responsive */}
+      <section className="hero bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}>
         <div className="container">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl font-bold mb-6">
+          <div className="max-w-3xl xl:max-w-4xl mx-auto text-center">
+            <h1 className="text-fluid-hero font-bold mb-4 md:mb-6">
               Formación Profesional de Calidad
             </h1>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-fluid-hero-sub mb-6 md:mb-8 opacity-90">
               Cursos presenciales, online y semipresenciales. Ciclos formativos y formación
               para el empleo con ayudas disponibles.
             </p>
-            <div className="flex gap-4 flex-wrap">
-              <Link to="/cursos" className="btn-primary bg-white text-primary hover:bg-neutral-100">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Link to="/cursos" className="btn-primary bg-white text-primary hover:bg-neutral-100 text-center text-sm md:text-base">
                 Ver Cursos
               </Link>
-              <Link to="/contacto" className="btn-secondary border-white text-white hover:bg-white hover:text-primary">
+              <Link to="/contacto" className="btn-secondary bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary text-center text-sm md:text-base">
                 Solicitar Información
               </Link>
             </div>
@@ -38,19 +38,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Courses Section */}
-      <section className="py-16 bg-neutral-50">
+      {/* Featured Courses Section - Fluid Responsive */}
+      <section className="bg-neutral-50" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-2">Cursos Destacados</h2>
-            <p className="text-neutral-600">
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-fluid-section-title font-bold mb-2">Cursos Destacados</h2>
+            <p className="text-fluid-body text-neutral-600 text-left">
               Descubre nuestros cursos más populares y con mayor demanda
             </p>
           </div>
 
           {/* Loading State */}
           {featuredCoursesState.status === 'loading' && (
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid-fluid-cards">
               <CourseCardSkeleton />
               <CourseCardSkeleton />
               <CourseCardSkeleton />
@@ -69,7 +69,7 @@ export default function HomePage() {
             <>
               {featuredCoursesState.data && featuredCoursesState.data.length > 0 ? (
                 <>
-                  <div className="grid md:grid-cols-3 gap-8">
+                  <div className="grid-fluid-cards">
                     {featuredCoursesState.data.slice(0, 3).map((course) => (
                       <CourseCard key={course.id} course={course} />
                     ))}
@@ -113,10 +113,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16">
+      {/* Features Section - Fluid Responsive */}
+      <section style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid-fluid-features">
             {/* Feature 1 */}
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
@@ -134,8 +134,8 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Formación de Calidad</h3>
-              <p className="text-neutral-600">
+              <h3 className="font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Formación de Calidad</h3>
+              <p className="text-fluid-body text-neutral-600 text-center">
                 Cursos homologados con docentes expertos y contenidos actualizados
               </p>
             </div>
@@ -157,8 +157,8 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Ayudas Disponibles</h3>
-              <p className="text-neutral-600">
+              <h3 className="font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Ayudas Disponibles</h3>
+              <p className="text-fluid-body text-neutral-600 text-center">
                 Acceso a becas y financiación para facilitar tu formación profesional
               </p>
             </div>
@@ -180,8 +180,8 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Flexibilidad</h3>
-              <p className="text-neutral-600">
+              <h3 className="font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Flexibilidad</h3>
+              <p className="text-fluid-body text-neutral-600 text-center">
                 Modalidades presencial, online y semipresencial para adaptarnos a ti
               </p>
             </div>
@@ -189,17 +189,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-secondary text-white py-16">
+      {/* CTA Section - Fluid Responsive */}
+      <section className="bg-secondary text-white" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-fluid-section-title font-bold mb-4 md:mb-6">
             ¿Listo para dar el siguiente paso?
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <p className="text-fluid-hero-sub mb-6 md:mb-8 opacity-90 max-w-2xl xl:max-w-3xl mx-auto px-4">
             Contacta con nosotros y te ayudaremos a encontrar el curso perfecto para
             impulsar tu carrera profesional
           </p>
-          <Link to="/contacto" className="btn-primary bg-white text-secondary hover:bg-neutral-100">
+          <Link to="/contacto" className="btn-primary bg-white text-secondary hover:bg-neutral-100 inline-block">
             Solicitar Información
           </Link>
         </div>
