@@ -12,6 +12,9 @@ import { Courses } from './collections/Courses';
 import { CourseRuns } from './collections/CourseRuns';
 import { Students } from './collections/Students';
 import { Enrollments } from './collections/Enrollments';
+import { Leads } from './collections/Leads';
+import { Campaigns } from './collections/Campaigns';
+import { AdsTemplates } from './collections/AdsTemplates';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -68,6 +71,11 @@ export default buildConfig({
     CourseRuns,
     // Tier 3 Collections - Student Management (CRITICAL - Maximum GDPR Security)
     Students,
+    // Tier 3 Collections - Lead Management (CRITICAL - Public Endpoint + GDPR Security)
+    Leads,
+    // Tier 3 Collections - Marketing Management (Business Intelligence Protection)
+    Campaigns,
+    AdsTemplates,
     // Tier 4 Collections - Enrollment Management (CRITICAL - Financial Data Protection)
     Enrollments,
   ],
