@@ -15,6 +15,8 @@ import { Enrollments } from './collections/Enrollments';
 import { Leads } from './collections/Leads';
 import { Campaigns } from './collections/Campaigns';
 import { AdsTemplates } from './collections/AdsTemplates';
+import { BlogPosts } from './collections/BlogPosts';
+import { FAQs } from './collections/FAQs';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -78,6 +80,9 @@ export default buildConfig({
     AdsTemplates,
     // Tier 4 Collections - Enrollment Management (CRITICAL - Financial Data Protection)
     Enrollments,
+    // Content Management - Blog & Help Center
+    BlogPosts,
+    FAQs,
   ],
 
   // TypeScript type generation
