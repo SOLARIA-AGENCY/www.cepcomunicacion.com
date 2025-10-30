@@ -11,6 +11,7 @@ import { Campuses } from './collections/Campuses';
 import { Courses } from './collections/Courses';
 import { CourseRuns } from './collections/CourseRuns';
 import { Students } from './collections/Students';
+import { Enrollments } from './collections/Enrollments';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -67,6 +68,8 @@ export default buildConfig({
     CourseRuns,
     // Tier 3 Collections - Student Management (CRITICAL - Maximum GDPR Security)
     Students,
+    // Tier 4 Collections - Enrollment Management (CRITICAL - Financial Data Protection)
+    Enrollments,
   ],
 
   // TypeScript type generation
