@@ -19,7 +19,8 @@ const MODALITY_LABELS = {
   hibrido: 'Semipresencial',
 } as const;
 
-export default async function CourseDetailPage({ params }: { params: { slug: string } }) {
+export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const payload = await getPayload({ config: configPromise });
 
   // Fetch course by slug
@@ -27,7 +28,7 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
     collection: 'courses',
     where: {
       slug: {
-        equals: params.slug,
+        equals: slug,
       },
     },
     limit: 1,
@@ -58,7 +59,7 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
             <span>/</span>
             <Link href="/cursos" className="hover:text-primary transition-colors">Cursos</Link>
             <span>/</span>
-            <span className="text-neutral-900 font-medium">{course.title}</span>
+            <span className="text-neutral-900 font-medium">{course.name}</span>
           </nav>
         </div>
       </section>
@@ -77,12 +78,12 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
             )}
 
             {/* Title */}
-            <h1 className="text-fluid-section-title font-bold mb-4">{course.title}</h1>
+            <h1 className="text-fluid-section-title font-bold mb-4">{course.name}</h1>
 
-            {/* Short Description */}
-            {course.short_description && (
+            {/* Description */}
+            {course.description && (
               <p className="text-fluid-body opacity-90 mb-6">
-                {course.short_description}
+                {course.description}
               </p>
             )}
 

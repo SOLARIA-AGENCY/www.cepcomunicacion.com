@@ -38,6 +38,9 @@ export function Header() {
             <Link href="/faq" className="text-neutral-700 hover:text-primary transition-colors hidden xl:inline">
               FAQ
             </Link>
+            <Link href="/design-hub" className="text-neutral-400 hover:text-primary transition-colors text-xs lg:text-sm hidden xl:inline">
+              Design Hub
+            </Link>
             <Link href="/contacto" className="btn-primary py-2 px-3 lg:px-4 text-xs lg:text-sm">
               Contacto
             </Link>
@@ -99,6 +102,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 FAQ
+              </Link>
+              <Link
+                href="/design-hub"
+                className="text-neutral-400 hover:text-primary transition-colors text-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Design Hub
               </Link>
               <Link
                 href="/contacto"
