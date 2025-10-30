@@ -9,14 +9,6 @@ import { Users } from './collections/Users';
 import { Cycles } from './collections/Cycles';
 import { Campuses } from './collections/Campuses';
 import { Courses } from './collections/Courses';
-import { CourseRuns } from './collections/CourseRuns';
-import { Students } from './collections/Students';
-import { Enrollments } from './collections/Enrollments';
-import { Leads } from './collections/Leads';
-import { Campaigns } from './collections/Campaigns';
-import { AdsTemplates } from './collections/AdsTemplates';
-import { BlogPosts } from './collections/BlogPosts';
-import { FAQs } from './collections/FAQs';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -69,20 +61,6 @@ export default buildConfig({
     Campuses,
     // Tier 1 Collections - Content
     Courses,
-    // Tier 2 Collections - Course Management
-    CourseRuns,
-    // Tier 3 Collections - Student Management (CRITICAL - Maximum GDPR Security)
-    Students,
-    // Tier 3 Collections - Lead Management (CRITICAL - Public Endpoint + GDPR Security)
-    Leads,
-    // Tier 3 Collections - Marketing Management (Business Intelligence Protection)
-    Campaigns,
-    AdsTemplates,
-    // Tier 4 Collections - Enrollment Management (CRITICAL - Financial Data Protection)
-    Enrollments,
-    // Content Management - Blog & Help Center
-    BlogPosts,
-    FAQs,
   ],
 
   // TypeScript type generation
