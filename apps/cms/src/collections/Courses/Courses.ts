@@ -126,6 +126,20 @@ export const Courses: CollectionConfig = {
     },
 
     /**
+     * Featured Image - Course image for cards and hero sections
+     * Relationship to Media collection
+     */
+    {
+      name: 'featured_image',
+      type: 'upload',
+      relationTo: 'media',
+      required: false,
+      admin: {
+        description: 'Main image displayed on course cards and detail page',
+      },
+    },
+
+    /**
      * Cycle - Educational cycle relationship (required)
      * Many-to-One relationship
      */

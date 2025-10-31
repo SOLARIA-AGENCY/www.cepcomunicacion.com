@@ -151,8 +151,9 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         onClick={handleClick}
         role="button"
         tabIndex={0}
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault(); // Prevent default space scrolling
             handleClick();
           }
         }}

@@ -3,6 +3,11 @@ import { postgresAdapter } from '@payloadcms/db-postgres';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { s3Storage } from '@payloadcms/storage-s3';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Import collections (will be implemented next with TDD methodology)
 import { Cycles } from './collections/Cycles/Cycles';
@@ -17,7 +22,7 @@ import { Campaigns } from './collections/Campaigns/Campaigns';
 import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
-import { Media } from './collections/Media/Media';
+import { Media } from './collections/Media';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 // import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 

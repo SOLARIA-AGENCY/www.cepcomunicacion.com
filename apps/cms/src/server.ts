@@ -2,6 +2,12 @@ import express from 'express';
 import payload from 'payload';
 import { config } from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import payloadConfig from './payload.config.js';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 config({ path: path.resolve(__dirname, '../.env') });
@@ -13,6 +19,7 @@ const PORT = process.env.PORT || 3001;
 const start = async (): Promise<void> => {
   // Initialize Payload
   await payload.init({
+    config: payloadConfig,
     secret: process.env.PAYLOAD_SECRET!,
     express: app,
     onInit: async () => {
