@@ -23,8 +23,8 @@ import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
 import { Media } from './collections/Media';
+import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
-// import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
@@ -58,9 +58,9 @@ export default buildConfig({
     FAQs, // ✅ Frequently Asked Questions
     Media, // ✅ File uploads with S3 storage
 
-    // Metadata & Compliance
+    // Compliance & System
+    AuditLogs, // ✅ GDPR Article 30 compliance - Immutable audit trail
     // SEOMetadata,
-    // AuditLogs,
   ],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'YOUR_SECRET_HERE',
