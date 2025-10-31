@@ -1,0 +1,16 @@
+# Grafana Dashboard Provisioning Configuration
+# Automatically load dashboards from JSON files on startup
+
+apiVersion: 1
+
+providers:
+  - name: 'CEPComunicacion Dashboards'
+    orgId: 1
+    folder: 'CEPComunicacion v2'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: true

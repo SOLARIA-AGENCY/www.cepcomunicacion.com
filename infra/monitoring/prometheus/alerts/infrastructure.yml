@@ -1,0 +1,378 @@
+# Infrastructure Alert Rules for CEPComunicacion v2
+# These alerts monitor system resources, containers, and infrastructure health
+
+groups:
+  - name: system_resources
+    interval: 30s
+    rules:
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: |
+          100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+          category: system
+          team: platform
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% on {{ $labels.instance }} (threshold: 80%)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-cpu"
+
+      # Critical CPU usage
+      - alert: CriticalCPUUsage
+        expr: |
+          100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 5m
+        labels:
+          severity: critical
+          category: system
+          team: platform
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% on {{ $labels.instance }} - immediate action required"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-cpu"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)
+            /
+            node_memory_MemTotal_bytes
+          ) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+          category: system
+          team: platform
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }} (threshold: 80%)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-memory"
+
+      # Critical memory usage
+      - alert: CriticalMemoryUsage
+        expr: |
+          (
+            (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)
+            /
+            node_memory_MemTotal_bytes
+          ) * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+          category: system
+          team: platform
+        annotations:
+          summary: "Critical memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }} - OOM risk"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-memory"
+
+      # Disk space low
+      - alert: DiskSpaceLow
+        expr: |
+          (
+            (node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"}
+            /
+            node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"})
+          ) * 100 < 20
+        for: 5m
+        labels:
+          severity: warning
+          category: system
+          team: platform
+        annotations:
+          summary: "Disk space low on {{ $labels.instance }}"
+          description: "Available disk space is {{ $value | humanize }}% on {{ $labels.mountpoint }}"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/low-disk-space"
+
+      # Disk space critically low
+      - alert: DiskSpaceCritical
+        expr: |
+          (
+            (node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"}
+            /
+            node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"})
+          ) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+          category: system
+          team: platform
+        annotations:
+          summary: "Disk space critically low on {{ $labels.instance }}"
+          description: "Available disk space is {{ $value | humanize }}% on {{ $labels.mountpoint }} - immediate cleanup required"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/low-disk-space"
+
+      # High disk I/O
+      - alert: HighDiskIO
+        expr: |
+          rate(node_disk_io_time_seconds_total[5m]) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          category: system
+          team: platform
+        annotations:
+          summary: "High disk I/O on {{ $labels.instance }}"
+          description: "Disk {{ $labels.device }} I/O utilization is {{ $value | humanizePercentage }}"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-disk-io"
+
+      # Network receive errors
+      - alert: NetworkReceiveErrors
+        expr: |
+          rate(node_network_receive_errs_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          category: network
+          team: platform
+        annotations:
+          summary: "Network receive errors on {{ $labels.instance }}"
+          description: "{{ $labels.device }} is experiencing {{ $value }} receive errors/second"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/network-errors"
+
+      # Network transmit errors
+      - alert: NetworkTransmitErrors
+        expr: |
+          rate(node_network_transmit_errs_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          category: network
+          team: platform
+        annotations:
+          summary: "Network transmit errors on {{ $labels.instance }}"
+          description: "{{ $labels.device }} is experiencing {{ $value }} transmit errors/second"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/network-errors"
+
+      # System load high
+      - alert: HighSystemLoad
+        expr: |
+          node_load15 / count(node_cpu_seconds_total{mode="idle"}) without (cpu, mode) > 2
+        for: 10m
+        labels:
+          severity: warning
+          category: system
+          team: platform
+        annotations:
+          summary: "High system load on {{ $labels.instance }}"
+          description: "15-minute load average is {{ $value }} (threshold: 2x CPU cores)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-load"
+
+  - name: docker_containers
+    interval: 30s
+    rules:
+      # Container down
+      - alert: ContainerDown
+        expr: |
+          time() - container_last_seen{name=~"cepcomunicacion_.*"} > 60
+        for: 2m
+        labels:
+          severity: critical
+          category: containers
+          team: platform
+        annotations:
+          summary: "Container {{ $labels.name }} is down"
+          description: "Container {{ $labels.name }} has been down for more than 2 minutes"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/container-down"
+
+      # Container restarting frequently
+      - alert: ContainerRestartingFrequently
+        expr: |
+          rate(container_restart_count[15m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          category: containers
+          team: platform
+        annotations:
+          summary: "Container {{ $labels.name }} is restarting frequently"
+          description: "Container {{ $labels.name }} has restarted {{ $value }} times in the last 15 minutes"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/container-restarts"
+
+      # Container high CPU
+      - alert: ContainerHighCPU
+        expr: |
+          (
+            sum(rate(container_cpu_usage_seconds_total{name=~"cepcomunicacion_.*"}[5m])) by (name)
+            /
+            sum(container_spec_cpu_quota{name=~"cepcomunicacion_.*"} / container_spec_cpu_period{name=~"cepcomunicacion_.*"}) by (name)
+          ) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          category: containers
+          team: platform
+        annotations:
+          summary: "Container {{ $labels.name }} high CPU usage"
+          description: "Container {{ $labels.name }} is using {{ $value | humanizePercentage }} of allocated CPU"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/container-high-cpu"
+
+      # Container high memory
+      - alert: ContainerHighMemory
+        expr: |
+          (
+            container_memory_working_set_bytes{name=~"cepcomunicacion_.*"}
+            /
+            container_spec_memory_limit_bytes{name=~"cepcomunicacion_.*"}
+          ) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          category: containers
+          team: platform
+        annotations:
+          summary: "Container {{ $labels.name }} high memory usage"
+          description: "Container {{ $labels.name }} is using {{ $value | humanizePercentage }} of allocated memory"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/container-high-memory"
+
+      # Container OOM killed
+      - alert: ContainerOOMKilled
+        expr: |
+          increase(container_oom_events_total{name=~"cepcomunicacion_.*"}[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          category: containers
+          team: platform
+        annotations:
+          summary: "Container {{ $labels.name }} was OOM killed"
+          description: "Container {{ $labels.name }} was killed by OOM killer - increase memory limits"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/container-oom"
+
+  - name: nginx_alerts
+    interval: 30s
+    rules:
+      # Nginx high connection count
+      - alert: NginxHighConnections
+        expr: |
+          nginx_connections_active > 1000
+        for: 5m
+        labels:
+          severity: warning
+          category: webserver
+          team: platform
+        annotations:
+          summary: "Nginx has high active connections"
+          description: "Nginx has {{ $value }} active connections (threshold: 1000)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/nginx-connections"
+
+      # Nginx high request rate
+      - alert: NginxHighRequestRate
+        expr: |
+          rate(nginx_http_requests_total[5m]) > 5000
+        for: 5m
+        labels:
+          severity: warning
+          category: webserver
+          team: platform
+        annotations:
+          summary: "Nginx request rate is high"
+          description: "Nginx is handling {{ $value }} requests/second (threshold: 5000 rps)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/nginx-high-rate"
+
+      # Nginx errors
+      - alert: NginxErrors
+        expr: |
+          rate(nginx_http_requests_total{status=~"5.."}[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          category: webserver
+          team: platform
+        annotations:
+          summary: "Nginx is returning 5xx errors"
+          description: "Nginx is returning {{ $value }} 5xx errors/second"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/nginx-errors"
+
+  - name: ssl_certificates
+    interval: 1h
+    rules:
+      # SSL certificate expiring soon
+      - alert: SSLCertificateExpiringSoon
+        expr: |
+          (probe_ssl_earliest_cert_expiry - time()) / 86400 < 30
+        for: 1h
+        labels:
+          severity: warning
+          category: ssl
+          team: platform
+        annotations:
+          summary: "SSL certificate for {{ $labels.instance }} expiring soon"
+          description: "SSL certificate for {{ $labels.instance }} expires in {{ $value }} days"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/ssl-renewal"
+
+      # SSL certificate expiring very soon
+      - alert: SSLCertificateExpiringVerySoon
+        expr: |
+          (probe_ssl_earliest_cert_expiry - time()) / 86400 < 7
+        for: 1h
+        labels:
+          severity: critical
+          category: ssl
+          team: platform
+        annotations:
+          summary: "SSL certificate for {{ $labels.instance }} expiring very soon"
+          description: "SSL certificate for {{ $labels.instance }} expires in {{ $value }} days - renew immediately"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/ssl-renewal"
+
+  - name: uptime_monitoring
+    interval: 1m
+    rules:
+      # Website down
+      - alert: WebsiteDown
+        expr: |
+          probe_success{job="blackbox-http"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          category: uptime
+          team: platform
+        annotations:
+          summary: "Website {{ $labels.instance }} is down"
+          description: "{{ $labels.instance }} has been unreachable for 2 minutes"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/website-down"
+
+      # Slow response time
+      - alert: SlowResponseTime
+        expr: |
+          probe_http_duration_seconds{job="blackbox-http"} > 5
+        for: 5m
+        labels:
+          severity: warning
+          category: uptime
+          team: platform
+        annotations:
+          summary: "{{ $labels.instance }} is responding slowly"
+          description: "{{ $labels.instance }} response time is {{ $value }}s (threshold: 5s)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/slow-response"
+
+      # Database connection failure
+      - alert: DatabaseConnectionFailure
+        expr: |
+          probe_success{job="blackbox-tcp",instance="postgres:5432"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          category: uptime
+          team: backend
+        annotations:
+          summary: "Cannot connect to PostgreSQL"
+          description: "PostgreSQL TCP connection has been failing for 2 minutes"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/db-connection-failure"
+
+      # Redis connection failure
+      - alert: RedisConnectionFailure
+        expr: |
+          probe_success{job="blackbox-tcp",instance="redis:6379"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          category: uptime
+          team: backend
+        annotations:
+          summary: "Cannot connect to Redis"
+          description: "Redis TCP connection has been failing for 2 minutes"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/redis-connection-failure"

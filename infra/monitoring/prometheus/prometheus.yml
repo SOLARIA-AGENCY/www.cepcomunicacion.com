@@ -1,0 +1,219 @@
+# Prometheus Configuration for CEPComunicacion v2
+# Version: 1.0.0
+# Last Updated: 2025-10-31
+
+global:
+  scrape_interval: 15s           # Scrape targets every 15 seconds
+  evaluation_interval: 15s       # Evaluate rules every 15 seconds
+  scrape_timeout: 10s            # Timeout after 10 seconds
+  external_labels:
+    cluster: 'cepcomunicacion-prod'
+    environment: 'production'
+    project: 'cepcomunicacion-v2'
+    datacenter: 'hostinger-srv943151'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+      timeout: 10s
+      api_version: v2
+
+# Rule files
+rule_files:
+  - '/etc/prometheus/alerts/*.yml'
+  - '/etc/prometheus/rules/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+          component: 'monitoring'
+
+  # Node Exporter - System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'system'
+          component: 'node-exporter'
+          instance: 'srv943151'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'srv943151'
+
+  # PostgreSQL Exporter - Database metrics
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'database'
+          component: 'postgresql'
+          database: 'cepcomunicacion'
+    scrape_interval: 30s
+
+  # cAdvisor - Docker container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          service: 'containers'
+          component: 'cadvisor'
+    metric_relabel_configs:
+      # Drop unnecessary metrics to save storage
+      - source_labels: [__name__]
+        regex: 'container_tasks_state|container_cpu_usage_seconds_total'
+        action: drop
+
+  # Redis Exporter - Cache and queue metrics
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'cache'
+          component: 'redis'
+          usage: 'bullmq-queue'
+
+  # Nginx Exporter - Web server metrics
+  - job_name: 'nginx-exporter'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+        labels:
+          service: 'webserver'
+          component: 'nginx'
+
+  # Next.js Application Metrics
+  - job_name: 'nextjs-app'
+    static_configs:
+      - targets: ['web:3001']
+        labels:
+          service: 'frontend'
+          component: 'nextjs'
+          app: 'web'
+    metrics_path: '/api/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Payload CMS Metrics
+  - job_name: 'payload-cms'
+    static_configs:
+      - targets: ['cms:3000']
+        labels:
+          service: 'backend'
+          component: 'payload-cms'
+          app: 'cms'
+    metrics_path: '/api/metrics'
+    scrape_interval: 30s
+
+  # BullMQ Worker Metrics (if exposed)
+  - job_name: 'bullmq-workers'
+    static_configs:
+      - targets: ['worker:9090']
+        labels:
+          service: 'workers'
+          component: 'bullmq'
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Blackbox Exporter - HTTP/HTTPS probing
+  - job_name: 'blackbox-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - https://www.cepcomunicacion.com
+          - https://www.cepcomunicacion.com/api/health
+          - https://cms.cepcomunicacion.com/admin
+          - https://cms.cepcomunicacion.com/api/health
+        labels:
+          service: 'uptime'
+          component: 'blackbox'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Blackbox Exporter - ICMP probing
+  - job_name: 'blackbox-icmp'
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+          - 148.230.118.124
+        labels:
+          service: 'uptime'
+          component: 'blackbox'
+          probe_type: 'icmp'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Blackbox Exporter - TCP probing
+  - job_name: 'blackbox-tcp'
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+          - postgres:5432
+          - redis:6379
+        labels:
+          service: 'uptime'
+          component: 'blackbox'
+          probe_type: 'tcp'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Grafana self-monitoring
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+        labels:
+          service: 'monitoring'
+          component: 'grafana'
+    metrics_path: '/metrics'
+
+  # Loki self-monitoring
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']
+        labels:
+          service: 'logging'
+          component: 'loki'
+    metrics_path: '/metrics'
+
+  # Alertmanager self-monitoring
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['alertmanager:9093']
+        labels:
+          service: 'monitoring'
+          component: 'alertmanager'
+    metrics_path: '/metrics'
+
+# Remote write configuration (optional - for long-term storage)
+# remote_write:
+#   - url: 'https://prometheus.example.com/api/v1/write'
+#     basic_auth:
+#       username: 'admin'
+#       password: 'secret'

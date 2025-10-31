@@ -1,0 +1,290 @@
+version: '3.8'
+
+services:
+  # Prometheus - Metrics collection and storage
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: cepcomunicacion_prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts:/etc/prometheus/alerts:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.size=10GB'
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+      - cepcomunicacion_default
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=prometheus"
+
+  # Grafana - Visualization and dashboards
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: cepcomunicacion_grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-ChangeMe123!}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
+      - GF_SERVER_ROOT_URL=https://monitor.cepcomunicacion.com
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_LOG_MODE=console
+      - GF_LOG_LEVEL=info
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=${SMTP_HOST:-smtp.gmail.com:587}
+      - GF_SMTP_USER=${SMTP_USER}
+      - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
+      - GF_SMTP_FROM_ADDRESS=${SMTP_FROM:-alerts@cepcomunicacion.com}
+    ports:
+      - "3003:3000"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      - loki
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=grafana"
+
+  # Node Exporter - System metrics (CPU, memory, disk, network)
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: cepcomunicacion_node_exporter
+    command:
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - '/:/host:ro,rslave'
+      - '/proc:/host/proc:ro'
+      - '/sys:/host/sys:ro'
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=node-exporter"
+
+  # PostgreSQL Exporter - Database metrics
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: cepcomunicacion_postgres_exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER:-cepcomunicacion}:${POSTGRES_PASSWORD:-wGWxjMYsUWSBvlqw2Ck9KU2BKUI=}@postgres:5432/${POSTGRES_DB:-cepcomunicacion}?sslmode=disable
+      - PG_EXPORTER_EXTEND_QUERY_PATH=/etc/postgres-exporter/queries.yaml
+    volumes:
+      - ./postgres-exporter/queries.yaml:/etc/postgres-exporter/queries.yaml:ro
+    ports:
+      - "9187:9187"
+    networks:
+      - monitoring
+      - cepcomunicacion_default
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=postgres-exporter"
+
+  # cAdvisor - Docker container metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cepcomunicacion_cadvisor
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=cadvisor"
+
+  # Redis Exporter - Redis/BullMQ metrics
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.55.0
+    container_name: cepcomunicacion_redis_exporter
+    environment:
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+    ports:
+      - "9121:9121"
+    networks:
+      - monitoring
+      - cepcomunicacion_default
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=redis-exporter"
+
+  # Nginx Exporter - Web server metrics
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.0.0
+    container_name: cepcomunicacion_nginx_exporter
+    command:
+      - '--nginx.scrape-uri=http://nginx:8081/nginx_status'
+    ports:
+      - "9113:9113"
+    networks:
+      - monitoring
+      - cepcomunicacion_default
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=nginx-exporter"
+
+  # Loki - Log aggregation
+  loki:
+    image: grafana/loki:2.9.3
+    container_name: cepcomunicacion_loki
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=loki"
+
+  # Promtail - Log shipper
+  promtail:
+    image: grafana/promtail:2.9.3
+    container_name: cepcomunicacion_promtail
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - monitoring
+    restart: unless-stopped
+    depends_on:
+      - loki
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=promtail"
+
+  # Uptime Kuma - Uptime monitoring
+  uptime-kuma:
+    image: louislam/uptime-kuma:1.23.11
+    container_name: cepcomunicacion_uptime_kuma
+    volumes:
+      - uptime_kuma_data:/app/data
+    ports:
+      - "3004:3001"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=uptime-kuma"
+
+  # Alertmanager - Alert routing and management
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: cepcomunicacion_alertmanager
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=https://alerts.cepcomunicacion.com'
+    ports:
+      - "9093:9093"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=alertmanager"
+
+  # Blackbox Exporter - External endpoint monitoring
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.24.0
+    container_name: cepcomunicacion_blackbox_exporter
+    volumes:
+      - ./blackbox-exporter/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+    command:
+      - '--config.file=/etc/blackbox_exporter/config.yml'
+    ports:
+      - "9115:9115"
+    networks:
+      - monitoring
+    restart: unless-stopped
+    labels:
+      - "com.cepcomunicacion.service=monitoring"
+      - "com.cepcomunicacion.component=blackbox-exporter"
+
+volumes:
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/cepcomunicacion/monitoring/prometheus
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/cepcomunicacion/monitoring/grafana
+  loki_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/cepcomunicacion/monitoring/loki
+  uptime_kuma_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/cepcomunicacion/monitoring/uptime-kuma
+  alertmanager_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/cepcomunicacion/monitoring/alertmanager
+
+networks:
+  monitoring:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+  cepcomunicacion_default:
+    external: true
