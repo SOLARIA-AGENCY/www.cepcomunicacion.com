@@ -1,12 +1,11 @@
 /**
  * PostCSS Configuration
  *
- * Required for TailwindCSS v4
+ * Tailwind CSS 4.x requires @tailwindcss/postcss plugin
  */
 
 export default {
   plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
+    '@tailwindcss/postcss': {},
   },
 };

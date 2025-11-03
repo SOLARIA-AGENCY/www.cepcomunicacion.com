@@ -7,7 +7,7 @@
 
 import { memo, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Course } from '@types/index';
+import type { Course } from '../../types';
 
 export interface CourseCardProps {
   course: Course;

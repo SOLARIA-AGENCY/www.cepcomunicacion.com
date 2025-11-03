@@ -1,0 +1,69 @@
+{
+  "patterns": [
+    {
+      "id": "PAT-001",
+      "name": "Monorepo Workspace Structure",
+      "category": "architecture",
+      "description": "Clear modular structure with apps/ and packages/ separation",
+      "applicability": "All multi-app projects",
+      "confidence": 1.0
+    },
+    {
+      "id": "PAT-002",
+      "name": "Iterative Error Fixing",
+      "category": "development",
+      "description": "Fix one error at a time, compile, repeat until zero errors",
+      "applicability": "All compilation/build phases",
+      "confidence": 1.0
+    },
+    {
+      "id": "PAT-003",
+      "name": "Comprehensive Quality Checks",
+      "category": "quality",
+      "description": "Pre-commit checklist: fmt, lint, test, build, coverage",
+      "applicability": "All commits",
+      "confidence": 1.0
+    },
+    {
+      "id": "PAT-004",
+      "name": "Property-Based Testing",
+      "category": "testing",
+      "description": "Test algebraic properties and invariants, not just examples",
+      "applicability": "Business logic with mathematical properties",
+      "confidence": 0.9
+    },
+    {
+      "id": "PAT-005",
+      "name": "Two-Phase Architecture",
+      "category": "architecture",
+      "description": "Design-time verification + runtime execution (trust the proof)",
+      "applicability": "Systems with provable properties",
+      "confidence": 0.9
+    },
+    {
+      "id": "PAT-006",
+      "name": "API Verification Protocol (MANDATORY)",
+      "category": "integration",
+      "description": "Read all dependency APIs, document, verify before using",
+      "applicability": "Any code using external APIs/libraries",
+      "confidence": 1.0,
+      "enforcement": "MANDATORY"
+    },
+    {
+      "id": "PAT-007",
+      "name": "Fluid Responsive Design",
+      "category": "frontend",
+      "description": "CSS Grid auto-fit + clamp() for smooth scaling at any width",
+      "applicability": "Responsive web interfaces",
+      "confidence": 1.0
+    },
+    {
+      "id": "PAT-008",
+      "name": "Docker-First Development",
+      "category": "infrastructure",
+      "description": "Develop in containers to eliminate platform-specific issues",
+      "applicability": "All backend services",
+      "confidence": 1.0
+    }
+  ]
+}

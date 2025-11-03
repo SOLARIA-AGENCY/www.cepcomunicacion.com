@@ -11,7 +11,8 @@
  * </Accordion>
  */
 
-import { memo, useState, useCallback, ReactNode } from 'react';
+import { memo, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
 
 export interface AccordionProps {
   /**

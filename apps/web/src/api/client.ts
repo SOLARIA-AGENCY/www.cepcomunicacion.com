@@ -5,7 +5,18 @@
  * Base URL is proxied through Vite dev server to avoid CORS issues
  */
 
-import type { PaginatedResponse, SingleResponse } from '@types/index';
+import type {
+  PaginatedResponse,
+  SingleResponse,
+  Course,
+  CourseRun,
+  Campus,
+  Cycle,
+  Lead,
+  BlogPost,
+  FAQ,
+  Media,
+} from '../types';
 
 /**
  * API Configuration
@@ -88,7 +99,7 @@ class APIClient {
   /**
    * POST request
    */
-  async post<T>(endpoint: string, data: any): Promise<T> {
+  async post<T, TData = unknown>(endpoint: string, data: TData): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -98,7 +109,7 @@ class APIClient {
   /**
    * PUT request
    */
-  async put<T>(endpoint: string, data: any): Promise<T> {
+  async put<T, TData = unknown>(endpoint: string, data: TData): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -138,21 +149,21 @@ export const coursesAPI = {
     page?: number;
     limit?: number;
   }) {
-    return apiClient.get<PaginatedResponse<any>>('/courses', params);
+    return apiClient.get<PaginatedResponse<Course>>('/courses', params);
   },
 
   /**
    * Get single course by slug
    */
   async getBySlug(slug: string) {
-    return apiClient.get<any>(`/courses/${slug}`);
+    return apiClient.get<SingleResponse<Course>>(`/courses/${slug}`);
   },
 
   /**
    * Get single course by ID
    */
   async getById(id: string) {
-    return apiClient.get<any>(`/courses/${id}`);
+    return apiClient.get<SingleResponse<Course>>(`/courses/${id}`);
   },
 };
 
@@ -170,14 +181,14 @@ export const courseRunsAPI = {
     page?: number;
     limit?: number;
   }) {
-    return apiClient.get<PaginatedResponse<any>>('/course-runs', params);
+    return apiClient.get<PaginatedResponse<CourseRun>>('/course-runs', params);
   },
 
   /**
    * Get course runs for a specific course
    */
   async getByCourse(courseId: string) {
-    return apiClient.get<PaginatedResponse<any>>('/course-runs', {
+    return apiClient.get<PaginatedResponse<CourseRun>>('/course-runs', {
       'where[course][equals]': courseId,
       'where[status][in]': 'enrollment_open,in_progress',
     });
@@ -192,7 +203,7 @@ export const campusesAPI = {
    * Get all active campuses
    */
   async getAll() {
-    return apiClient.get<PaginatedResponse<any>>('/campuses', {
+    return apiClient.get<PaginatedResponse<Campus>>('/campuses', {
       'where[active][equals]': true,
     });
   },
@@ -201,7 +212,7 @@ export const campusesAPI = {
    * Get single campus by slug
    */
   async getBySlug(slug: string) {
-    return apiClient.get<any>(`/campuses/${slug}`);
+    return apiClient.get<SingleResponse<Campus>>(`/campuses/${slug}`);
   },
 };
 
@@ -213,7 +224,7 @@ export const cyclesAPI = {
    * Get all active cycles
    */
   async getAll() {
-    return apiClient.get<PaginatedResponse<any>>('/cycles', {
+    return apiClient.get<PaginatedResponse<Cycle>>('/cycles', {
       'where[active][equals]': true,
     });
   },
@@ -242,7 +253,7 @@ export const leadsAPI = {
     utm_term?: string;
     utm_content?: string;
   }) {
-    return apiClient.post<SingleResponse<any>>('/leads', data);
+    return apiClient.post<SingleResponse<Lead>>('/leads', data);
   },
 };
 
@@ -258,7 +269,7 @@ export const blogAPI = {
     limit?: number;
     tag?: string;
   }) {
-    return apiClient.get<PaginatedResponse<any>>('/blog-posts', {
+    return apiClient.get<PaginatedResponse<BlogPost>>('/blog-posts', {
       'where[status][equals]': 'published',
       ...params,
     });
@@ -268,7 +279,7 @@ export const blogAPI = {
    * Get single blog post by slug
    */
   async getBySlug(slug: string) {
-    return apiClient.get<any>(`/blog-posts/${slug}`);
+    return apiClient.get<SingleResponse<BlogPost>>(`/blog-posts/${slug}`);
   },
 };
 
@@ -282,7 +293,7 @@ export const faqsAPI = {
   async getAll(params?: {
     category?: string;
   }) {
-    return apiClient.get<PaginatedResponse<any>>('/faqs', {
+    return apiClient.get<PaginatedResponse<FAQ>>('/faqs', {
       'where[active][equals]': true,
       sort: 'order',
       ...params,
@@ -298,7 +309,7 @@ export const mediaAPI = {
    * Get media file by ID
    */
   async getById(id: string) {
-    return apiClient.get<any>(`/media/${id}`);
+    return apiClient.get<SingleResponse<Media>>(`/media/${id}`);
   },
 };
 

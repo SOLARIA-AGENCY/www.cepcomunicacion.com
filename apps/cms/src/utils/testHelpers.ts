@@ -96,7 +96,6 @@ export async function createTestCampus(payload: Payload) {
       address: '123 Test Street',
       city: 'Test City',
       postal_code: '28001',
-      province: 'Madrid',
     },
   });
 }
@@ -107,15 +106,14 @@ export async function createTestCampus(payload: Payload) {
  * @param cycleId - ID of the cycle to associate with
  * @returns Created course document
  */
-export async function createTestCourse(payload: Payload, cycleId: string) {
+export async function createTestCourse(payload: Payload, cycleId: number | string) {
   return await payload.create({
     collection: 'courses',
     data: {
       slug: 'test-course',
       name: 'Test Course',
-      code: 'TEST001',
-      cycle: cycleId,
-      description: 'Test course description',
+      cycle: typeof cycleId === 'string' ? parseInt(cycleId, 10) : cycleId,
+      modality: 'presencial',
     },
   });
 }

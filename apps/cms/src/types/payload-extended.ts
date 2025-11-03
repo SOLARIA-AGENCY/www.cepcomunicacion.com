@@ -10,7 +10,7 @@
  */
 
 import type { Express } from 'express';
-import type { Payload, FieldAccess } from 'payload';
+import type { Payload } from 'payload';
 
 declare module 'payload' {
   /**
@@ -25,23 +25,6 @@ declare module 'payload' {
      */
     express: Express;
   }
-
-  /**
-   * Extends Field types with access property
-   *
-   * All field types can have access control, but TypeScript
-   * union type Field doesn't include this in every variant.
-   */
-  interface Field {
-    /**
-     * Field-level access control
-     *
-     * Controls who can read/update/create/delete this field.
-     * Available on all field types but not always typed.
-     */
-    access?: FieldAccess<unknown, unknown>;
-  }
-
 }
 
 /**

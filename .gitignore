@@ -26,6 +26,12 @@ out/
 coverage/
 .nyc_output/
 
+# Playwright E2E Testing
+test-results/
+playwright-report/
+playwright/.cache/
+e2e/screenshots/
+
 # IDEs and editors
 .vscode/*
 !.vscode/settings.json

@@ -8,7 +8,8 @@
 
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { BlogPost, BlogPostCard } from '@components/ui';
+import type { BlogPost } from '@components/ui';
+import { BlogPostCard } from '@components/ui';
 
 // Static blog posts data (same as BlogPage - would be shared in production)
 const blogPostsData: BlogPost[] = [

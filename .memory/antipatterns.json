@@ -1,0 +1,63 @@
+{
+  "antipatterns": [
+    {
+      "id": "ANTI-001",
+      "name": "Optional Dependencies in Workspace Root",
+      "category": "architecture",
+      "description": "Using optional features in workspace root Cargo.toml",
+      "severity": "medium",
+      "examples": ["serde = { version = \"1.0\", optional = true } in workspace root"]
+    },
+    {
+      "id": "ANTI-002",
+      "name": "Eq Derive on Float Types",
+      "category": "typing",
+      "description": "Deriving Eq trait on structs containing f32/f64",
+      "severity": "high",
+      "examples": ["#[derive(Eq)] on struct with f32 field"],
+      "reason": "f32 cannot implement Eq (NaN != NaN)"
+    },
+    {
+      "id": "ANTI-003",
+      "name": "IndexMap without JsonSchema",
+      "category": "dependencies",
+      "description": "Using IndexMap when JsonSchema trait is required",
+      "severity": "medium",
+      "solution": "Use HashMap or BTreeMap instead"
+    },
+    {
+      "id": "ANTI-004",
+      "name": "Speculation-Driven API Design (CRITICAL)",
+      "category": "integration",
+      "description": "Assuming APIs exist without reading source code",
+      "severity": "critical",
+      "impact": "30-50 compilation errors, 2+ hours wasted",
+      "prevention": "Apply PAT-006 MANDATORY before any integration"
+    },
+    {
+      "id": "ANTI-005",
+      "name": "Technical Debt Hiding",
+      "category": "process",
+      "description": "Deferring fixes with 'I'll fix it later'",
+      "severity": "critical",
+      "signals": ["Lo arreglo después", "Skipear esta fase", "Los tests pueden esperar"],
+      "remedy": "STOP → AUDIT → ROOT CAUSE → FIX → DOCUMENT → LEARN"
+    },
+    {
+      "id": "ANTI-006",
+      "name": "Missing Phase Specification",
+      "category": "documentation",
+      "description": "Implementing without documented spec",
+      "severity": "high",
+      "prevention": "Create docs/specs/phase_N_spec.md BEFORE coding"
+    },
+    {
+      "id": "ANTI-007",
+      "name": "Discrete Breakpoint Overload",
+      "category": "frontend",
+      "description": "Using excessive sm:/md:/lg: classes instead of fluid CSS",
+      "severity": "medium",
+      "solution": "Use CSS Grid auto-fit and clamp() for true fluid responsive"
+    }
+  ]
+}

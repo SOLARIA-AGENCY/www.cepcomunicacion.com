@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { api } from '@api/client';
-import type { Course, CourseFilters, LoadingState } from '@types/index';
+import type { Course, CourseFilters, LoadingState } from '../types';
 
 export function useCourses(filters?: CourseFilters): LoadingState<Course[]> {
   const [state, setState] = useState<LoadingState<Course[]>>({
@@ -19,13 +19,7 @@ export function useCourses(filters?: CourseFilters): LoadingState<Course[]> {
   // Only re-compute when individual filter values change
   const memoizedFilters = useMemo(
     () => filters,
-    [
-      filters?.cycle,
-      filters?.campus,
-      filters?.modality,
-      filters?.featured,
-      filters?.search,
-    ]
+    [filters]
   );
 
   useEffect(() => {
@@ -33,7 +27,7 @@ export function useCourses(filters?: CourseFilters): LoadingState<Course[]> {
       setState({ status: 'loading', data: null, error: null });
 
       try {
-        const params: Record<string, any> = {
+        const params: Record<string, string | number | boolean> = {
           'where[active][equals]': true,
           limit: 100,
         };
@@ -100,7 +94,7 @@ export function useCourse(slug: string): LoadingState<Course> {
         const response = await api.courses.getBySlug(slug);
         setState({
           status: 'success',
-          data: response,
+          data: response.doc,
           error: null,
         });
       } catch (error) {

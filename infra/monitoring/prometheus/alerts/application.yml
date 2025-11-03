@@ -1,0 +1,324 @@
+# Application Alert Rules for CEPComunicacion v2
+# These alerts monitor application health, performance, and availability
+
+groups:
+  - name: application_availability
+    interval: 30s
+    rules:
+      # Service is down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+          category: availability
+          team: platform
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "{{ $labels.job }} on {{ $labels.instance }} has been down for more than 2 minutes."
+          runbook: "https://docs.cepcomunicacion.com/runbooks/service-down"
+
+      # High HTTP error rate (5xx errors)
+      - alert: HighHTTPErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m])) by (service, component)
+            /
+            sum(rate(http_requests_total[5m])) by (service, component)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          category: errors
+          team: backend
+        annotations:
+          summary: "High 5xx error rate on {{ $labels.service }}"
+          description: "{{ $labels.service }} ({{ $labels.component }}) has {{ $value | humanizePercentage }} error rate (threshold: 5%)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-error-rate"
+
+      # Client error rate elevated (4xx errors)
+      - alert: ElevatedClientErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"4.."}[5m])) by (service, component)
+            /
+            sum(rate(http_requests_total[5m])) by (service, component)
+          ) > 0.15
+        for: 10m
+        labels:
+          severity: warning
+          category: errors
+          team: backend
+        annotations:
+          summary: "Elevated 4xx error rate on {{ $labels.service }}"
+          description: "{{ $labels.service }} ({{ $labels.component }}) has {{ $value | humanizePercentage }} client error rate"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/client-errors"
+
+  - name: application_performance
+    interval: 30s
+    rules:
+      # Slow API responses (p95 latency)
+      - alert: SlowAPIResponses
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service, endpoint)
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+          team: backend
+        annotations:
+          summary: "API endpoint {{ $labels.endpoint }} is slow"
+          description: "95th percentile latency is {{ $value | humanizeDuration }} for {{ $labels.endpoint }} on {{ $labels.service }}"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/slow-api"
+
+      # Very slow API responses (p95 latency)
+      - alert: VerySlowAPIResponses
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service, endpoint)
+          ) > 5
+        for: 3m
+        labels:
+          severity: critical
+          category: performance
+          team: backend
+        annotations:
+          summary: "API endpoint {{ $labels.endpoint }} is critically slow"
+          description: "95th percentile latency is {{ $value | humanizeDuration }} for {{ $labels.endpoint }} on {{ $labels.service }}"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/slow-api"
+
+      # High request rate (potential DDoS)
+      - alert: HighRequestRate
+        expr: |
+          sum(rate(http_requests_total[5m])) by (service) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+          team: platform
+        annotations:
+          summary: "High request rate on {{ $labels.service }}"
+          description: "{{ $labels.service }} is receiving {{ $value }} requests/second (threshold: 1000 rps)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/high-request-rate"
+
+  - name: database_alerts
+    interval: 30s
+    rules:
+      # Database connection pool exhausted
+      - alert: DatabaseConnectionsHigh
+        expr: |
+          pg_stat_database_numbackends{datname="cepcomunicacion"} > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+          team: backend
+        annotations:
+          summary: "Database connections are high"
+          description: "{{ $value }} active connections to PostgreSQL (max: 100)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/db-connections"
+
+      # Database connection pool critically high
+      - alert: DatabaseConnectionsCritical
+        expr: |
+          pg_stat_database_numbackends{datname="cepcomunicacion"} > 90
+        for: 2m
+        labels:
+          severity: critical
+          category: database
+          team: backend
+        annotations:
+          summary: "Database connections critically high"
+          description: "{{ $value }} active connections to PostgreSQL (max: 100) - service may start rejecting requests"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/db-connections"
+
+      # Slow database queries
+      - alert: SlowDatabaseQueries
+        expr: |
+          rate(pg_stat_database_blks_read[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+          team: backend
+        annotations:
+          summary: "High database disk reads detected"
+          description: "Database is reading {{ $value }} blocks/sec from disk (potential slow queries or missing indexes)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/slow-queries"
+
+      # Database replication lag (if applicable)
+      - alert: DatabaseReplicationLag
+        expr: |
+          pg_replication_lag > 60
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+          team: backend
+        annotations:
+          summary: "Database replication lag detected"
+          description: "Replication lag is {{ $value }} seconds"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/replication-lag"
+
+  - name: queue_alerts
+    interval: 30s
+    rules:
+      # BullMQ queue size growing
+      - alert: QueueSizeGrowing
+        expr: |
+          bullmq_queue_waiting > 1000
+        for: 10m
+        labels:
+          severity: warning
+          category: queue
+          team: backend
+        annotations:
+          summary: "BullMQ queue {{ $labels.queue }} is growing"
+          description: "Queue {{ $labels.queue }} has {{ $value }} waiting jobs (threshold: 1000)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/queue-backlog"
+
+      # BullMQ queue critically backed up
+      - alert: QueueBacklogCritical
+        expr: |
+          bullmq_queue_waiting > 5000
+        for: 5m
+        labels:
+          severity: critical
+          category: queue
+          team: backend
+        annotations:
+          summary: "BullMQ queue {{ $labels.queue }} critically backed up"
+          description: "Queue {{ $labels.queue }} has {{ $value }} waiting jobs - workers may be stuck"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/queue-backlog"
+
+      # High job failure rate
+      - alert: HighJobFailureRate
+        expr: |
+          (
+            sum(rate(bullmq_job_failed_total[5m])) by (queue)
+            /
+            sum(rate(bullmq_job_completed_total[5m])) by (queue)
+          ) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          category: queue
+          team: backend
+        annotations:
+          summary: "High job failure rate in queue {{ $labels.queue }}"
+          description: "{{ $value | humanizePercentage }} of jobs in {{ $labels.queue }} are failing"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/job-failures"
+
+      # No workers processing jobs
+      - alert: NoActiveWorkers
+        expr: |
+          bullmq_workers_active == 0
+        for: 5m
+        labels:
+          severity: critical
+          category: queue
+          team: backend
+        annotations:
+          summary: "No active workers for queue {{ $labels.queue }}"
+          description: "Queue {{ $labels.queue }} has no active workers - jobs are not being processed"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/no-workers"
+
+  - name: cache_alerts
+    interval: 30s
+    rules:
+      # Redis memory usage high
+      - alert: RedisMemoryHigh
+        expr: |
+          (redis_memory_used_bytes / redis_memory_max_bytes) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          category: cache
+          team: backend
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis is using {{ $value | humanizePercentage }} of allocated memory"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/redis-memory"
+
+      # Redis evicting keys
+      - alert: RedisEvictingKeys
+        expr: |
+          rate(redis_evicted_keys_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          category: cache
+          team: backend
+        annotations:
+          summary: "Redis is evicting keys"
+          description: "Redis is evicting {{ $value }} keys/second - memory may be insufficient"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/redis-eviction"
+
+      # Low cache hit rate
+      - alert: LowCacheHitRate
+        expr: |
+          (
+            rate(redis_keyspace_hits_total[5m])
+            /
+            (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m]))
+          ) < 0.5
+        for: 10m
+        labels:
+          severity: warning
+          category: cache
+          team: backend
+        annotations:
+          summary: "Low Redis cache hit rate"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} (threshold: 50%)"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/low-cache-hit"
+
+  - name: business_metrics
+    interval: 1m
+    rules:
+      # No leads in last hour (business impact)
+      - alert: NoLeadsReceived
+        expr: |
+          increase(leads_total[1h]) == 0
+        for: 1h
+        labels:
+          severity: warning
+          category: business
+          team: marketing
+        annotations:
+          summary: "No leads received in the last hour"
+          description: "Zero leads have been captured in the last 60 minutes - check forms and integrations"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/no-leads"
+
+      # Lead submission errors
+      - alert: LeadSubmissionErrors
+        expr: |
+          rate(lead_submission_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          category: business
+          team: backend
+        annotations:
+          summary: "Lead submission errors detected"
+          description: "{{ $value }} lead submissions/second are failing"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/lead-errors"
+
+      # Campaign spending anomaly (if tracked)
+      - alert: CampaignSpendingAnomaly
+        expr: |
+          (
+            rate(campaign_spend_euros[1h])
+            /
+            rate(campaign_spend_euros[1h] offset 24h)
+          ) > 2
+        for: 30m
+        labels:
+          severity: warning
+          category: business
+          team: marketing
+        annotations:
+          summary: "Campaign spending anomaly detected"
+          description: "Campaign {{ $labels.campaign }} spending is {{ $value }}x higher than yesterday"
+          runbook: "https://docs.cepcomunicacion.com/runbooks/spending-anomaly"
