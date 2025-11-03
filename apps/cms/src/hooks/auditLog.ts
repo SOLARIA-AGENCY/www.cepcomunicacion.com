@@ -20,20 +20,24 @@ export function createAuditLogHook(operation: 'create' | 'update' | 'delete'): C
       // Get user ID (if authenticated)
       const userId = req.user?.id;
 
-      // Get IP address from request
-      const ipAddress = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+      // Get IP address from request headers
+      const xForwardedFor = req.headers?.get?.('x-forwarded-for');
+      const ipAddress = typeof xForwardedFor === 'string'
+        ? xForwardedFor.split(',')[0].trim()
+        : 'unknown';
 
       // Create audit log entry
+      // Note: user_email, user_role, and status are auto-populated by beforeValidate hooks
       await req.payload.create({
-        collection: 'audit_logs',
+        collection: 'audit-logs',
         data: {
-          entity_type: collection.slug,
-          entity_id: doc.id,
           action: operation,
-          user_id: userId || null,
-          ip_address: typeof ipAddress === 'string' ? ipAddress : ipAddress[0],
-          changes: operation === 'update' ? { before: previousDoc, after: doc } : null,
-        },
+          collection_name: collection.slug as any,
+          document_id: String(doc.id),
+          user_id: userId ?? undefined,
+          ip_address: ipAddress,
+          changes: operation === 'update' ? { before: previousDoc, after: doc } : undefined,
+        } as any, // Type assertion: hooks will populate required fields
       });
     } catch (error) {
       // Log error but don't fail the operation

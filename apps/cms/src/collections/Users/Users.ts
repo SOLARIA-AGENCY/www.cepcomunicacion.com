@@ -1,12 +1,11 @@
 import type { CollectionConfig } from 'payload';
 import {
-  isAdmin,
   canReadUsers,
   canCreateUsers,
   canUpdateUsers,
   canDeleteUsers,
 } from './access';
-import { passwordSchema, emailSchema, phoneSchema, formatValidationErrors } from './Users.validation';
+import { passwordSchema, emailSchema, phoneSchema } from './Users.validation';
 
 /**
  * Users Collection
@@ -151,7 +150,7 @@ export const Users: CollectionConfig = {
         description: 'Email address (used for login)',
         readOnly: true, // Email should not be changed after creation
       },
-      validate: (val: string | undefined) => {
+      validate: (val: unknown): true | string => {
         if (!val) return 'Email is required';
 
         try {
@@ -174,7 +173,7 @@ export const Users: CollectionConfig = {
       admin: {
         description: 'Password (min 8 chars, must include uppercase, lowercase, number, special char)',
       },
-      validate: (val: string | undefined) => {
+      validate: (val: unknown): true | string => {
         if (!val) return 'Password is required';
 
         try {
@@ -196,10 +195,11 @@ export const Users: CollectionConfig = {
       admin: {
         description: 'Full name of the user',
       },
-      validate: (val: string | undefined) => {
+      validate: (val: unknown): true | string => {
         if (!val) return 'Name is required';
-        if (val.length < 2) return 'Name must be at least 2 characters';
-        if (val.length > 100) return 'Name must be less than 100 characters';
+        const strVal = String(val);
+        if (strVal.length < 2) return 'Name must be at least 2 characters';
+        if (strVal.length > 100) return 'Name must be less than 100 characters';
         return true;
       },
     },
@@ -245,7 +245,7 @@ export const Users: CollectionConfig = {
        */
       access: {
         read: () => true, // Everyone can see roles
-        update: isAdmin, // Only admin can change roles
+        update: ({ req }) => !!req.user && req.user.role === 'admin', // Only admin can change roles
       },
     },
 
@@ -259,11 +259,12 @@ export const Users: CollectionConfig = {
         description: 'URL to profile picture',
         position: 'sidebar',
       },
-      validate: (val: string | undefined) => {
+      validate: (val: unknown): true | string => {
         if (!val) return true; // Optional field
 
+        const strVal = String(val);
         try {
-          new URL(val);
+          new URL(strVal);
           return true;
         } catch {
           return 'Avatar URL must be a valid URL';
@@ -280,7 +281,7 @@ export const Users: CollectionConfig = {
       admin: {
         description: 'Phone number (format: +34 XXX XXX XXX)',
       },
-      validate: (val: string | undefined) => {
+      validate: (val: unknown): true | string => {
         if (!val) return true; // Optional field
 
         try {
@@ -310,7 +311,7 @@ export const Users: CollectionConfig = {
        */
       access: {
         read: () => true, // Everyone can see status
-        update: isAdmin, // Only admin can change status
+        update: ({ req }) => !!req.user && req.user.role === 'admin', // Only admin can change status
       },
     },
 

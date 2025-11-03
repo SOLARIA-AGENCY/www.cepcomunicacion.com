@@ -32,7 +32,6 @@ export default buildConfig({
     user: Users.slug, // CRITICAL: Specify auth collection
     meta: {
       titleSuffix: '- CEP Comunicación',
-      favicon: '/favicon.ico',
     },
   },
   collections: [
