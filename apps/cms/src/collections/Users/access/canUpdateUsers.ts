@@ -24,7 +24,7 @@ import type { Access } from 'payload';
  * @param id - ID of user being updated
  * @returns Boolean true for full access, or query constraint object
  */
-export const canUpdateUsers: Access = ({ req: { user }, id }) => {
+export const canUpdateUsers: Access = ({ req: { user } }) => {
   // Not authenticated - deny access
   if (!user) {
     return false;

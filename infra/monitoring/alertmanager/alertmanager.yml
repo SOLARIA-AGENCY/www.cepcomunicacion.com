@@ -1,0 +1,224 @@
+# Alertmanager Configuration for CEPComunicacion v2
+# Alert routing, grouping, and notification management
+
+global:
+  resolve_timeout: 5m
+  smtp_from: 'alerts@cepcomunicacion.com'
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_auth_username: '${SMTP_USER}'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+  smtp_require_tls: true
+
+# Alert routing tree
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s              # Wait 10s before sending first notification
+  group_interval: 5m           # Wait 5m before sending batch of new alerts
+  repeat_interval: 4h          # Resend alert every 4h if still firing
+  receiver: 'default'
+
+  # Child routes with specific routing rules
+  routes:
+    # Critical alerts - immediate notification
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 5s
+      repeat_interval: 30m
+      continue: true
+
+    # Platform/infrastructure alerts
+    - match:
+        team: platform
+      receiver: 'platform-team'
+      group_by: ['alertname', 'instance']
+      continue: false
+
+    # Backend/application alerts
+    - match:
+        team: backend
+      receiver: 'backend-team'
+      group_by: ['alertname', 'service', 'component']
+      continue: false
+
+    # Marketing/business alerts
+    - match:
+        team: marketing
+      receiver: 'marketing-team'
+      group_by: ['alertname', 'campaign']
+      continue: false
+
+    # Database alerts
+    - match:
+        category: database
+      receiver: 'database-team'
+      group_by: ['alertname', 'database']
+      continue: false
+
+    # Security alerts
+    - match:
+        category: security
+      receiver: 'security-team'
+      group_wait: 1s
+      repeat_interval: 15m
+      continue: false
+
+# Inhibition rules - prevent redundant alerts
+inhibit_rules:
+  # If service is down, inhibit all other alerts for that service
+  - source_match:
+      severity: 'critical'
+      alertname: 'ServiceDown'
+    target_match:
+      severity: 'warning'
+    equal: ['service', 'instance']
+
+  # If container is down, inhibit high resource alerts
+  - source_match:
+      severity: 'critical'
+      alertname: 'ContainerDown'
+    target_match_re:
+      alertname: 'Container(HighCPU|HighMemory)'
+    equal: ['container']
+
+  # If database connection fails, inhibit query performance alerts
+  - source_match:
+      severity: 'critical'
+      alertname: 'DatabaseConnectionFailure'
+    target_match:
+      category: 'database'
+    equal: ['instance']
+
+  # If website is down, inhibit slow response alerts
+  - source_match:
+      severity: 'critical'
+      alertname: 'WebsiteDown'
+    target_match:
+      alertname: 'SlowResponseTime'
+    equal: ['instance']
+
+# Notification receivers
+receivers:
+  # Default receiver - email to operations team
+  - name: 'default'
+    email_configs:
+      - to: 'operations@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP] Alert: {{ .GroupLabels.alertname }}'
+        html: |
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+          <p><strong>Severity:</strong> {{ .Labels.severity }}</p>
+          <p><strong>Service:</strong> {{ .Labels.service }}</p>
+          <p><strong>Started:</strong> {{ .StartsAt }}</p>
+          {{ if .Annotations.runbook }}
+          <p><a href="{{ .Annotations.runbook }}">Runbook</a></p>
+          {{ end }}
+          {{ end }}
+
+  # Critical alerts - multiple channels
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'oncall@cepcomunicacion.com,cto@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP CRITICAL] {{ .GroupLabels.alertname }}'
+          Priority: 'urgent'
+        html: |
+          <h1 style="color: red;">CRITICAL ALERT</h1>
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+          <p><strong>Service:</strong> {{ .Labels.service }}</p>
+          <p><strong>Started:</strong> {{ .StartsAt }}</p>
+          <p><a href="{{ .Annotations.runbook }}" style="background: red; color: white; padding: 10px;">View Runbook</a></p>
+          {{ end }}
+    # Uncomment for Slack integration
+    # slack_configs:
+    #   - api_url: '${SLACK_WEBHOOK_URL}'
+    #     channel: '#alerts-critical'
+    #     title: 'CRITICAL: {{ .GroupLabels.alertname }}'
+    #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+    #     send_resolved: true
+    # Uncomment for PagerDuty integration
+    # pagerduty_configs:
+    #   - service_key: '${PAGERDUTY_SERVICE_KEY}'
+    #     description: '{{ .GroupLabels.alertname }}'
+
+  # Platform team alerts
+  - name: 'platform-team'
+    email_configs:
+      - to: 'platform@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP Platform] {{ .GroupLabels.alertname }}'
+        html: |
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p>{{ .Annotations.description }}</p>
+          <p><strong>Instance:</strong> {{ .Labels.instance }}</p>
+          <p><a href="{{ .Annotations.runbook }}">Runbook</a></p>
+          {{ end }}
+
+  # Backend team alerts
+  - name: 'backend-team'
+    email_configs:
+      - to: 'backend@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP Backend] {{ .GroupLabels.alertname }}'
+        html: |
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p>{{ .Annotations.description }}</p>
+          <p><strong>Service:</strong> {{ .Labels.service }}</p>
+          <p><strong>Component:</strong> {{ .Labels.component }}</p>
+          <p><a href="{{ .Annotations.runbook }}">Runbook</a></p>
+          {{ end }}
+
+  # Marketing team alerts
+  - name: 'marketing-team'
+    email_configs:
+      - to: 'marketing@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP Marketing] {{ .GroupLabels.alertname }}'
+        html: |
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p>{{ .Annotations.description }}</p>
+          {{ if .Labels.campaign }}
+          <p><strong>Campaign:</strong> {{ .Labels.campaign }}</p>
+          {{ end }}
+          {{ end }}
+
+  # Database team alerts
+  - name: 'database-team'
+    email_configs:
+      - to: 'dba@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP Database] {{ .GroupLabels.alertname }}'
+        html: |
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p>{{ .Annotations.description }}</p>
+          <p><strong>Database:</strong> {{ .Labels.database }}</p>
+          <p><a href="{{ .Annotations.runbook }}">Runbook</a></p>
+          {{ end }}
+
+  # Security team alerts
+  - name: 'security-team'
+    email_configs:
+      - to: 'security@cepcomunicacion.com,cto@cepcomunicacion.com'
+        headers:
+          Subject: '[CEP SECURITY] {{ .GroupLabels.alertname }}'
+          Priority: 'urgent'
+        html: |
+          <h1 style="color: orange;">SECURITY ALERT</h1>
+          {{ range .Alerts }}
+          <h2>{{ .Annotations.summary }}</h2>
+          <p>{{ .Annotations.description }}</p>
+          <p><strong>Started:</strong> {{ .StartsAt }}</p>
+          <p><a href="{{ .Annotations.runbook }}" style="background: orange; color: white; padding: 10px;">View Runbook</a></p>
+          {{ end }}
+
+# Templates for custom notification formats
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'

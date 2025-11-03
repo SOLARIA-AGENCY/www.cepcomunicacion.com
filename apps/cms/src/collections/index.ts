@@ -33,10 +33,11 @@ export { Leads } from './Leads';
 export { Enrollments } from './Enrollments/Enrollments';
 export { Students } from './Students/Students';
 export { default as Campaigns } from './Campaigns';
-export { default as AdsTemplates } from './AdsTemplates';
+export { AdsTemplates } from './AdsTemplates/AdsTemplates';
 export { BlogPosts } from './BlogPosts/BlogPosts';
 export { FAQs } from './FAQs/FAQs';
 export { Media } from './Media/Media';
+export { AuditLogs } from './AuditLogs/AuditLogs';
 // ... more collections to come
 
 export const collections = [

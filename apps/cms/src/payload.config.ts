@@ -3,6 +3,11 @@ import { postgresAdapter } from '@payloadcms/db-postgres';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { s3Storage } from '@payloadcms/storage-s3';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Import collections (will be implemented next with TDD methodology)
 import { Cycles } from './collections/Cycles/Cycles';
@@ -17,9 +22,9 @@ import { Campaigns } from './collections/Campaigns/Campaigns';
 import { AdsTemplates } from './collections/AdsTemplates/AdsTemplates';
 import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
-import { Media } from './collections/Media/Media';
+import { Media } from './collections/Media';
+import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
-// import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
@@ -27,7 +32,6 @@ export default buildConfig({
     user: Users.slug, // CRITICAL: Specify auth collection
     meta: {
       titleSuffix: '- CEP Comunicación',
-      favicon: '/favicon.ico',
     },
   },
   collections: [
@@ -53,9 +57,9 @@ export default buildConfig({
     FAQs, // ✅ Frequently Asked Questions
     Media, // ✅ File uploads with S3 storage
 
-    // Metadata & Compliance
+    // Compliance & System
+    AuditLogs, // ✅ GDPR Article 30 compliance - Immutable audit trail
     // SEOMetadata,
-    // AuditLogs,
   ],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'YOUR_SECRET_HERE',

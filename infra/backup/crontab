@@ -1,7 +1,92 @@
-# Backup Crontab
-# This will be replaced by entrypoint.sh with environment-specific schedule
+################################################################################
+# CEPComunicacion v2 - Backup Cron Schedule
+################################################################################
+# Installation: crontab /path/to/this/file
+# Or append to existing crontab: crontab -l > /tmp/cron.backup && cat this_file >> /tmp/cron.backup && crontab /tmp/cron.backup
+#
+# IMPORTANT: Ensure all scripts have execute permissions:
+# chmod +x /infra/backup/scripts/*.sh
+#
+# Logs: /var/log/cepcomunicacion/
+################################################################################
 
-# Default: Daily backup at 3:00 AM UTC
-0 3 * * * /scripts/backup.sh >> /var/log/backup/backup.log 2>&1
+# Environment variables for all cron jobs
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""
 
-# Empty line required at end
+# Application-specific environment (adjust paths as needed)
+APP_DIR=/var/www/cepcomunicacion
+BACKUP_DIR=/var/backups/cepcomunicacion
+LOG_DIR=/var/log/cepcomunicacion
+
+################################################################################
+# DAILY BACKUPS
+################################################################################
+
+# Database Backup - Every day at 2:00 AM UTC
+# Creates daily PostgreSQL dump with 30-day retention
+0 2 * * * /infra/backup/scripts/backup-database.sh >> ${LOG_DIR}/cron-backup.log 2>&1
+
+# Configuration Backup - Every day at 2:30 AM UTC
+# Backs up .env, docker-compose.yml, and other config files
+30 2 * * * /infra/backup/scripts/backup-config.sh >> ${LOG_DIR}/cron-backup.log 2>&1
+
+# Media Backup - Every day at 3:00 AM UTC
+# Incremental backup of uploaded files using rsync with hard links
+0 3 * * * /infra/backup/scripts/backup-media.sh >> ${LOG_DIR}/cron-backup.log 2>&1
+
+################################################################################
+# WEEKLY BACKUPS
+################################################################################
+
+# Weekly Database Backup - Every Sunday at 3:30 AM UTC
+# Creates weekly PostgreSQL dump with 12-week (3-month) retention
+30 3 * * 0 /infra/backup/scripts/backup-database-weekly.sh >> ${LOG_DIR}/cron-backup.log 2>&1
+
+################################################################################
+# BACKUP MONITORING
+################################################################################
+
+# Backup Health Check - Every 6 hours
+# Monitors backup freshness, integrity, and disk space
+0 */6 * * * /infra/backup/scripts/check-backups.sh >> ${LOG_DIR}/cron-backup-check.log 2>&1
+
+# Morning Backup Report - Every day at 8:00 AM UTC
+# Sends daily backup status report
+0 8 * * * /infra/backup/scripts/check-backups.sh >> ${LOG_DIR}/cron-backup-check.log 2>&1
+
+################################################################################
+# MAINTENANCE TASKS
+################################################################################
+
+# Cleanup Old Logs - Monthly on 1st at 4:00 AM UTC
+# Removes logs older than 90 days
+0 4 1 * * find ${LOG_DIR} -name "*.log" -type f -mtime +90 -delete
+
+################################################################################
+# OPTIONAL: S3 SYNC (Uncomment if using S3/MinIO)
+################################################################################
+
+# Sync to S3 - Every day at 4:00 AM UTC (after all backups complete)
+# Uploads backups to S3-compatible storage for off-site backup
+# 0 4 * * * /infra/backup/scripts/sync-to-s3.sh >> ${LOG_DIR}/cron-s3-sync.log 2>&1
+
+################################################################################
+# SCHEDULE SUMMARY
+################################################################################
+#
+# 02:00 - Database backup (daily)
+# 02:30 - Configuration backup (daily)
+# 03:00 - Media backup (daily)
+# 03:30 - Weekly database backup (Sunday only)
+# 04:00 - S3 sync (optional, daily)
+# 06:00 - Backup health check
+# 08:00 - Morning backup report
+# 12:00 - Backup health check
+# 18:00 - Backup health check
+# 00:00 - Backup health check
+#
+################################################################################
+# END OF CRONTAB
+################################################################################
