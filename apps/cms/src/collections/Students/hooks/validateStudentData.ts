@@ -1,4 +1,4 @@
-import type { FieldHook } from 'payload';
+import type { CollectionBeforeValidateHook } from 'payload';
 import {
   spanishPhoneRegex,
   dniRegex,
@@ -41,7 +41,7 @@ import {
  * @returns Modified data if validation passes
  * @throws Error if validation fails
  */
-export const validateStudentData: FieldHook = async ({ data, req, operation, value }) => {
+export const validateStudentData: CollectionBeforeValidateHook = async ({ data, req, operation }) => {
   const validationErrors: string[] = [];
 
   try {
@@ -108,7 +108,8 @@ export const validateStudentData: FieldHook = async ({ data, req, operation, val
     // SECURITY: NO logging of PII (SP-004)
     // DO NOT log: email, phone, DNI, names, emergency contact info
     if (req?.payload?.logger) {
-      req.payload.logger.info('[Student] Data validation passed', {
+      req.payload.logger.info({
+        msg: '[Student] Data validation passed',
         operation,
         hasEmail: !!data?.email,
         hasPhone: !!data?.phone,
@@ -125,7 +126,8 @@ export const validateStudentData: FieldHook = async ({ data, req, operation, val
 
     // Log unexpected errors without exposing PII
     if (req?.payload?.logger) {
-      req.payload.logger.error('[Student] Unexpected validation error', {
+      req.payload.logger.error({
+        msg: '[Student] Unexpected validation error',
         error: error instanceof Error ? error.message : 'Unknown error',
         operation,
       });

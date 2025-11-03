@@ -1,4 +1,4 @@
-import type { FieldHook } from 'payload';
+import type { CollectionBeforeValidateHook } from 'payload';
 
 /**
  * Hook: validateStudentRelationships
@@ -36,11 +36,10 @@ import type { FieldHook } from 'payload';
  * @returns Modified data if validation passes
  * @throws Error if relationship validation fails
  */
-export const validateStudentRelationships: FieldHook = async ({
+export const validateStudentRelationships: CollectionBeforeValidateHook = async ({
   data,
   req,
   operation,
-  value,
 }) => {
   // Only validate on creation
   if (operation !== 'create') {
@@ -65,7 +64,8 @@ export const validateStudentRelationships: FieldHook = async ({
         // SECURITY: NO logging of user details (could contain PII)
         // Only log validation success
         if (req.payload.logger) {
-          req.payload.logger.info('[Student] Relationship validation passed', {
+          req.payload.logger.info({
+            msg: '[Student] Relationship validation passed',
             operation,
             hasCreatedBy: !!data.created_by,
           });
@@ -80,7 +80,8 @@ export const validateStudentRelationships: FieldHook = async ({
   } catch (error) {
     // Log error without exposing PII
     if (req?.payload?.logger) {
-      req.payload.logger.error('[Student] Relationship validation error', {
+      req.payload.logger.error({
+        msg: '[Student] Relationship validation error',
         error: error instanceof Error ? error.message : 'Unknown error',
         operation,
       });

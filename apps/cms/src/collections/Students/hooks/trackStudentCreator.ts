@@ -1,4 +1,4 @@
-import type { FieldHook } from 'payload';
+import type { CollectionBeforeChangeHook } from 'payload';
 
 /**
  * Hook: trackStudentCreator
@@ -36,17 +36,18 @@ import type { FieldHook } from 'payload';
  * @param args - Hook arguments from Payload
  * @returns Modified data with created_by set/protected
  */
-export const trackStudentCreator: FieldHook = async ({ data, req, operation, originalDoc }) => {
+export const trackStudentCreator: CollectionBeforeChangeHook = async ({ data, req, operation, originalDoc }) => {
   try {
     // CREATION: Auto-populate created_by
-    if (operation === 'create') {
+    if (operation === 'create' && data) {
       if (!data.created_by && req?.user?.id) {
         data.created_by = req.user.id;
 
         // SECURITY: NO logging of user details (could be PII)
         // Only log successful creator tracking
         if (req.payload?.logger) {
-          req.payload.logger.info('[Student] Creator tracked', {
+          req.payload.logger.info({
+            msg: '[Student] Creator tracked',
             operation,
             userId: req.user.id,
           });
@@ -56,13 +57,19 @@ export const trackStudentCreator: FieldHook = async ({ data, req, operation, ori
 
     // UPDATE: Protect created_by from modification (immutability)
     if (operation === 'update') {
+      // Guard clause: ensure data exists
+      if (!data) {
+        return data;
+      }
+
       // If created_by is present in update data, it's a tampering attempt
       if (data.created_by && originalDoc?.created_by) {
         // Detect tampering attempt
         if (data.created_by !== originalDoc.created_by) {
           // SECURITY: Log tampering attempt
           if (req?.payload?.logger) {
-            req.payload.logger.warn('[Student] Attempted to modify created_by (blocked)', {
+            req.payload.logger.warn({
+              msg: '[Student] Attempted to modify created_by (blocked)',
               operation,
               userId: req?.user?.id,
               originalCreator: originalDoc.created_by,
@@ -78,7 +85,8 @@ export const trackStudentCreator: FieldHook = async ({ data, req, operation, ori
   } catch (error) {
     // Log error without exposing PII
     if (req?.payload?.logger) {
-      req.payload.logger.error('[Student] Error in creator tracking', {
+      req.payload.logger.error({
+        msg: '[Student] Error in creator tracking',
         error: error instanceof Error ? error.message : 'Unknown error',
         operation,
       });

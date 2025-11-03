@@ -1,4 +1,4 @@
-import type { FieldHook } from 'payload';
+import type { CollectionBeforeValidateHook } from 'payload';
 
 /**
  * Hook: captureStudentConsentMetadata
@@ -30,11 +30,10 @@ import type { FieldHook } from 'payload';
  * @param args - Hook arguments from Payload
  * @returns Modified data with consent metadata
  */
-export const captureStudentConsentMetadata: FieldHook = async ({
+export const captureStudentConsentMetadata: CollectionBeforeValidateHook = async ({
   data,
   req,
   operation,
-  value,
 }) => {
   // Only capture on creation, not on updates
   if (operation !== 'create') {
@@ -55,14 +54,14 @@ export const captureStudentConsentMetadata: FieldHook = async ({
     // Capture IP address from request
     if (!data.consent_ip_address && req) {
       // Try X-Forwarded-For header first (if behind proxy)
-      const forwardedFor = req.headers?.['x-forwarded-for'];
+      const forwardedFor = req.headers?.get?.('x-forwarded-for');
       if (forwardedFor) {
         // X-Forwarded-For can be a comma-separated list, take first IP
-        const ips = Array.isArray(forwardedFor) ? forwardedFor : forwardedFor.split(',');
-        data.consent_ip_address = ips[0].trim();
-      } else if (req.ip) {
-        // Fallback to req.ip
-        data.consent_ip_address = req.ip;
+        const forwardedForStr = typeof forwardedFor === 'string' ? forwardedFor : String(forwardedFor);
+        data.consent_ip_address = forwardedForStr.split(',')[0]?.trim() || '127.0.0.1';
+      } else {
+        // Fallback to a default IP if none available
+        data.consent_ip_address = '127.0.0.1';
       }
     }
 
@@ -70,7 +69,8 @@ export const captureStudentConsentMetadata: FieldHook = async ({
     // DO NOT log: email, name, IP address (all are PII)
     // Only log operation success with non-PII identifiers
     if (req?.payload?.logger) {
-      req.payload.logger.info('[Student] Consent metadata captured', {
+      req.payload.logger.info({
+        msg: '[Student] Consent metadata captured',
         hasTimestamp: !!data.consent_timestamp,
         hasIPAddress: !!data.consent_ip_address,
         operation,
@@ -79,7 +79,8 @@ export const captureStudentConsentMetadata: FieldHook = async ({
   } catch (error) {
     // Log error without exposing PII
     if (req?.payload?.logger) {
-      req.payload.logger.error('[Student] Error capturing consent metadata', {
+      req.payload.logger.error({
+        msg: '[Student] Error capturing consent metadata',
         error: error instanceof Error ? error.message : 'Unknown error',
         operation,
       });

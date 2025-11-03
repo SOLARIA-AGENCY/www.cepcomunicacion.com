@@ -192,8 +192,9 @@ export const Students: CollectionConfig = {
       admin: {
         description: 'Student first name (PII)',
       },
-      validate: (val: string | undefined) => {
-        if (!val) return 'First name is required';
+      validate: (val: unknown): true | string => {
+        if (typeof val !== 'string') return 'First name must be a string';
+        if (!val || val.trim() === '') return 'First name is required';
         if (val.length > 100) return 'First name must be 100 characters or less';
         return true;
       },
@@ -220,8 +221,9 @@ export const Students: CollectionConfig = {
       admin: {
         description: 'Student last name (PII)',
       },
-      validate: (val: string | undefined) => {
-        if (!val) return 'Last name is required';
+      validate: (val: unknown): true | string => {
+        if (typeof val !== 'string') return 'Last name must be a string';
+        if (!val || val.trim() === '') return 'Last name is required';
         if (val.length > 100) return 'Last name must be 100 characters or less';
         return true;
       },
@@ -247,8 +249,9 @@ export const Students: CollectionConfig = {
       admin: {
         description: 'Student email address (PII - unique, GDPR protected)',
       },
-      validate: (val: string | undefined) => {
-        if (!val) return 'Email is required';
+      validate: (val: unknown): true | string => {
+        if (typeof val !== 'string') return 'Email must be a string';
+        if (!val || val.trim() === '') return 'Email is required';
         if (val.length > 255) return 'Email must be 255 characters or less';
         return true;
       },
@@ -535,7 +538,7 @@ export const Students: CollectionConfig = {
         read: () => true, // All authenticated can read
         update: () => false, // IMMUTABLE - no one can update
       },
-      validate: (val: boolean | undefined) => {
+      validate: (val: unknown): true | string => {
         if (val !== true) {
           return 'GDPR consent is required and must be explicitly accepted';
         }
@@ -558,7 +561,7 @@ export const Students: CollectionConfig = {
         read: () => true,
         update: () => false, // IMMUTABLE
       },
-      validate: (val: boolean | undefined) => {
+      validate: (val: unknown): true | string => {
         if (val !== true) {
           return 'You must accept the privacy policy';
         }
