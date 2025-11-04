@@ -5,13 +5,78 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 **Project Name:** CEPComunicacion v2
-**Status:** Phase 0 - Specification & Planning (Pre-development)
-**Methodology:** Spec-Driven Development (SDD)
+**Status:** Phase 1 Complete - Production Deployed ✅
+**Methodology:** **SOLARIA Methodology** (Spec-Driven Development + Zero Technical Debt)
 **Client:** CEP FORMACIÓN (educational organization)
 **Agency:** SOLARIA AGENCY
 **Purpose:** Complete redesign and rebuild of educational platform to replace existing WordPress site
 
-This is a **specification-first repository**. The extensive technical documentation exists before any implementation code. All architectural decisions, technology choices, and system designs are documented in detail before development begins.
+### SOLARIA Methodology Applied
+
+This project follows the **Metodología SOLARIA** (validated in BRIK-64 project):
+
+#### Core Principles
+- ✅ **Zero Technical Debt** - No "lo arreglo después"
+- ✅ **PAT-006 Mandatory** - API verification for all integrations
+- ✅ **Spec-Driven Development** - Think first, code with confidence
+- ✅ **Quality Gates** - 100% tests passing, ≥75% coverage
+- ✅ **Agent Specialization** - Delegate tasks to specialized agents
+
+#### Measurable Results (Target)
+- Tests: 100% passing
+- Coverage: ≥75%
+- Build warnings: 0
+- Technical debt: 0
+- Documentation: Complete
+
+#### Documentation Structure
+```
+.memory/                    # Project memory and learning
+├── server-info.md          # Hetzner server configuration
+├── ssh-config.md           # SSH access details
+└── learning_log.jsonl      # Lessons learned
+
+docs/
+├── specs/                  # Specifications per phase
+├── ADR/                    # Architecture Decision Records
+└── audits/                 # Audit reports
+
+METODOLOGIA SOLARIA/        # Complete methodology docs
+├── README_METODOLOGIA.md
+├── DESARROLLO_METODOLOGIA_SOLARIA.md
+└── RESUMEN_EJECUTIVO_METODOLOGIA.md
+```
+
+#### Agent System (10 Specialized Agents)
+1. **Project Coordinator** - Task delegation and management
+2. **PostgreSQL Schema Architect** - Database design
+3. **Payload CMS Architect** - CMS implementation
+4. **React Frontend Dev** - Frontend development
+5. **Security GDPR Compliance** - Security audits
+6. **BullMQ Worker Automation** - Background jobs
+7. **Infrastructure DevOps** - Deployment and infrastructure
+8. **Testing Automation** - Test suites and CI/CD
+9. **LLM Ingestion** - AI content generation
+10. **Analytics Metrics** - GA4, Meta Pixel, Plausible
+
+**Key Rule**: Always delegate to specialized agents for complex tasks.
+
+#### Automation Philosophy
+**CRITICAL**: This project is designed for **complete automation without user intervention**.
+
+- ✅ **Auto-execution**: Execute all tasks autonomously
+- ✅ **SSH Access**: Use `~/.ssh/solaria-hetzner/id_solaria_hetzner_prod` for Hetzner server
+- ✅ **Database Operations**: Execute directly on PostgreSQL via SSH
+- ✅ **Service Management**: Restart/reload services as needed (PM2, Nginx, PostgreSQL)
+- ✅ **Error Handling**: Auto-fix or document errors, never wait for user input
+- ✅ **Verification**: Auto-verify all operations (tests, builds, deployments)
+
+**Connection Details**:
+- Server: `root@46.62.222.138`
+- SSH Key: `~/.ssh/solaria-hetzner/id_solaria_hetzner_prod`
+- Database: `cepcomunicacion` (PostgreSQL 16.10)
+- Redis: localhost:6379
+- PM2 App: `cepcomunicacion-cms`
 
 ## Technology Stack (UPDATED 2025-10-23)
 
