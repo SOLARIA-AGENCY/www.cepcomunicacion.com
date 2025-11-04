@@ -1,0 +1,97 @@
+# Admin Dashboard Dockerfile - Next.js 15.2.3
+# Multi-stage build for optimized production image
+
+# ========================================
+# STAGE 1: Dependencies
+# ========================================
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS deps
+
+# Install build dependencies
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json pnpm-*.yaml ./
+COPY apps/admin/package.json ./apps/admin/
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile --filter admin...
+
+# ========================================
+# STAGE 2: Builder
+# ========================================
+FROM node:${NODE_VERSION}-alpine AS builder
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/admin/node_modules ./apps/admin/node_modules
+
+# Copy source code
+COPY apps/admin ./apps/admin
+COPY package*.json pnpm-*.yaml ./
+COPY tsconfig.json ./
+
+# Set environment for build
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+# Build the application
+WORKDIR /app/apps/admin
+RUN pnpm run build
+
+# ========================================
+# STAGE 3: Production
+# ========================================
+FROM node:${NODE_VERSION}-alpine
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    tini \
+    wget \
+    curl
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+WORKDIR /app/apps/admin
+
+# Copy Next.js standalone output
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/.next/standalone ./
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/.next/static ./.next/static
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/public ./public
+
+# Switch to non-root user
+USER nodejs
+
+# Expose port
+EXPOSE 3001
+
+# Environment variables
+ENV NODE_ENV=production
+ENV PORT=3001
+ENV HOSTNAME=0.0.0.0
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3001/ || exit 1
+
+# Use tini to handle signals properly
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start the application
+CMD ["node", "server.js"]
