@@ -1,34 +1,32 @@
-import { config as dotenvConfig } from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-// ES module equivalent of __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load environment variables
-dotenvConfig({ path: path.resolve(__dirname, '../.env') });
-
-// Import Payload CMS after env is loaded
+// Environment variables loaded via Node.js --env-file flag (no dotenv needed)
 import { getPayload } from 'payload';
-import payloadConfig from './payload.config.js';
-
-const PORT = parseInt(process.env.PORT || '3001');
+import { getPayloadConfig } from './payload.config.js';
 
 // Start Payload CMS
 const start = async (): Promise<void> => {
-  // Initialize Payload - it handles Express internally in 3.x
+  // Initialize Payload - config is evaluated here (lazy) after env vars are loaded
   const payload = await getPayload({
-    config: payloadConfig,
+    config: getPayloadConfig(),
   });
 
-  payload.logger.info(`Payload initialized`);
-  payload.logger.info(`Admin URL: ${payload.getAdminURL()}`);
-  payload.logger.info(`API URL: ${payload.getAdminURL().replace('/admin', '/api')}`);
+  payload.logger.info(`✓ Payload initialized`);
+  payload.logger.info(`✓ Admin URL: ${payload.getAdminURL()}`);
+  payload.logger.info(`✓ API URL: ${payload.getAdminURL().replace('/admin', '/api')}`);
 
-  // In Payload 3.x with Next.js, the server is started internally
-  // For standalone mode, we would need Next.js server
-  payload.logger.info(`Server ready on port ${PORT}`);
+  // Payload 3.x with Next.js: Server runs internally
+  // Keep process alive to serve requests
+  payload.logger.info(`✓ Server running (Next.js internal)`);
+
+  // Keep process alive
+  process.on('SIGTERM', () => {
+    payload.logger.info('SIGTERM received, shutting down gracefully');
+    process.exit(0);
+  });
+
+  process.on('SIGINT', () => {
+    payload.logger.info('SIGINT received, shutting down gracefully');
+    process.exit(0);
+  });
 };
 
 start().catch((error) => {

@@ -26,7 +26,9 @@ import { Media } from './collections/Media';
 import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 
-export default buildConfig({
+// Export factory function for lazy evaluation (ESM + --env-file compatibility)
+// Ensures process.env is read AFTER environment variables are loaded
+export const getPayloadConfig = () => buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
   admin: {
     user: Users.slug, // CRITICAL: Specify auth collection
@@ -68,7 +70,8 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      connectionString: `postgresql://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
+      connectionString: process.env.DATABASE_URL ||
+        `postgresql://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
     },
     migrationDir: path.resolve(__dirname, '../migrations'),
   }),
@@ -98,3 +101,9 @@ export default buildConfig({
     process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
   ],
 });
+
+// Note: Use named export getPayloadConfig() for lazy evaluation
+// This ensures process.env is read AFTER --env-file loads variables
+
+// Default export for Next.js @payload-config alias
+export default getPayloadConfig()
