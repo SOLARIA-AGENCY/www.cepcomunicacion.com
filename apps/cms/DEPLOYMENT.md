@@ -50,11 +50,12 @@
 
 - **Hostname:** srv943151
 - **IP Address:** 46.62.222.138
-- **Provider:** Hostinger
-- **OS:** Ubuntu 25.04 (Plucky Puffin)
+- **Provider:** Hetzner VPS
+- **OS:** Ubuntu 24.04.3 LTS
 - **CPU:** 1 vCore AMD EPYC 9354P
 - **RAM:** 3.8 GB
 - **Storage:** 48 GB SSD
+- **Swap:** 4 GB (production optimized)
 
 ### Directory Structure
 

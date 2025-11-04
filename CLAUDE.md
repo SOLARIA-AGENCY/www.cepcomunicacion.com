@@ -33,8 +33,8 @@ This is a **specification-first repository**. The extensive technical documentat
 
 ### Infrastructure
 - **Containerization:** Docker + Docker Compose
-- **Server:** Ubuntu 22.04 on Hostinger VPS (srv943151 - 148.230.118.124)
-- **Web Server:** Nginx with SSL (Let's Encrypt)
+- **Server:** Ubuntu 24.04.3 LTS on Hetzner VPS (srv943151 - 46.62.222.138)
+- **Web Server:** Nginx 1.26.3 with reverse proxy + security headers
 - **Storage:** Local persistent volumes or S3-compatible (MinIO)
 
 ### Integrations
@@ -215,30 +215,32 @@ Field-level permissions enforced in Payload CMS collections.
 
 ## Development Server Information
 
-**VPS Details (from root CLAUDE.md):**
+**VPS Details (Hetzner Production Server):**
 - Hostname: srv943151
-- IP: 148.230.118.124
-- Provider: Hostinger
-- OS: Ubuntu 25.04 (Plucky Puffin)
+- IP: 46.62.222.138
+- Provider: Hetzner VPS
+- OS: Ubuntu 24.04.3 LTS
 - CPU: 1 vCore AMD EPYC 9354P
 - RAM: 3.8 GB
 - Storage: 48 GB SSD
+- Swap: 4GB (optimized for production)
 
-**Installed Services:**
-- Apache2 (active on port 80)
-- Nginx (installed, inactive)
-- PHP 8.4.5
+**Production Stack:**
+- Nginx 1.26.3 (reverse proxy + static server)
 - Node.js v22.20.0
-- MariaDB 11.4.7
-- PM2 (process manager)
+- PostgreSQL 16.10 (native installation)
+- Redis 7.0.15 (native installation)
+- PM2 6.0.13 (process manager)
 - Git 2.48.1
+- UFW firewall (active: SSH, HTTP, HTTPS)
 
-**Target Deployment:**
-- Docker containers managed by Docker Compose
-- Nginx reverse proxy in front of services
-- SSL/TLS via Let's Encrypt
-- PostgreSQL in dedicated container
-- Redis for job queue
+**Current Deployment:**
+- Next.js 15.2.3 + Payload CMS 3.62.1 (PM2 managed)
+- React 19.0.0 frontend (Vite static build)
+- Nginx serving frontend + proxying CMS/API
+- PostgreSQL database with 27 tables
+- Redis for BullMQ job queue
+- SSL/TLS ready (Let's Encrypt - pending configuration)
 
 ## MCP Tools Configuration
 
