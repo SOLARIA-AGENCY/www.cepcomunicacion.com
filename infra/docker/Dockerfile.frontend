@@ -17,17 +17,14 @@ RUN apk add --no-cache \
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
-COPY packages/ ./packages/
+# Copy package files for frontend app only
+COPY apps/web/package*.json ./
 
 # Install dependencies
-RUN npm ci --workspace=web --include-workspace-root
+RUN npm ci
 
 # Copy application source
-COPY apps/web ./apps/web
-COPY tsconfig.json ./
+COPY apps/web ./
 
 # Build arguments for environment variables
 ARG VITE_API_URL
@@ -39,7 +36,6 @@ ARG VITE_ENABLE_LLM=false
 ARG VITE_ENABLE_WHATSAPP=false
 
 # Build the application
-WORKDIR /app/apps/web
 RUN npm run build
 
 # ========================================
@@ -63,7 +59,7 @@ WORKDIR /app
 RUN npm install -g serve@14
 
 # Copy built assets from builder
-COPY --from=builder --chown=nodejs:nodejs /app/apps/web/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 
 # Switch to non-root user
 USER nodejs
