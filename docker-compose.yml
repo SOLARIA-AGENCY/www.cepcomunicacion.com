@@ -80,10 +80,10 @@ services:
       - nginx-cache:/var/cache/nginx
       - ./infra/nginx/logs:/var/log/nginx
     depends_on:
-      # - frontend  # Commented out - using Option 4 (Custom Admin Dashboard)
-      - admin
-      - cms
-      - minio
+      - frontend  # Public website (React + Vite)
+      - admin     # Admin dashboard (Next.js)
+      - cms       # Payload CMS backend
+      - minio     # S3-compatible storage
     networks:
       - external
     healthcheck:
