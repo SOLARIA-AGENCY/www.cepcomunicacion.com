@@ -101,7 +101,7 @@ services:
   # ========================================
   frontend:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.frontend
       args:
         NODE_VERSION: "20"
@@ -196,7 +196,7 @@ services:
   # ========================================
   cms:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.cms
       args:
         NODE_VERSION: "20"
@@ -285,7 +285,7 @@ services:
   # ========================================
   worker-automation:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.worker
       args:
         NODE_VERSION: "20"
@@ -334,7 +334,7 @@ services:
   # ========================================
   worker-llm:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.worker
       args:
         NODE_VERSION: "20"
@@ -385,7 +385,7 @@ services:
   # ========================================
   worker-stats:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.worker
       args:
         NODE_VERSION: "20"
@@ -585,7 +585,7 @@ services:
   # ========================================
   bullboard:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.bullboard
     container_name: cep-bullboard
     restart: unless-stopped
@@ -615,7 +615,7 @@ services:
   # ========================================
   backup:
     build:
-      context: ../../
+      context: .
       dockerfile: infra/docker/Dockerfile.backup
     container_name: cep-backup
     restart: unless-stopped
