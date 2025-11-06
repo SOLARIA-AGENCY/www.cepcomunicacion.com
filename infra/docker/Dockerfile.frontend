@@ -20,8 +20,8 @@ WORKDIR /app
 # Copy package files for frontend app only
 COPY apps/web/package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (using npm install since package-lock.json is gitignored)
+RUN npm install
 
 # Copy application source
 COPY apps/web ./
