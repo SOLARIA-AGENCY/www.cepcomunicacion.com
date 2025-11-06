@@ -1,13 +1,15 @@
 /**
  * Mock data for testing and design preview
+ * Updated to match Course interface from types/index.ts
  */
 
-export const mockCourses = [
+import type { Course } from '../../types';
+
+export const mockCourses: Course[] = [
   {
-    id: 1,
-    name: 'Marketing Digital y Redes Sociales',
+    id: '1',
+    title: 'Marketing Digital y Redes Sociales',
     slug: 'marketing-digital-redes-sociales',
-    course_type: 'ciclo-superior',
     duration_hours: 100,
     modality: 'online',
     price: 900,
@@ -15,16 +17,15 @@ export const mockCourses = [
     financial_aid_available: true,
     featured: true,
     active: true,
-    cycle: {
-      name: 'Ciclo Superior en Marketing y Publicidad',
-      code: 'CSMP',
-    },
+    cycle: 'ciclo-superior-marketing-publicidad',
+    created_by: 'admin-user',
+    createdAt: '2025-01-01T00:00:00.000Z',
+    updatedAt: '2025-01-01T00:00:00.000Z',
   },
   {
-    id: 2,
-    name: 'Diseño Gráfico con Adobe Creative Suite',
+    id: '2',
+    title: 'Diseño Gráfico con Adobe Creative Suite',
     slug: 'diseno-grafico-adobe',
-    course_type: 'privados',
     duration_hours: 80,
     modality: 'presencial',
     price: 1100,
@@ -32,16 +33,15 @@ export const mockCourses = [
     financial_aid_available: false,
     featured: false,
     active: true,
-    cycle: {
-      name: 'Ciclo Superior en Marketing y Publicidad',
-      code: 'CSMP',
-    },
+    cycle: 'ciclo-superior-marketing-publicidad',
+    created_by: 'admin-user',
+    createdAt: '2025-01-01T00:00:00.000Z',
+    updatedAt: '2025-01-01T00:00:00.000Z',
   },
   {
-    id: 3,
-    name: 'Administrativo de Oficina',
+    id: '3',
+    title: 'Administrativo de Oficina',
     slug: 'administrativo-oficina',
-    course_type: 'ciclo-medio',
     duration_hours: 160,
     modality: 'presencial',
     price: 0,
@@ -49,9 +49,9 @@ export const mockCourses = [
     financial_aid_available: false,
     featured: true,
     active: true,
-    cycle: {
-      name: 'Ciclo Medio en Gestión Administrativa',
-      code: 'CMGA',
-    },
+    cycle: 'ciclo-medio-gestion-administrativa',
+    created_by: 'admin-user',
+    createdAt: '2025-01-01T00:00:00.000Z',
+    updatedAt: '2025-01-01T00:00:00.000Z',
   },
 ];
