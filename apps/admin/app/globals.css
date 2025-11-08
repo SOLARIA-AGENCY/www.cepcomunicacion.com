@@ -1,20 +1,23 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 
-:root {
-  --background: #f9fafb;
-  --foreground: #111827;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Custom Properties */
+  --color-background: #f9fafb;
+  --color-foreground: #111827;
+
+  /* Typography - Montserrat font family */
   --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* CEP Formación Brand Colors */
   --color-primary: #1e40af;
   --color-primary-dark: #1e3a8a;
   --color-primary-light: #3b82f6;
+}
+
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
 }
 
 body {
