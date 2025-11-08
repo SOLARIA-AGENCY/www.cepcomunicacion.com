@@ -30,8 +30,30 @@ export interface ApiError {
 /**
  * Login to Payload CMS
  * POST /api/users/login
+ *
+ * DEVELOPMENT MODE: Allow admin/admin bypass
  */
 export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
+  // DEVELOPMENT BYPASS: Allow admin/admin login without backend
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
+  ) {
+    if (credentials.email === 'admin' && credentials.password === 'admin') {
+      return {
+        message: 'Login successful (DEV MODE)',
+        user: {
+          id: 'dev-admin',
+          email: 'admin@cepcomunicacion.com',
+          role: 'admin',
+        },
+        token: 'dev-token-' + Date.now(),
+        exp: Date.now() + 86400000, // 24 hours
+      };
+    }
+  }
+
+  // Production authentication via Payload CMS
   const response = await fetch(`${API_URL}/users/login`, {
     method: 'POST',
     headers: {
