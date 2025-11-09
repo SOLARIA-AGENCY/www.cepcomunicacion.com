@@ -33,7 +33,7 @@ FROM node:${NODE_VERSION}-alpine AS builder
 
 # Build-time arguments for Next.js NEXT_PUBLIC_* variables
 ARG NEXT_PUBLIC_ENABLE_DEV_LOGIN=true
-ARG NEXT_PUBLIC_API_URL=http://cms:3000/api
+ARG NEXT_PUBLIC_API_URL=/api
 
 WORKDIR /app
 
