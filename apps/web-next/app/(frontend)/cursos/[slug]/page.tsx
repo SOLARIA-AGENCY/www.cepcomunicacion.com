@@ -23,7 +23,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
   const { slug } = await params;
 
   // Fetch course by slug
-  const coursesResult = await payloadClient.find('courses', {
+  const coursesResult = await payloadClient.find<Course>('courses', {
     where: {
       slug: {
         equals: slug,
