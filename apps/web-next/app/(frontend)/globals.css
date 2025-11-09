@@ -434,3 +434,70 @@
     letter-spacing: 0.05em;
   }
 }
+
+/**
+ * SYSTEM DESIGN HUB: Typography Standardization
+ * All titles and navigation links in UPPERCASE and CENTERED
+ * Applied: 2025-11-10 (ported from apps/web)
+ */
+@layer components {
+  /* Main page titles and section headings - UPPERCASE and CENTERED */
+  h1, h2, h3, h4,
+  .section-title,
+  .hero-title,
+  .page-title {
+    text-transform: uppercase !important;
+    text-align: center !important;
+  }
+
+  /* Subtitles and descriptive text - CENTERED only (preserve case) */
+  .subtitle,
+  .section-subtitle,
+  .hero-subtitle {
+    text-align: center !important;
+  }
+
+  /* Header navigation links - UPPERCASE */
+  header nav a,
+  .navbar a,
+  .menu-item a,
+  .nav-link,
+  nav a {
+    text-transform: uppercase !important;
+  }
+
+  /* Footer navigation links - UPPERCASE */
+  footer a,
+  .footer-links a,
+  .footer-menu a {
+    text-transform: uppercase !important;
+  }
+
+  /* CTA sections - UPPERCASE and CENTERED */
+  .cta-section h2,
+  .cta-section h3,
+  .cta-title {
+    text-transform: uppercase !important;
+    text-align: center !important;
+  }
+
+  /* Feature and benefit cards - CENTERED titles */
+  .feature-card h3,
+  .benefit-card h3,
+  .feature-title {
+    text-align: center !important;
+  }
+
+  /* Course catalog page specific */
+  .course-catalog-title {
+    text-transform: uppercase !important;
+    text-align: center !important;
+  }
+
+  /* About page specific */
+  .about-title,
+  .mission-title {
+    text-transform: uppercase !important;
+    text-align: center !important;
+  }
+}
