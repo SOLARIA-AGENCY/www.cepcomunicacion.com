@@ -34,12 +34,12 @@ export interface ApiError {
  * DEVELOPMENT MODE: Allow admin/admin bypass
  */
 export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
-  // DEVELOPMENT BYPASS: Allow admin@cepcomunicacion.com/admin login without backend
+  // DEVELOPMENT BYPASS: Allow admin@cepcomunicacion.com/admin123 login without backend
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
   ) {
-    if (credentials.email === 'admin@cepcomunicacion.com' && credentials.password === 'admin') {
+    if (credentials.email === 'admin@cepcomunicacion.com' && credentials.password === 'admin123') {
       return {
         message: 'Login successful (DEV MODE)',
         user: {
