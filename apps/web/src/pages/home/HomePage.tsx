@@ -41,9 +41,9 @@ export default function HomePage() {
       {/* Featured Courses Section - Fluid Responsive */}
       <section className="bg-neutral-50" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container">
-          <div className="mb-6 md:mb-8">
+          <div className="mb-6 md:mb-8 text-center">
             <h2 className="text-fluid-section-title font-bold mb-2">Cursos Destacados</h2>
-            <p className="text-fluid-body text-neutral-600 text-left">
+            <p className="text-fluid-body text-neutral-600">
               Descubre nuestros cursos más populares y con mayor demanda
             </p>
           </div>

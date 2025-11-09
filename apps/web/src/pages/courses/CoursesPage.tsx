@@ -62,7 +62,7 @@ export default function CoursesPage() {
     <div className="courses-page py-12">
       <div className="container">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold mb-2">Nuestros Cursos</h1>
           <p className="text-neutral-600">
             Encuentra el curso perfecto para tu carrera profesional
