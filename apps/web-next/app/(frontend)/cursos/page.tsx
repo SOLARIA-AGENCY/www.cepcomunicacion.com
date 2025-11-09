@@ -2,33 +2,34 @@
  * Courses Page
  *
  * Professional catalog page with filtering capability
- * Server Component with data fetching from Payload CMS
+ * Server Component with data fetching from Payload CMS via REST API
  */
 
 import Link from 'next/link';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
+import { payloadClient } from '@/lib/payloadClient';
 import { CourseCard } from '@/components/ui';
+import type { Course } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CursosPage() {
-  const payload = await getPayload({ config: configPromise });
-
-  // Fetch courses with relationships
-  const coursesResult = await payload.find({
-    collection: 'courses',
-    where: {
-      active: {
-        equals: true,
+  // Fetch courses with relationships via REST API
+  let courses: Course[] = [];
+  try {
+    const coursesResult = await payloadClient.find('courses', {
+      where: {
+        active: {
+          equals: true,
+        },
       },
-    },
-    limit: 50,
-    sort: '-createdAt',
-    depth: 2, // Include cycle and other relationships
-  });
-
-  const courses = coursesResult.docs;
+      limit: 50,
+      sort: '-createdAt',
+      depth: 2, // Include cycle and other relationships
+    });
+    courses = coursesResult.docs || [];
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+  }
 
   return (
     <div className="courses-page bg-neutral-50">
