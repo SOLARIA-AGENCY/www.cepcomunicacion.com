@@ -40,13 +40,20 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
     process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
   ) {
     if (credentials.email === 'admin@cepcomunicacion.com' && credentials.password === 'admin123') {
+      const devUser = {
+        id: 'dev-admin',
+        email: 'admin@cepcomunicacion.com',
+        role: 'admin',
+      };
+
+      // Store dev session in localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('dev_session', JSON.stringify(devUser));
+      }
+
       return {
         message: 'Login successful (DEV MODE)',
-        user: {
-          id: 'dev-admin',
-          email: 'admin@cepcomunicacion.com',
-          role: 'admin',
-        },
+        user: devUser,
         token: 'dev-token-' + Date.now(),
         exp: Date.now() + 86400000, // 24 hours
       };
@@ -76,6 +83,11 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
  * POST /api/users/logout
  */
 export async function logout(): Promise<void> {
+  // Clear dev session if exists
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('dev_session');
+  }
+
   const response = await fetch(`${API_URL}/users/logout`, {
     method: 'POST',
     credentials: 'include',
@@ -91,6 +103,24 @@ export async function logout(): Promise<void> {
  * GET /api/users/me
  */
 export async function getCurrentUser() {
+  // DEVELOPMENT BYPASS: Check for dev session in localStorage
+  if (
+    (process.env.NODE_ENV === 'development' ||
+      process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true') &&
+    typeof window !== 'undefined'
+  ) {
+    const devSession = localStorage.getItem('dev_session');
+    if (devSession) {
+      try {
+        const user = JSON.parse(devSession);
+        return { user }; // Match Payload CMS response format
+      } catch {
+        // Invalid session, clear it
+        localStorage.removeItem('dev_session');
+      }
+    }
+  }
+
   const response = await fetch(`${API_URL}/users/me`, {
     credentials: 'include',
   });
