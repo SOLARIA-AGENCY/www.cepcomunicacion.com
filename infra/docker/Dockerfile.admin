@@ -31,6 +31,10 @@ RUN pnpm install --frozen-lockfile --filter admin...
 # ========================================
 FROM node:${NODE_VERSION}-alpine AS builder
 
+# Build-time arguments for Next.js NEXT_PUBLIC_* variables
+ARG NEXT_PUBLIC_ENABLE_DEV_LOGIN=true
+ARG NEXT_PUBLIC_API_URL=http://cms:3000/api
+
 WORKDIR /app
 
 # Install pnpm
@@ -48,6 +52,9 @@ COPY tsconfig.json ./
 # Set environment for build
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# Pass NEXT_PUBLIC_* variables to build (required for client-side code)
+ENV NEXT_PUBLIC_ENABLE_DEV_LOGIN=${NEXT_PUBLIC_ENABLE_DEV_LOGIN}
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 # Build the application
 WORKDIR /app/apps/admin
