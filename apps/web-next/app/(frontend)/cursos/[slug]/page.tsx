@@ -79,9 +79,9 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             <h1 className="text-fluid-section-title title-uppercase font-bold mb-4">{course.name}</h1>
 
             {/* Description */}
-            {course.description && (
+            {course.short_description && (
               <p className="text-fluid-body opacity-90 mb-6">
-                {course.description}
+                {course.short_description}
               </p>
             )}
 
@@ -129,11 +129,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             {/* Main Content Column */}
             <div className="lg:col-span-2 space-y-8">
               {/* Description */}
-              {course.description && (
+              {course.short_description && (
                 <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
                   <h2 className="text-2xl section-title-uppercase font-bold text-neutral-900 mb-4">Descripción del curso</h2>
                   <div className="prose prose-neutral max-w-none">
-                    <p className="text-neutral-700 leading-relaxed">{course.description}</p>
+                    <p className="text-neutral-700 leading-relaxed">{course.short_description}</p>
                   </div>
                 </div>
               )}
@@ -179,21 +179,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
                   )}
 
                   {/* Price */}
-                  {course.price !== null && course.price !== undefined && (
+                  {course.base_price !== null && course.base_price !== undefined && (
                     <div className="flex justify-between py-3 border-b border-neutral-200">
                       <span className="text-neutral-600">Precio:</span>
                       <span className="font-semibold text-neutral-900">
-                        {course.price === 0 ? 'Gratuito' : `${course.price}€`}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Course Type */}
-                  {course.course_type && (
-                    <div className="flex justify-between py-3 border-b border-neutral-200">
-                      <span className="text-neutral-600">Tipo:</span>
-                      <span className="font-semibold text-neutral-900 capitalize">
-                        {course.course_type.replace(/_/g, ' ')}
+                        {course.base_price === 0 ? 'Gratuito' : `${course.base_price}€`}
                       </span>
                     </div>
                   )}
