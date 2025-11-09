@@ -26,26 +26,21 @@ const MODALITY_LABELS = {
 
 export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCardProps) {
   // Extract image URL - memoized to prevent recalculation
+  // TODO: Add featured_image field to Courses collection
   const imageUrl = useMemo(() => {
-    if (!course.featured_image) return null;
-
-    if (typeof course.featured_image === 'string') {
-      return `/api/media/${course.featured_image}`;
-    }
-
-    // If it's a Media object with sizes
-    return course.featured_image.sizes?.card?.url || course.featured_image.url;
-  }, [course.featured_image]);
+    return null; // Featured image not implemented yet
+  }, []);
 
   // Get cycle name - memoized to prevent recalculation
   const cycleName = useMemo(() => {
     if (!course.cycle) return null;
 
-    if (typeof course.cycle === 'string') {
-      return null; // Will need to fetch separately
+    // Type guard: cycle can be number | Cycle object
+    if (typeof course.cycle === 'object' && 'name' in course.cycle) {
+      return course.cycle.name;
     }
 
-    return course.cycle.name;
+    return null; // cycle is just an ID, not populated
   }, [course.cycle]);
 
   // Handle click - memoized to prevent recreation
@@ -62,7 +57,7 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         <div className="relative h-48 -mx-8 -mt-8 mb-4 rounded-t-xl overflow-hidden bg-neutral-200">
           <img
             src={imageUrl}
-            alt={course.featured_image && typeof course.featured_image !== 'string' ? course.featured_image.alt : course.title}
+            alt={course.name}
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -110,9 +105,11 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             {/* Modality */}
-            <span className="text-primary font-semibold">
-              {MODALITY_LABELS[course.modality]}
-            </span>
+            {course.modality && (
+              <span className="text-primary font-semibold">
+                {MODALITY_LABELS[course.modality]}
+              </span>
+            )}
 
             {/* Duration */}
             {course.duration_hours && (

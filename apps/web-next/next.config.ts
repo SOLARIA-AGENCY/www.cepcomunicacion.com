@@ -2,8 +2,14 @@ import { withPayload } from '@payloadcms/next/withPayload';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Standalone output for Docker deployment
+  output: 'standalone',
+
   // Typed Routes (moved out of experimental in Next.js 16)
   typedRoutes: true,
+
+  // Turbopack config (empty to silence Next.js 16 warning)
+  turbopack: {},
 
   // PRODUCTION FIX: Disable Turbopack due to Drizzle Kit incompatibility
   // Use Webpack for production builds until Payload 3.x supports Turbopack

@@ -15,13 +15,13 @@ export function Footer() {
       <div className="container">
         <div className="grid-fluid-footer">
           <div>
-            <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">CEP Formación</h3>
+            <h3 className="title-uppercase text-lg md:text-xl font-bold mb-3 md:mb-4">CEP Formación</h3>
             <p className="text-neutral-400 text-xs md:text-sm">
               Centro de formación profesional de calidad con cursos presenciales, online y semipresenciales.
             </p>
           </div>
           <div>
-            <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Enlaces Rápidos</h4>
+            <h4 className="title-uppercase text-base md:text-lg font-semibold mb-3 md:mb-4">Enlaces Rápidos</h4>
             <ul className="space-y-2">
               <li><Link href="/cursos" className="text-neutral-400 hover:text-white transition-colors text-sm">Cursos</Link></li>
               <li><Link href="/sobre-nosotros" className="text-neutral-400 hover:text-white transition-colors text-sm">Sobre Nosotros</Link></li>
@@ -30,7 +30,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Legal</h4>
+            <h4 className="title-uppercase text-base md:text-lg font-semibold mb-3 md:mb-4">Legal</h4>
             <ul className="space-y-2">
               <li><Link href="/politica-privacidad" className="text-neutral-400 hover:text-white transition-colors text-sm">Política de Privacidad</Link></li>
               <li><Link href="/aviso-legal" className="text-neutral-400 hover:text-white transition-colors text-sm">Aviso Legal</Link></li>
@@ -38,7 +38,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Contacto</h4>
+            <h4 className="title-uppercase text-base md:text-lg font-semibold mb-3 md:mb-4">Contacto</h4>
             <ul className="space-y-2 text-neutral-400 text-xs md:text-sm">
               <li>Tel: +34 900 000 000</li>
               <li>info@cepcomunicacion.com</li>

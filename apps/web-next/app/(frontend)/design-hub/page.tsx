@@ -18,12 +18,13 @@ import type { Course } from '@/payload-types';
 
 // Mock course for preview
 const mockCourse: Course = {
-  id: 'mock-1',
+  id: 1,
   name: 'Desarrollo Web Full Stack',
   description: 'Aprende a desarrollar aplicaciones web completas con las tecnologías más demandadas del mercado.',
   slug: 'desarrollo-web-full-stack',
   modality: 'presencial',
-  cycle: 'mock-cycle' as any,
+  cycle: 1, // Mock cycle ID
+  course_type: 'privados',
   featured: true,
   active: true,
   createdAt: new Date().toISOString(),

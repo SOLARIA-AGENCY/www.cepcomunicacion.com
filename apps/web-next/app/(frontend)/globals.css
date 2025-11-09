@@ -6,6 +6,9 @@
  * Color Palette: Professional education theme
  */
 
+/* Import Montserrat Font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -402,4 +405,32 @@
   .border-primary { border-color: var(--color-primary); }
   .border-secondary { border-color: var(--color-secondary); }
   .border-accent { border-color: var(--color-accent); }
+
+  /* Typography Uppercase Classes - Montserrat Headings */
+  .title-uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .title-hero {
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    font-size: 0.875rem; /* 14px */
+  }
+
+  .card-title-uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .section-title-uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 }

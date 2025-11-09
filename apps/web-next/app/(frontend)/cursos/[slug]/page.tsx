@@ -41,8 +41,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
     notFound();
   }
 
-  // Get cycle information
-  const cycleName = course.cycle && typeof course.cycle !== 'string' ? course.cycle.name : null;
+  // Get cycle information (type guard for number | Cycle union)
+  const cycleName = course.cycle && typeof course.cycle === 'object' && 'name' in course.cycle ? course.cycle.name : null;
 
   // Get campus information
   const campuses = course.campuses && Array.isArray(course.campuses)
@@ -78,7 +78,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             )}
 
             {/* Title */}
-            <h1 className="text-fluid-section-title font-bold mb-4">{course.name}</h1>
+            <h1 className="text-fluid-section-title title-uppercase font-bold mb-4">{course.name}</h1>
 
             {/* Description */}
             {course.description && (
@@ -90,13 +90,15 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             {/* Meta Information */}
             <div className="flex flex-wrap gap-6 text-sm">
               {/* Modality */}
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>{MODALITY_LABELS[course.modality]}</span>
-              </div>
+              {course.modality && (
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>{MODALITY_LABELS[course.modality]}</span>
+                </div>
+              )}
 
               {/* Duration */}
               {course.duration_hours && (
@@ -131,7 +133,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
               {/* Description */}
               {course.description && (
                 <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-neutral-900 mb-4">Descripción del curso</h2>
+                  <h2 className="text-2xl section-title-uppercase font-bold text-neutral-900 mb-4">Descripción del curso</h2>
                   <div className="prose prose-neutral max-w-none">
                     <p className="text-neutral-700 leading-relaxed">{course.description}</p>
                   </div>
@@ -141,7 +143,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
               {/* Campuses */}
               {campuses.length > 0 && (
                 <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-neutral-900 mb-4">Sedes disponibles</h2>
+                  <h2 className="text-2xl section-title-uppercase font-bold text-neutral-900 mb-4">Sedes disponibles</h2>
                   <div className="grid sm:grid-cols-2 gap-4">
                     {campuses.map((campus: any) => (
                       <div key={campus.id} className="border border-neutral-200 rounded-lg p-4">
@@ -159,7 +161,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             {/* Sidebar */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl shadow-md p-6 sticky top-24">
-                <h3 className="text-xl font-bold text-neutral-900 mb-4">Información del curso</h3>
+                <h3 className="text-xl card-title-uppercase font-bold text-neutral-900 mb-4">Información del curso</h3>
 
                 <div className="space-y-4 mb-6">
                   {/* Duration */}
@@ -171,10 +173,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
                   )}
 
                   {/* Modality */}
-                  <div className="flex justify-between py-3 border-b border-neutral-200">
-                    <span className="text-neutral-600">Modalidad:</span>
-                    <span className="font-semibold text-neutral-900">{MODALITY_LABELS[course.modality]}</span>
-                  </div>
+                  {course.modality && (
+                    <div className="flex justify-between py-3 border-b border-neutral-200">
+                      <span className="text-neutral-600">Modalidad:</span>
+                      <span className="font-semibold text-neutral-900">{MODALITY_LABELS[course.modality]}</span>
+                    </div>
+                  )}
 
                   {/* Price */}
                   {course.price !== null && course.price !== undefined && (
@@ -225,7 +229,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
       {/* Related Courses CTA */}
       <section className="bg-white border-t border-neutral-200" style={{ padding: 'clamp(2rem, 4vw, 3rem) 0' }}>
         <div className="container text-center">
-          <h2 className="text-2xl font-bold text-neutral-900 mb-3">¿Quieres ver más cursos?</h2>
+          <h2 className="text-2xl section-title-uppercase font-bold text-neutral-900 mb-3">¿Quieres ver más cursos?</h2>
           <p className="text-neutral-600 mb-6">Descubre toda nuestra oferta formativa</p>
           <Link href="/cursos" className="btn-secondary inline-block">
             Ver todos los cursos

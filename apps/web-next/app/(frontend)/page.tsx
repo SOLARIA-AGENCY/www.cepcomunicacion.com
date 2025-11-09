@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { CourseCard } from '@/components/ui';
+import type { Course } from '@/payload-types';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,7 @@ export default async function HomePage() {
   // Fetch featured courses from Payload CMS
   const payload = await getPayload({ config: configPromise });
 
-  let featuredCourses = [];
+  let featuredCourses: Course[] = [];
   try {
     const coursesData = await payload.find({
       collection: 'courses',
@@ -42,7 +43,7 @@ export default async function HomePage() {
       <section className="hero bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}>
         <div className="container">
           <div className="max-w-3xl xl:max-w-4xl mx-auto text-center">
-            <h1 className="text-fluid-hero font-bold mb-4 md:mb-6">
+            <h1 className="text-fluid-hero title-hero font-bold mb-4 md:mb-6">
               Formación Profesional de Calidad
             </h1>
             <p className="text-fluid-hero-sub mb-6 md:mb-8 opacity-90">
@@ -65,7 +66,7 @@ export default async function HomePage() {
       <section className="bg-neutral-50" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container">
           <div className="mb-6 md:mb-8">
-            <h2 className="text-fluid-section-title font-bold mb-2">Cursos Destacados</h2>
+            <h2 className="text-fluid-section-title section-title-uppercase font-bold mb-2">Cursos Destacados</h2>
             <p className="text-fluid-body text-neutral-600 text-left">
               Descubre nuestros cursos más populares y con mayor demanda
             </p>
@@ -136,7 +137,7 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Formación de Calidad</h3>
+              <h3 className="card-title-uppercase font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Formación de Calidad</h3>
               <p className="text-fluid-body text-neutral-600 text-center">
                 Cursos homologados con docentes expertos y contenidos actualizados
               </p>
@@ -159,7 +160,7 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Ayudas Disponibles</h3>
+              <h3 className="card-title-uppercase font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Ayudas Disponibles</h3>
               <p className="text-fluid-body text-neutral-600 text-center">
                 Acceso a becas y financiación para facilitar tu formación profesional
               </p>
@@ -182,7 +183,7 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Flexibilidad</h3>
+              <h3 className="card-title-uppercase font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Flexibilidad</h3>
               <p className="text-fluid-body text-neutral-600 text-center">
                 Modalidades presencial, online y semipresencial para adaptarnos a ti
               </p>

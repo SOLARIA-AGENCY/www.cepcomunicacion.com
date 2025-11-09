@@ -22,26 +22,26 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-3 lg:gap-4 xl:gap-6 items-center text-sm lg:text-base">
-            <Link href="/" className="text-neutral-700 hover:text-primary transition-colors">
+          <div className="hidden md:flex gap-3 lg:gap-4 xl:gap-6 items-center">
+            <Link href="/" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
               Inicio
             </Link>
-            <Link href="/cursos" className="text-neutral-700 hover:text-primary transition-colors">
+            <Link href="/cursos" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
               Cursos
             </Link>
-            <Link href="/sobre-nosotros" className="text-neutral-700 hover:text-primary transition-colors hidden lg:inline">
+            <Link href="/sobre-nosotros" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors hidden lg:inline">
               Sobre Nosotros
             </Link>
-            <Link href="/blog" className="text-neutral-700 hover:text-primary transition-colors">
+            <Link href="/blog" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
               Blog
             </Link>
-            <Link href="/faq" className="text-neutral-700 hover:text-primary transition-colors hidden xl:inline">
+            <Link href="/faq" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors hidden xl:inline">
               FAQ
             </Link>
-            <Link href="/design-hub" className="text-neutral-400 hover:text-primary transition-colors text-xs lg:text-sm hidden xl:inline">
+            <Link href="/design-hub" className="nav-uppercase text-neutral-400 hover:text-primary transition-colors hidden xl:inline">
               Design Hub
             </Link>
-            <Link href="/contacto" className="btn-primary py-2 px-3 lg:px-4 text-xs lg:text-sm">
+            <Link href="/contacto" className="nav-uppercase btn-primary py-2 px-3 lg:px-4">
               Contacto
             </Link>
           </div>
@@ -70,49 +70,49 @@ export function Header() {
             <div className="flex flex-col gap-4">
               <Link
                 href="/"
-                className="text-neutral-700 hover:text-primary transition-colors"
+                className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Inicio
               </Link>
               <Link
                 href="/cursos"
-                className="text-neutral-700 hover:text-primary transition-colors"
+                className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Cursos
               </Link>
               <Link
                 href="/sobre-nosotros"
-                className="text-neutral-700 hover:text-primary transition-colors"
+                className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Sobre Nosotros
               </Link>
               <Link
                 href="/blog"
-                className="text-neutral-700 hover:text-primary transition-colors"
+                className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/faq"
-                className="text-neutral-700 hover:text-primary transition-colors"
+                className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 FAQ
               </Link>
               <Link
                 href="/design-hub"
-                className="text-neutral-400 hover:text-primary transition-colors text-sm"
+                className="nav-uppercase text-neutral-400 hover:text-primary transition-colors text-base"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Design Hub
               </Link>
               <Link
                 href="/contacto"
-                className="btn-primary py-2 px-4 text-sm inline-block text-center"
+                className="nav-uppercase btn-primary py-2 px-4 inline-block text-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contacto

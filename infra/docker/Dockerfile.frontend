@@ -1,65 +1,79 @@
-# Frontend Dockerfile - React SPA with Vite
+# Frontend Dockerfile - Next.js 16 SSG with Payload CMS Integration
 # Multi-stage build for optimized production image
 
 # ========================================
-# STAGE 1: Build
+# STAGE 1: Dependencies
 # ========================================
 ARG NODE_VERSION=20
-FROM node:${NODE_VERSION}-alpine AS builder
+FROM node:${NODE_VERSION}-alpine AS deps
 
 # Install build dependencies
 RUN apk add --no-cache \
+    libc6-compat \
     python3 \
     make \
-    g++ \
-    git
+    g++
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files for frontend app only
-COPY apps/web/package*.json ./
+# Copy package files
+COPY package*.json pnpm-*.yaml ./
+COPY apps/web-next/package.json ./apps/web-next/
 
-# Install dependencies (using npm install since package-lock.json is gitignored)
-RUN npm install
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy application source
-COPY apps/web ./
-
-# Build arguments for environment variables
-ARG VITE_API_URL
-ARG VITE_ENABLE_ANALYTICS=false
-ARG VITE_GA4_ID
-ARG VITE_PLAUSIBLE_DOMAIN
-ARG VITE_HCAPTCHA_SITE_KEY
-ARG VITE_ENABLE_LLM=false
-ARG VITE_ENABLE_WHATSAPP=false
-
-# Build the application
-RUN npm run build
+# Install dependencies
+RUN pnpm install --frozen-lockfile --filter web-next...
 
 # ========================================
-# STAGE 2: Production Server
+# STAGE 2: Builder
+# ========================================
+FROM node:${NODE_VERSION}-alpine AS builder
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/web-next/node_modules ./apps/web-next/node_modules
+
+# Copy source code
+COPY apps/web-next ./apps/web-next
+COPY package*.json pnpm-*.yaml ./
+COPY tsconfig.json ./
+
+# Set environment for build
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+# Build the application (use webpack to avoid Drizzle Kit incompatibility with Turbopack)
+WORKDIR /app/apps/web-next
+RUN pnpm exec next build --webpack
+
+# ========================================
+# STAGE 3: Production
 # ========================================
 FROM node:${NODE_VERSION}-alpine
 
 # Install runtime dependencies
 RUN apk add --no-cache \
     tini \
-    wget
+    wget \
+    curl
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-# Set working directory
 WORKDIR /app
 
-# Install serve for SPA hosting
-RUN npm install -g serve@14
-
-# Copy built assets from builder
-COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
+# Copy Next.js standalone output (includes apps/web-next structure)
+COPY --from=builder --chown=nodejs:nodejs /app/apps/web-next/.next/standalone ./
+COPY --from=builder --chown=nodejs:nodejs /app/apps/web-next/.next/static ./apps/web-next/.next/static
+COPY --from=builder --chown=nodejs:nodejs /app/apps/web-next/public ./apps/web-next/public
 
 # Switch to non-root user
 USER nodejs
@@ -67,12 +81,17 @@ USER nodejs
 # Expose port
 EXPOSE 3000
 
+# Environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:3000 || exit 1
+    CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
 
 # Use tini to handle signals properly
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start the application
-CMD ["serve", "-s", "dist", "-l", "3000", "--no-request-logging"]
+CMD ["node", "apps/web-next/server.js"]
