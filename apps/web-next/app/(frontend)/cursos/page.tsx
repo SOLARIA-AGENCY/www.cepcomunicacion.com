@@ -6,23 +6,14 @@
  */
 
 import Link from 'next/link';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
 import { CourseCard } from '@/components/ui';
+import { payloadClient } from '@/lib/payloadClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CursosPage() {
-  const payload = await getPayload({ config: configPromise });
-
-  // Fetch courses with relationships
-  const coursesResult = await payload.find({
-    collection: 'courses',
-    where: {
-      active: {
-        equals: true,
-      },
-    },
+  // Fetch courses with relationships via REST API
+  const coursesResult = await payloadClient.courses.findActive({
     limit: 50,
     sort: '-createdAt',
     depth: 2, // Include cycle and other relationships

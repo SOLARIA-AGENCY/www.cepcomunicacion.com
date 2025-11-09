@@ -14,7 +14,7 @@
 
 import { useState, useEffect } from 'react';
 import { CourseCard } from '@/components/ui';
-import type { Course } from '@/payload-types';
+import type { Course } from '@/lib/payloadClient';
 
 // Mock course for preview
 const mockCourse: Course = {
@@ -23,6 +23,7 @@ const mockCourse: Course = {
   description: 'Aprende a desarrollar aplicaciones web completas con las tecnologías más demandadas del mercado.',
   slug: 'desarrollo-web-full-stack',
   modality: 'presencial',
+  course_type: 'telematico',
   cycle: 'mock-cycle' as any,
   featured: true,
   active: true,

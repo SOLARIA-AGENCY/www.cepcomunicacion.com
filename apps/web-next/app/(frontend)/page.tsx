@@ -6,32 +6,16 @@
  */
 
 import Link from 'next/link';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
 import { CourseCard } from '@/components/ui';
+import { payloadClient } from '@/lib/payloadClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  // Fetch featured courses from Payload CMS
-  const payload = await getPayload({ config: configPromise });
-
+  // Fetch featured courses from Payload CMS via REST API
   let featuredCourses = [];
   try {
-    const coursesData = await payload.find({
-      collection: 'courses',
-      where: {
-        featured: {
-          equals: true,
-        },
-        active: {
-          equals: true,
-        },
-      },
-      limit: 3,
-      depth: 2, // Include cycle data
-    });
-    featuredCourses = coursesData.docs || [];
+    featuredCourses = await payloadClient.courses.findFeatured(3);
   } catch (error) {
     console.error('Error fetching featured courses:', error);
   }
