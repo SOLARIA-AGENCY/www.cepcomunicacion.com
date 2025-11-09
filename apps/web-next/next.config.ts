@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   // Standalone output for Docker deployment
   output: 'standalone',
 
-  // Typed Routes (moved out of experimental in Next.js 16)
-  typedRoutes: true,
+  // Typed Routes disabled (Footer has links to non-existent legal pages)
+  typedRoutes: false,
 
   // Turbopack config (empty to silence Next.js 16 warning)
   turbopack: {},
