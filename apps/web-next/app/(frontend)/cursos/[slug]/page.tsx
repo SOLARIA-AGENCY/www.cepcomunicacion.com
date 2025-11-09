@@ -8,6 +8,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { payloadClient } from '@/lib/payloadClient';
+import type { Course } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
