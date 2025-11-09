@@ -16,7 +16,7 @@ export default async function CursosPage() {
   // Fetch courses with relationships via REST API
   let courses: Course[] = [];
   try {
-    const coursesResult = await payloadClient.find('courses', {
+    const coursesResult = await payloadClient.find<Course>('courses', {
       where: {
         active: {
           equals: true,

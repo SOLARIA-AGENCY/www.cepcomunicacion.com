@@ -10,7 +10,7 @@
 
 import { memo, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import type { Course } from '@/payload-types';
+import type { Course } from '@/lib/types';
 
 export interface CourseCardProps {
   course: Course;
@@ -95,9 +95,9 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         </h3>
 
         {/* Short Description */}
-        {course.description && (
+        {course.short_description && (
           <p className="text-neutral-600 text-sm mb-4 line-clamp-3">
-            {course.description}
+            {course.short_description}
           </p>
         )}
 

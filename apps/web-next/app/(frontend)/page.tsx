@@ -16,7 +16,7 @@ export default async function HomePage() {
   // Fetch featured courses from Payload CMS via REST API
   let featuredCourses: Course[] = [];
   try {
-    const coursesData = await payloadClient.find('courses', {
+    const coursesData = await payloadClient.find<Course>('courses', {
       where: {
         featured: {
           equals: true,
