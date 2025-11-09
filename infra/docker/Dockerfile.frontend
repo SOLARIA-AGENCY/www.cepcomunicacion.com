@@ -70,10 +70,17 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copy Next.js standalone output (includes apps/web-next structure)
+# Copy Next.js standalone output
+# Standalone already includes the full directory structure
 COPY --from=builder --chown=nodejs:nodejs /app/apps/web-next/.next/standalone ./
+
+# Copy static assets and public files into the standalone structure
+# These are not included in standalone output and must be copied separately
 COPY --from=builder --chown=nodejs:nodejs /app/apps/web-next/.next/static ./apps/web-next/.next/static
 COPY --from=builder --chown=nodejs:nodejs /app/apps/web-next/public ./apps/web-next/public
+
+# Set working directory to where server.js expects to run from
+WORKDIR /app/apps/web-next
 
 # Switch to non-root user
 USER nodejs
@@ -93,5 +100,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # Use tini to handle signals properly
 ENTRYPOINT ["/sbin/tini", "--"]
 
-# Start the application
-CMD ["node", "apps/web-next/server.js"]
+# Start the application (server.js expects to run from its own directory)
+CMD ["node", "server.js"]
