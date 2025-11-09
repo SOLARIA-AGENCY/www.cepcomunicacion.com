@@ -1,4 +1,3 @@
-import { withPayload } from '@payloadcms/next/withPayload';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -267,8 +266,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Payload 3.x configuration with performance optimization
-export default withPayload(nextConfig, {
-  // Cut Payload's compile times in half during development
-  devBundleServerPackages: false,
-});
+// Export Next.js config directly (Payload removed as part of ADR-003 migration)
+export default nextConfig;
