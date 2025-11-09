@@ -24,11 +24,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
 
-  // ESLint during builds
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
-
   // Image optimization - SECURITY: Whitelist specific domains only (no wildcards)
   images: {
     remotePatterns: [
