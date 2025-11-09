@@ -7,8 +7,7 @@
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
+import { payloadClient } from '@/lib/payloadClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,11 +20,9 @@ const MODALITY_LABELS = {
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const payload = await getPayload({ config: configPromise });
 
   // Fetch course by slug
-  const coursesResult = await payload.find({
-    collection: 'courses',
+  const coursesResult = await payloadClient.find('courses', {
     where: {
       slug: {
         equals: slug,
