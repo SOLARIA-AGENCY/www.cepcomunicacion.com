@@ -6,21 +6,17 @@
  */
 
 import Link from 'next/link';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
 import { CourseCard } from '@/components/ui';
-import type { Course } from '@/payload-types';
+import { payloadClient } from '@/lib/payloadClient';
+import type { Course } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  // Fetch featured courses from Payload CMS
-  const payload = await getPayload({ config: configPromise });
-
+  // Fetch featured courses from Payload CMS via REST API
   let featuredCourses: Course[] = [];
   try {
-    const coursesData = await payload.find({
-      collection: 'courses',
+    const coursesData = await payloadClient.find('courses', {
       where: {
         featured: {
           equals: true,
