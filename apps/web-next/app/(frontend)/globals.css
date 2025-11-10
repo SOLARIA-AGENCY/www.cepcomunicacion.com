@@ -50,6 +50,14 @@
     --color-accent-dark: #c2410c;
     --color-accent-light: #f97316;
 
+    /* CEP Formación Course Type Colors */
+    --color-cep-rosa: #f2014b; /* Rosa CEP - PRIVADO/CICLOS */
+    --color-cep-rosa-dark: #d6013f;
+    --color-cep-ocupados: #10B981; /* Verde - TRABAJADORES OCUPADOS */
+    --color-cep-ocupados-dark: #059669;
+    --color-cep-desempleados: #3B82F6; /* Azul - TRABAJADORES DESEMPLEADOS */
+    --color-cep-desempleados-dark: #2563EB;
+
     --color-neutral-50: #f9fafb;
     --color-neutral-100: #f3f4f6;
     --color-neutral-200: #e5e7eb;
@@ -342,6 +350,42 @@
     gap: clamp(1rem, 3vw, 2rem);
   }
 
+  /* Course Cards Grid - 3 columns for CEP Formación */
+  .courses-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  /* Course Card - Vertical design with min-height */
+  .course-card-vertical {
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Responsive - 2 columns on tablet */
+  @media (max-width: 1024px) {
+    .courses-grid-3col {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .course-card-vertical {
+      min-height: 620px;
+    }
+  }
+
+  /* Responsive - 1 column on mobile */
+  @media (max-width: 768px) {
+    .courses-grid-3col {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .course-card-vertical {
+      min-height: auto;
+    }
+  }
+
   /* Fluid Responsive Grid - Features (3 columns max) */
   .grid-fluid-features {
     display: grid;
@@ -405,6 +449,19 @@
   .border-primary { border-color: var(--color-primary); }
   .border-secondary { border-color: var(--color-secondary); }
   .border-accent { border-color: var(--color-accent); }
+
+  /* CEP Formación Course Type Colors */
+  .bg-cep-rosa { background-color: var(--color-cep-rosa); }
+  .bg-cep-rosa-dark { background-color: var(--color-cep-rosa-dark); }
+  .text-cep-rosa { color: var(--color-cep-rosa); }
+
+  .bg-cep-ocupados { background-color: var(--color-cep-ocupados); }
+  .bg-cep-ocupados-dark { background-color: var(--color-cep-ocupados-dark); }
+  .text-cep-ocupados { color: var(--color-cep-ocupados); }
+
+  .bg-cep-desempleados { background-color: var(--color-cep-desempleados); }
+  .bg-cep-desempleados-dark { background-color: var(--color-cep-desempleados-dark); }
+  .text-cep-desempleados { color: var(--color-cep-desempleados); }
 
   /* Typography Uppercase Classes - Montserrat Headings */
   .title-uppercase {

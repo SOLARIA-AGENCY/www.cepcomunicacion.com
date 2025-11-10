@@ -1,10 +1,12 @@
 /**
- * CourseCard Component Tests
+ * CourseCard Component Tests - CEP Formación Redesign
  *
  * Unit tests for CourseCard component
  * - Component rendering
- * - Props handling
- * - Event handlers
+ * - CEP brand colors by course type
+ * - Pricing display rules
+ * - 3-column grid layout
+ * - Tenerife locations
  * - Accessibility
  */
 
@@ -12,7 +14,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CourseCard } from '@/components/ui/CourseCard';
-import type { Course } from '@/payload-types';
+import type { Course } from '@/lib/types';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
@@ -23,93 +25,274 @@ vi.mock('next/link', () => ({
   ),
 }));
 
-describe('CourseCard', () => {
-  const mockCourse: Course = {
+describe('CourseCard - CEP Formación Redesign', () => {
+  const baseCourse: Partial<Course> = {
     id: '1',
     name: 'Marketing Digital y Redes Sociales',
     slug: 'marketing-digital-redes-sociales',
-    description: 'Domina las estrategias de marketing en redes sociales',
-    course_type: 'ciclo-superior',
+    short_description: 'Domina las estrategias de marketing en redes sociales',
     modality: 'online',
     duration_hours: 100,
-    price: 900,
-    financial_aid_available: true,
-    featured: true,
     active: true,
-    cycle: {
-      id: '1',
-      name: 'Ciclo Superior en Marketing',
-      code: 'CSMP',
-      level: 'ciclo-superior',
-      duration_years: 2,
-      active: true,
-      createdAt: '2025-01-01',
-      updatedAt: '2025-01-01',
-    },
-    campuses: [],
     createdAt: '2025-01-01',
     updatedAt: '2025-01-01',
   };
 
-  describe('Rendering', () => {
-    it('should render course name', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText(mockCourse.name)).toBeInTheDocument();
+  describe('CEP Brand Colors by Course Type', () => {
+    it('should display PRIVADO badge and pricing for privado courses', () => {
+      const privateCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={privateCourse} />);
+      expect(screen.getByText('PRIVADO')).toBeInTheDocument();
+      expect(screen.getByText('CONSULTAR PRECIO')).toBeInTheDocument();
     });
 
-    it('should render course description', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText(mockCourse.description!)).toBeInTheDocument();
+    it('should display TRABAJADORES OCUPADOS badge and 100% SUBVENCIONADO for ocupados courses', () => {
+      const ocupadosCourse: Course = {
+        ...baseCourse,
+        course_type: 'ocupados',
+      } as Course;
+
+      render(<CourseCard course={ocupadosCourse} />);
+      expect(screen.getByText('TRABAJADORES OCUPADOS')).toBeInTheDocument();
+      expect(screen.getByText('100% SUBVENCIONADO')).toBeInTheDocument();
     });
 
-    it('should render cycle name when available', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText('Ciclo Superior en Marketing')).toBeInTheDocument();
+    it('should display TRABAJADORES DESEMPLEADOS badge and GRATUITO for desempleados courses', () => {
+      const desempleadosCourse: Course = {
+        ...baseCourse,
+        course_type: 'desempleados',
+      } as Course;
+
+      render(<CourseCard course={desempleadosCourse} />);
+      expect(screen.getByText('TRABAJADORES DESEMPLEADOS')).toBeInTheDocument();
+      expect(screen.getByText('GRATUITO - 100% SUBVENCIONADO')).toBeInTheDocument();
     });
 
-    it('should render modality label', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText('Online')).toBeInTheDocument();
+    it('should display CICLO MEDIO badge and CONSULTAR PRECIO for ciclo_medio courses', () => {
+      const cicloMedioCourse: Course = {
+        ...baseCourse,
+        course_type: 'ciclo_medio',
+      } as Course;
+
+      render(<CourseCard course={cicloMedioCourse} />);
+      expect(screen.getByText('CICLO MEDIO')).toBeInTheDocument();
+      expect(screen.getByText('CONSULTAR PRECIO')).toBeInTheDocument();
     });
 
-    it('should render duration hours', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText('100h')).toBeInTheDocument();
+    it('should display CICLO SUPERIOR badge and CONSULTAR PRECIO for ciclo_superior courses', () => {
+      const cicloSuperiorCourse: Course = {
+        ...baseCourse,
+        course_type: 'ciclo_superior',
+      } as Course;
+
+      render(<CourseCard course={cicloSuperiorCourse} />);
+      expect(screen.getByText('CICLO SUPERIOR')).toBeInTheDocument();
+      expect(screen.getByText('CONSULTAR PRECIO')).toBeInTheDocument();
+    });
+  });
+
+  describe('Pricing Display Rules', () => {
+    it('should NOT display euro prices for any course type', () => {
+      const privateCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        base_price: 500,
+      } as Course;
+
+      const { container } = render(<CourseCard course={privateCourse} />);
+      const text = container.textContent || '';
+
+      // No debe haber texto como "500€" o "€"
+      expect(text).not.toMatch(/\d+€/);
     });
 
-    it('should render featured badge when featured', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText('Destacado')).toBeInTheDocument();
+    it('should display CONSULTAR PRECIO for private courses regardless of price field', () => {
+      const privateCourseWithPrice: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        base_price: 1000,
+      } as Course;
+
+      render(<CourseCard course={privateCourseWithPrice} />);
+      expect(screen.getByText('CONSULTAR PRECIO')).toBeInTheDocument();
+    });
+  });
+
+  describe('Modality and Duration Display', () => {
+    it('should display modality in UPPERCASE', () => {
+      const course: Course = {
+        ...baseCourse,
+        modality: 'presencial',
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      expect(screen.getByText('PRESENCIAL')).toBeInTheDocument();
     });
 
-    it('should render financial aid badge when available', () => {
-      render(<CourseCard course={mockCourse} />);
-      expect(screen.getByText('Ayudas disponibles')).toBeInTheDocument();
+    it('should display duration with H suffix in UPPERCASE', () => {
+      const course: Course = {
+        ...baseCourse,
+        duration_hours: 150,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      expect(screen.getByText('150H')).toBeInTheDocument();
     });
 
-    it('should not render financial aid badge when not available', () => {
-      const courseWithoutAid = { ...mockCourse, financial_aid_available: false };
-      render(<CourseCard course={courseWithoutAid} />);
+    it('should display ONLINE for online courses', () => {
+      const course: Course = {
+        ...baseCourse,
+        modality: 'online',
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      expect(screen.getByText('ONLINE')).toBeInTheDocument();
+    });
+
+    it('should display SEMIPRESENCIAL for hibrido courses', () => {
+      const course: Course = {
+        ...baseCourse,
+        modality: 'hibrido',
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      expect(screen.getByText('SEMIPRESENCIAL')).toBeInTheDocument();
+    });
+  });
+
+  describe('Tenerife Location Display', () => {
+    it('should append ", Tenerife" to campus name', () => {
+      const courseWithCampus: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        course_runs: [
+          {
+            id: '1',
+            campus: {
+              id: '1',
+              name: 'CEP NORTE',
+              address: 'Test Address',
+              city: 'Santa Cruz',
+              active: true,
+              createdAt: '2025-01-01',
+              updatedAt: '2025-01-01',
+            },
+            start_date: '2025-02-15',
+            enrollment_open: true,
+            published: true,
+            createdAt: '2025-01-01',
+            updatedAt: '2025-01-01',
+          },
+        ],
+      } as Course;
+
+      render(<CourseCard course={courseWithCampus} />);
+      expect(screen.getByText(/CEP NORTE, Tenerife/i)).toBeInTheDocument();
+    });
+
+    it('should display "Online, Tenerife" for online courses', () => {
+      const onlineCourse: Course = {
+        ...baseCourse,
+        modality: 'online',
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={onlineCourse} />);
+      expect(screen.getByText(/Online, Tenerife/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Eliminated Elements', () => {
+    it('should NOT display "DESTACADO" badge even if featured is true', () => {
+      const featuredCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        featured: true,
+      } as Course;
+
+      render(<CourseCard course={featuredCourse} />);
+      expect(screen.queryByText('DESTACADO')).not.toBeInTheDocument();
+      expect(screen.queryByText('Destacado')).not.toBeInTheDocument();
+    });
+
+    it('should NOT display "Ayudas disponibles" even if financial_aid_available is true', () => {
+      const aidCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        financial_aid_available: true,
+      } as Course;
+
+      render(<CourseCard course={aidCourse} />);
       expect(screen.queryByText('Ayudas disponibles')).not.toBeInTheDocument();
     });
+  });
 
-    it('should render default icon when no featured image', () => {
-      render(<CourseCard course={mockCourse} />);
-      const svg = screen.getByRole('link').querySelector('svg');
-      expect(svg).toBeInTheDocument();
+  describe('Title Display', () => {
+    it('should render course name in UPPERCASE', () => {
+      const course: Course = {
+        ...baseCourse,
+        name: 'Marketing Digital',
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      const heading = screen.getByRole('heading', { name: /marketing digital/i });
+      expect(heading).toBeInTheDocument();
+      expect(heading).toHaveClass('uppercase');
+    });
+
+    it('should align title to LEFT', () => {
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      const heading = screen.getByRole('heading', { name: /marketing/i });
+      expect(heading).toHaveClass('text-left');
+    });
+  });
+
+  describe('CTA Button', () => {
+    it('should display "VER CURSO" button', () => {
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
+      expect(screen.getByText('VER CURSO')).toBeInTheDocument();
     });
   });
 
   describe('Interaction', () => {
     it('should render as Link when no onClick provided', () => {
-      render(<CourseCard course={mockCourse} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
       const link = screen.getByRole('link');
-      expect(link).toHaveAttribute('href', `/cursos/${mockCourse.slug}`);
+      expect(link).toHaveAttribute('href', `/cursos/${baseCourse.slug}`);
     });
 
     it('should call onClick handler when provided', () => {
       const handleClick = vi.fn();
-      render(<CourseCard course={mockCourse} onClick={handleClick} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} onClick={handleClick} />);
 
       const card = screen.getByRole('button');
       fireEvent.click(card);
@@ -119,10 +302,14 @@ describe('CourseCard', () => {
 
     it('should handle keyboard events (Enter)', () => {
       const handleClick = vi.fn();
-      render(<CourseCard course={mockCourse} onClick={handleClick} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} onClick={handleClick} />);
 
       const card = screen.getByRole('button');
-      // Use keyDown instead of keyPress (deprecated)
       fireEvent.keyDown(card, { key: 'Enter', code: 'Enter' });
 
       expect(handleClick).toHaveBeenCalledTimes(1);
@@ -130,10 +317,14 @@ describe('CourseCard', () => {
 
     it('should handle keyboard events (Space)', () => {
       const handleClick = vi.fn();
-      render(<CourseCard course={mockCourse} onClick={handleClick} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} onClick={handleClick} />);
 
       const card = screen.getByRole('button');
-      // Use keyDown instead of keyPress (deprecated)
       fireEvent.keyDown(card, { key: ' ', code: 'Space' });
 
       expect(handleClick).toHaveBeenCalledTimes(1);
@@ -143,76 +334,95 @@ describe('CourseCard', () => {
   describe('Accessibility', () => {
     it('should have proper role when interactive', () => {
       const handleClick = vi.fn();
-      render(<CourseCard course={mockCourse} onClick={handleClick} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} onClick={handleClick} />);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
 
     it('should be keyboard accessible with tabIndex', () => {
       const handleClick = vi.fn();
-      render(<CourseCard course={mockCourse} onClick={handleClick} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} onClick={handleClick} />);
       const card = screen.getByRole('button');
       expect(card).toHaveAttribute('tabIndex', '0');
     });
 
     it('should have proper link semantics without onClick', () => {
-      render(<CourseCard course={mockCourse} />);
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
+
+      render(<CourseCard course={course} />);
       expect(screen.getByRole('link')).toBeInTheDocument();
     });
-  });
 
-  describe('Modality Display', () => {
-    it('should display "Presencial" for presencial modality', () => {
-      const presencialCourse = { ...mockCourse, modality: 'presencial' as const };
-      render(<CourseCard course={presencialCourse} />);
-      expect(screen.getByText('Presencial')).toBeInTheDocument();
-    });
+    it('should have aria-hidden on SVG icons', () => {
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
 
-    it('should display "Semipresencial" for hibrido modality', () => {
-      const hibridoCourse = { ...mockCourse, modality: 'hibrido' as const };
-      render(<CourseCard course={hibridoCourse} />);
-      expect(screen.getByText('Semipresencial')).toBeInTheDocument();
-    });
-
-    it('should display "Online" for online modality', () => {
-      const onlineCourse = { ...mockCourse, modality: 'online' as const };
-      render(<CourseCard course={onlineCourse} />);
-      expect(screen.getByText('Online')).toBeInTheDocument();
+      const { container } = render(<CourseCard course={course} />);
+      const svgs = container.querySelectorAll('svg[aria-hidden="true"]');
+      expect(svgs.length).toBeGreaterThan(0);
     });
   });
 
   describe('Edge Cases', () => {
-    it('should handle missing description', () => {
-      const courseWithoutDesc = { ...mockCourse, description: undefined };
+    it('should handle missing short_description', () => {
+      const courseWithoutDesc: Course = {
+        ...baseCourse,
+        short_description: undefined,
+        course_type: 'privado',
+      } as Course;
+
       render(<CourseCard course={courseWithoutDesc} />);
-      expect(screen.getByText(mockCourse.name)).toBeInTheDocument();
-    });
-
-    it('should handle missing cycle', () => {
-      const courseWithoutCycle = { ...mockCourse, cycle: undefined };
-      render(<CourseCard course={courseWithoutCycle} />);
-      expect(screen.queryByText('Ciclo Superior en Marketing')).not.toBeInTheDocument();
-    });
-
-    it('should handle string cycle reference (not populated)', () => {
-      const courseWithStringCycle = { ...mockCourse, cycle: '12345' };
-      render(<CourseCard course={courseWithStringCycle} />);
-      expect(screen.queryByText('Ciclo Superior en Marketing')).not.toBeInTheDocument();
+      expect(screen.getByText(/marketing digital y redes sociales/i)).toBeInTheDocument();
     });
 
     it('should handle missing duration_hours', () => {
-      const courseWithoutDuration = { ...mockCourse, duration_hours: undefined };
+      const courseWithoutDuration: Course = {
+        ...baseCourse,
+        duration_hours: undefined,
+        course_type: 'privado',
+      } as Course;
+
       render(<CourseCard course={courseWithoutDuration} />);
-      expect(screen.queryByText(/h$/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/H$/)).not.toBeInTheDocument();
+    });
+
+    it('should default to CONSULTAR PRECIO for unknown course types', () => {
+      const unknownTypeCourse: Course = {
+        ...baseCourse,
+        course_type: undefined,
+      } as Course;
+
+      render(<CourseCard course={unknownTypeCourse} />);
+      expect(screen.getByText('CONSULTAR PRECIO')).toBeInTheDocument();
     });
   });
 
   describe('Memoization', () => {
     it('should not re-render when props are the same (memo)', () => {
-      const { rerender } = render(<CourseCard course={mockCourse} />);
-      const firstRenderText = screen.getByText(mockCourse.name).innerHTML;
+      const course: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+      } as Course;
 
-      rerender(<CourseCard course={mockCourse} />);
-      const secondRenderText = screen.getByText(mockCourse.name).innerHTML;
+      const { rerender } = render(<CourseCard course={course} />);
+      const firstRenderText = screen.getByText(/marketing digital y redes sociales/i).innerHTML;
+
+      rerender(<CourseCard course={course} />);
+      const secondRenderText = screen.getByText(/marketing digital y redes sociales/i).innerHTML;
 
       expect(firstRenderText).toBe(secondRenderText);
     });

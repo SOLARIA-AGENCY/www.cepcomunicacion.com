@@ -73,8 +73,8 @@ export default async function CursosPage() {
                 </p>
               </div>
 
-              {/* Courses Grid */}
-              <div className="grid-fluid-cards">
+              {/* Courses Grid - 3 columns CEP Formación */}
+              <div className="courses-grid-3col">
                 {courses.map((course) => (
                   <CourseCard key={course.id} course={course} />
                 ))}
