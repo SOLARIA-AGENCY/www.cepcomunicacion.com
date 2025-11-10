@@ -2,7 +2,7 @@
  * Header Component
  *
  * Responsive navigation header with mobile menu and dropdown
- * Updated structure: INICIO | CICLOS | CURSOS ▼ | NOSOTROS | FAQ | BLOG | CONTACTO | ACCESO ALUMNOS
+ * Updated structure: INICIO | CICLOS | SEDES | CURSOS ▼ | NOSOTROS | FAQ | BLOG | CONTACTO | ACCESO ALUMNOS
  */
 
 'use client';
@@ -45,6 +45,10 @@ export function Header() {
 
             <Link href="/ciclos" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
               Ciclos
+            </Link>
+
+            <Link href="/sedes" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+              Sedes
             </Link>
 
             {/* DROPDOWN CURSOS */}
@@ -163,6 +167,14 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Ciclos
+              </Link>
+
+              <Link
+                href="/sedes"
+                className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sedes
               </Link>
 
               {/* Mobile Dropdown CURSOS */}
