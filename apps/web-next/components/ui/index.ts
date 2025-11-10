@@ -28,6 +28,12 @@ export type { AlertProps } from './Alert';
 export { CourseCard } from './CourseCard';
 export type { CourseCardProps } from './CourseCard';
 
+export { CourseFilters } from './CourseFilters';
+export type { CourseFiltersProps } from './CourseFilters';
+
+export { CoursesList } from './CoursesList';
+export type { CoursesListProps } from './CoursesList';
+
 export { Skeleton, SkeletonText, SkeletonCard } from './Skeleton';
 export type { SkeletonProps } from './Skeleton';
 

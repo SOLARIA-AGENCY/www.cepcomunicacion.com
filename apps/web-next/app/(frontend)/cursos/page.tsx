@@ -7,7 +7,7 @@
 
 import Link from 'next/link';
 import { payloadClient } from '@/lib/payloadClient';
-import { CourseCard } from '@/components/ui';
+import { CoursesList } from '@/components/ui';
 import type { Course } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -45,10 +45,10 @@ export default async function CursosPage() {
         </div>
       </section>
 
-      {/* Courses Grid Section */}
-      <section style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
-        <div className="container">
-          {courses.length === 0 ? (
+      {/* Courses with Filters */}
+      {courses.length === 0 ? (
+        <section style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
+          <div className="container">
             <div className="bg-white rounded-xl shadow-md p-12 text-center max-w-2xl mx-auto">
               <div className="text-6xl mb-4">📚</div>
               <h2 className="text-2xl font-bold text-neutral-900 mb-3">
@@ -64,25 +64,11 @@ export default async function CursosPage() {
                 Volver al inicio
               </Link>
             </div>
-          ) : (
-            <>
-              {/* Course Count and Sort */}
-              <div className="mb-6 flex items-center justify-between">
-                <p className="text-neutral-600">
-                  Mostrando <span className="font-semibold text-neutral-900">{courses.length}</span> cursos
-                </p>
-              </div>
-
-              {/* Courses Grid - 3 columns CEP Formación */}
-              <div className="courses-grid-3col">
-                {courses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      ) : (
+        <CoursesList courses={courses} />
+      )}
 
       {/* CTA Section */}
       <section className="bg-white border-t border-neutral-200" style={{ padding: 'clamp(2rem, 4vw, 3rem) 0' }}>
