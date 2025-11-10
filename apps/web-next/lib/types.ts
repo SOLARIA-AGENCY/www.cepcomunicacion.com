@@ -20,9 +20,11 @@ export interface Course {
   cycle: number | Cycle;
   campuses?: (number | Campus)[];
   featured_image?: number | Media;
+  course_runs?: (number | CourseRun)[]; // Active course offerings
 
   // Course details
   modality: 'presencial' | 'online' | 'hibrido';
+  course_type?: 'privado' | 'ocupados' | 'desempleados' | 'teleformacion' | 'ciclo_medio' | 'ciclo_superior';
   duration_hours?: number;
   base_price?: number;
   financial_aid_available?: boolean;
@@ -81,6 +83,46 @@ export interface Campus {
   updatedAt: string;
 }
 
+export interface CourseRun {
+  id: number;
+  slug: string;
+
+  // Relationships
+  course: number | Course;
+  campus?: number | Campus;
+
+  // Scheduling
+  start_date: string;
+  end_date: string;
+  enrollment_deadline?: string;
+  schedule?: {
+    days: string[];
+    time_start?: string;
+    time_end?: string;
+  };
+
+  // Capacity
+  min_students?: number;
+  max_students?: number;
+  current_enrollment?: number;
+
+  // Pricing
+  price?: number;
+  subsidized?: boolean;
+  subsidized_price?: number;
+
+  // Status
+  status: 'draft' | 'published' | 'enrollment_open' | 'enrollment_closed' | 'in_progress' | 'completed' | 'cancelled';
+
+  // Instructor
+  instructor_name?: string;
+
+  // Metadata
+  created_by?: number | User;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Media {
   id: number;
   alt?: string;
@@ -111,4 +153,8 @@ export function isMediaPopulated(media: number | Media | undefined): media is Me
 
 export function isUserPopulated(user: number | User | undefined): user is User {
   return typeof user === 'object' && user !== null && 'email' in user;
+}
+
+export function isCourseRunPopulated(courseRun: number | CourseRun | undefined): courseRun is CourseRun {
+  return typeof courseRun === 'object' && courseRun !== null && 'start_date' in courseRun;
 }
