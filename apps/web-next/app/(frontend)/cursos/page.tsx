@@ -36,8 +36,8 @@ export default async function CursosPage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2rem, 6vw, 4rem) 0' }}>
         <div className="container">
-          <div className="max-w-4xl">
-            <h1 className="text-fluid-section-title font-bold mb-4">Catálogo de Cursos</h1>
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-fluid-section-title font-bold uppercase mb-4">Catálogo de Cursos</h1>
             <p className="text-fluid-body opacity-90 mb-4">
               Descubre nuestra amplia oferta formativa. Tenemos {courses.length} cursos disponibles para impulsar tu carrera profesional.
             </p>
