@@ -95,6 +95,81 @@ describe('CourseCard - CEP Formación Redesign', () => {
     });
   });
 
+  describe('Area Badges', () => {
+    it('should display TECNOLOGÍA badge for tecnologia area', () => {
+      const techCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        area: 'tecnologia',
+      } as Course;
+
+      render(<CourseCard course={techCourse} />);
+      expect(screen.getByText('TECNOLOGÍA')).toBeInTheDocument();
+    });
+
+    it('should display AUDIOVISUAL badge for audiovisual area', () => {
+      const audioCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        area: 'audiovisual',
+      } as Course;
+
+      render(<CourseCard course={audioCourse} />);
+      expect(screen.getByText('AUDIOVISUAL')).toBeInTheDocument();
+    });
+
+    it('should display MARKETING badge for marketing area', () => {
+      const marketingCourse: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        area: 'marketing',
+      } as Course;
+
+      render(<CourseCard course={marketingCourse} />);
+      expect(screen.getByText('MARKETING')).toBeInTheDocument();
+    });
+
+    it('should display SANITARIA badge for sanitaria area', () => {
+      const healthCourse: Course = {
+        ...baseCourse,
+        course_type: 'ocupados',
+        area: 'sanitaria',
+      } as Course;
+
+      render(<CourseCard course={healthCourse} />);
+      expect(screen.getByText('SANITARIA')).toBeInTheDocument();
+    });
+
+    it('should display both course type and area badges together', () => {
+      const courseWithBoth: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        area: 'audiovisual',
+      } as Course;
+
+      render(<CourseCard course={courseWithBoth} />);
+      expect(screen.getByText('PRIVADO')).toBeInTheDocument();
+      expect(screen.getByText('AUDIOVISUAL')).toBeInTheDocument();
+    });
+
+    it('should not display area badge when area is not provided', () => {
+      const courseWithoutArea: Course = {
+        ...baseCourse,
+        course_type: 'privado',
+        area: undefined,
+      } as Course;
+
+      const { container } = render(<CourseCard course={courseWithoutArea} />);
+
+      // Verify only course type badge is present
+      expect(screen.getByText('PRIVADO')).toBeInTheDocument();
+
+      // Verify no area badges are present
+      const badges = container.querySelectorAll('.bg-red-600, .bg-blue-600, .bg-purple-600, .bg-pink-600');
+      expect(badges.length).toBe(0);
+    });
+  });
+
   describe('Pricing Display Rules', () => {
     it('should NOT display euro prices for any course type', () => {
       const privateCourse: Course = {

@@ -37,6 +37,18 @@ const COURSE_TYPE_CONFIG = {
   ciclo_superior: { label: 'CICLO SUPERIOR', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
 } as const;
 
+// Area labels and colors for badges
+const AREA_CONFIG = {
+  sanitaria: { label: 'SANITARIA', color: 'bg-red-600' },
+  horeca: { label: 'HORECA', color: 'bg-orange-600' },
+  salud: { label: 'SALUD', color: 'bg-green-600' },
+  tecnologia: { label: 'TECNOLOGÍA', color: 'bg-blue-600' },
+  audiovisual: { label: 'AUDIOVISUAL', color: 'bg-purple-600' },
+  administracion: { label: 'ADMINISTRACIÓN', color: 'bg-cyan-600' },
+  marketing: { label: 'MARKETING', color: 'bg-pink-600' },
+  educacion: { label: 'EDUCACIÓN', color: 'bg-yellow-600' },
+} as const;
+
 // Placeholder images from Pexels (high quality, course-related)
 const PLACEHOLDER_IMAGES = {
   default: 'https://images.pexels.com/photos/5905857/pexels-photo-5905857.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -179,12 +191,19 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
           height="220"
         />
 
-        {/* Badges Container - ONLY Course Type (NO "DESTACADO") */}
+        {/* Badges Container - Course Type and Area */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-2">
           {/* Course Type Badge */}
           {course.course_type && COURSE_TYPE_CONFIG[course.course_type] && (
             <span className={`${COURSE_TYPE_CONFIG[course.course_type].color} text-white text-xs font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-wide`}>
               {COURSE_TYPE_CONFIG[course.course_type].label}
+            </span>
+          )}
+
+          {/* Area Badge */}
+          {course.area && AREA_CONFIG[course.area] && (
+            <span className={`${AREA_CONFIG[course.area].color} text-white text-xs font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-wide`}>
+              {AREA_CONFIG[course.area].label}
             </span>
           )}
         </div>

@@ -49,7 +49,7 @@ export const Courses: CollectionConfig = {
 
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'cycle', 'modality', 'active', 'featured'],
+    defaultColumns: ['name', 'course_type', 'area', 'modality', 'active', 'featured'],
     group: 'Courses',
     description: 'Educational course catalog with pricing, modality, and campus information',
   },
@@ -208,6 +208,50 @@ export const Courses: CollectionConfig = {
       defaultValue: 'presencial',
       admin: {
         description: 'Course delivery method',
+      },
+    },
+
+    /**
+     * Course Type - Category of course offering
+     * Enum: privado, ocupados, desempleados, teleformacion, ciclo_medio, ciclo_superior
+     */
+    {
+      name: 'course_type',
+      type: 'select',
+      required: false,
+      options: [
+        { label: 'Privado', value: 'privado' },
+        { label: 'Trabajadores Ocupados', value: 'ocupados' },
+        { label: 'Trabajadores Desempleados', value: 'desempleados' },
+        { label: 'Teleformación', value: 'teleformacion' },
+        { label: 'Ciclo Medio', value: 'ciclo_medio' },
+        { label: 'Ciclo Superior', value: 'ciclo_superior' },
+      ],
+      admin: {
+        description: 'Type of course offering (determines pricing and visibility)',
+      },
+    },
+
+    /**
+     * Area - Thematic area/category for filtering and organization
+     * Enum: sanitaria, horeca, salud, tecnologia, audiovisual, administracion, marketing, educacion
+     */
+    {
+      name: 'area',
+      type: 'select',
+      required: false,
+      options: [
+        { label: 'Área Sanitaria', value: 'sanitaria' },
+        { label: 'Área Horeca', value: 'horeca' },
+        { label: 'Área Salud', value: 'salud' },
+        { label: 'Área Tecnología', value: 'tecnologia' },
+        { label: 'Área Audiovisual', value: 'audiovisual' },
+        { label: 'Área Administración', value: 'administracion' },
+        { label: 'Área Marketing', value: 'marketing' },
+        { label: 'Área Educación', value: 'educacion' },
+      ],
+      admin: {
+        description: 'Thematic area for filtering courses (e.g., technology, healthcare, marketing)',
       },
     },
 

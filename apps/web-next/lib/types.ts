@@ -25,6 +25,7 @@ export interface Course {
   // Course details
   modality: 'presencial' | 'online' | 'hibrido';
   course_type?: 'privado' | 'ocupados' | 'desempleados' | 'teleformacion' | 'ciclo_medio' | 'ciclo_superior';
+  area?: 'sanitaria' | 'horeca' | 'salud' | 'tecnologia' | 'audiovisual' | 'administracion' | 'marketing' | 'educacion';
   duration_hours?: number;
   base_price?: number;
   financial_aid_available?: boolean;
