@@ -1515,29 +1515,259 @@ export interface StudentExpanded {
   postal_code: string
   emergency_contact: string
   emergency_phone: string
-  enrolled_courses: string[] // course IDs
+  photo: string
+  initials: string
+  campus_id: string
+  academic_notes: string // OBLIGATORIO
+  enrolled_courses: {
+    id: string
+    name: string
+    code: string
+    status: 'active' | 'completed' | 'abandoned'
+    grade?: number
+  }[]
   status: 'active' | 'inactive' | 'graduated'
 }
 
 const firstNames = ["Pablo", "Lucía", "Diego", "Carmen", "Alejandro", "Elena", "Miguel", "Sara", "David", "Marta", "Javier", "Laura", "Carlos", "Ana", "Daniel", "María", "Antonio", "Isabel", "Francisco", "Rosa"]
 const lastNames = ["García", "Martínez", "López", "González", "Rodríguez", "Fernández", "Pérez", "Sánchez", "Romero", "Torres", "Ruiz", "Díaz", "Moreno", "Muñoz", "Álvarez", "Jiménez", "Castro", "Ortiz", "Rubio", "Molina"]
 
-export const studentsExpanded: StudentExpanded[] = Array.from({ length: 25 }, (_, i) => ({
-  id: `student-${i + 1}`,
-  first_name: firstNames[i % firstNames.length],
-  last_name: `${lastNames[i % lastNames.length]} ${lastNames[(i + 5) % lastNames.length]}`,
-  email: `alumno${i + 1}@example.com`,
-  phone: `+34 6${String(i + 10).padStart(8, "0")}`,
-  dni: `${String(12345678 + i).slice(0, 8)}${String.fromCharCode(65 + (i % 23))}`,
-  date_of_birth: `199${5 + (i % 5)}-0${1 + (i % 9)}-${10 + (i % 18)}`,
-  address: `Calle ${lastNames[i % lastNames.length]}, ${i + 1}`,
-  city: ["Madrid", "Barcelona", "Valencia", "Sevilla", "Tenerife"][i % 5],
-  postal_code: `${28000 + (i * 10)}`,
-  emergency_contact: `${firstNames[(i + 3) % firstNames.length]} ${lastNames[(i + 7) % lastNames.length]}`,
-  emergency_phone: `+34 6${String(i + 40).padStart(8, "0")}`,
-  enrolled_courses: [String((i % 5) + 1)],
-  status: i % 7 === 0 ? 'graduated' : i % 11 === 0 ? 'inactive' : 'active'
-}))
+const coursesList = [
+  { id: "CURSO001", name: "Marketing Digital Avanzado", code: "MKT-ADV-2025" },
+  { id: "CURSO002", name: "Community Manager Profesional", code: "CM-PRO-2025" },
+  { id: "CURSO003", name: "SEO y SEM Estratégico", code: "SEO-SEM-2025" },
+  { id: "CURSO004", name: "Diseño Gráfico con Adobe", code: "DG-ADOBE-2025" },
+  { id: "CURSO005", name: "Producción Audiovisual", code: "PROD-AV-2025" }
+]
+
+export const studentsExpanded: StudentExpanded[] = Array.from({ length: 25 }, (_, i) => {
+  const firstName = firstNames[i % firstNames.length]
+  const lastName = `${lastNames[i % lastNames.length]} ${lastNames[(i + 5) % lastNames.length]}`
+  const initials = `${firstName.charAt(0)}${lastName.split(' ')[0].charAt(0)}`
+
+  return {
+    id: `student-${i + 1}`,
+    first_name: firstName,
+    last_name: lastName,
+    email: `alumno${i + 1}@example.com`,
+    phone: `+34 6${String(i + 10).padStart(8, "0")}`,
+    dni: `${String(12345678 + i).slice(0, 8)}${String.fromCharCode(65 + (i % 23))}`,
+    date_of_birth: `199${5 + (i % 5)}-0${1 + (i % 9)}-${10 + (i % 18)}`,
+    address: `Calle ${lastNames[i % lastNames.length]}, ${i + 1}`,
+    city: ["Santa Cruz de Tenerife", "La Laguna", "Icod de los Vinos", "Puerto de la Cruz", "Los Cristianos"][i % 5],
+    postal_code: `${38000 + (i * 10)}`,
+    emergency_contact: `${firstNames[(i + 3) % firstNames.length]} ${lastNames[(i + 7) % lastNames.length]}`,
+    emergency_phone: `+34 6${String(i + 40).padStart(8, "0")}`,
+    photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName + '+' + lastName.split(' ')[0])}&background=random`,
+    initials: initials,
+    campus_id: ["C001", "C002", "C003"][i % 3],
+    academic_notes: i % 3 === 0
+      ? "Estudiante destacado con excelente participación en clase. Muestra gran interés por las materias prácticas y aporta ideas innovadoras en los proyectos grupales. Recomendado para actividades de liderazgo."
+      : i % 3 === 1
+      ? "Alumno responsable con buen rendimiento académico. Asiste regularmente a clase y entrega los trabajos en plazo. Podría mejorar su participación oral en las dinámicas de grupo."
+      : "Rendimiento satisfactorio. Necesita refuerzo en algunas áreas técnicas pero muestra mejora constante. Se recomienda seguimiento individualizado en tutorías.",
+    enrolled_courses: i % 2 === 0 ? [
+      {
+        id: coursesList[i % coursesList.length].id,
+        name: coursesList[i % coursesList.length].name,
+        code: coursesList[i % coursesList.length].code,
+        status: 'active',
+        grade: undefined
+      }
+    ] : [
+      {
+        id: coursesList[i % coursesList.length].id,
+        name: coursesList[i % coursesList.length].name,
+        code: coursesList[i % coursesList.length].code,
+        status: 'completed',
+        grade: 75 + (i % 25)
+      },
+      {
+        id: coursesList[(i + 1) % coursesList.length].id,
+        name: coursesList[(i + 1) % coursesList.length].name,
+        code: coursesList[(i + 1) % coursesList.length].code,
+        status: 'active',
+        grade: undefined
+      }
+    ],
+    status: i % 7 === 0 ? 'graduated' : i % 11 === 0 ? 'inactive' : 'active'
+  }
+})
+
+// Alias for easier import
+export const studentsData = studentsExpanded
+
+// ============================================================================
+// PERSONAL ADMINISTRATIVO
+// ============================================================================
+
+export interface AdministrativeStaff {
+  id: string
+  first_name: string
+  last_name: string
+  email: string
+  phone: string
+  photo: string
+  initials: string
+  position: string
+  department: string
+  extension?: string
+  active: boolean
+  bio: string // OBLIGATORIO
+  responsibilities: string[]
+  certifications: {
+    title: string
+    institution: string
+    year: number
+  }[]
+  campuses: string[] // campus IDs
+}
+
+export const administrativeStaffData: AdministrativeStaff[] = [
+  {
+    id: "admin-1",
+    first_name: "Laura",
+    last_name: "Martínez González",
+    email: "laura.martinez@cepcomunicacion.com",
+    phone: "+34 922 111 001",
+    photo: "https://ui-avatars.com/api/?name=Laura+Martinez&background=random",
+    initials: "LM",
+    position: "Directora Administrativa",
+    department: "Administración",
+    extension: "101",
+    active: true,
+    bio: "Más de 15 años de experiencia en gestión administrativa y dirección de equipos. Especializada en optimización de procesos y coordinación de recursos humanos. Licenciada en Administración y Dirección de Empresas.",
+    responsibilities: [
+      "Supervisión del equipo administrativo",
+      "Gestión presupuestaria",
+      "Coordinación interdepartamental",
+      "Auditorías internas de calidad"
+    ],
+    certifications: [
+      { title: "MBA en Gestión Empresarial", institution: "Universidad de La Laguna", year: 2015 },
+      { title: "Certificación ISO 9001", institution: "AENOR", year: 2020 }
+    ],
+    campuses: ["C001", "C002", "C003"]
+  },
+  {
+    id: "admin-2",
+    first_name: "Carlos",
+    last_name: "Hernández Díaz",
+    email: "carlos.hernandez@cepcomunicacion.com",
+    phone: "+34 922 111 002",
+    photo: "https://ui-avatars.com/api/?name=Carlos+Hernandez&background=random",
+    initials: "CH",
+    position: "Responsable de Secretaría Académica",
+    department: "Secretaría Académica",
+    extension: "102",
+    active: true,
+    bio: "10 años de experiencia en gestión académica y atención al estudiante. Experto en sistemas de gestión educativa y normativa académica. Titulado en Administración de Empresas con especialización en gestión educativa.",
+    responsibilities: [
+      "Gestión de matrículas y expedientes académicos",
+      "Coordinación de calendarios y horarios",
+      "Emisión de certificados y títulos",
+      "Atención al alumnado"
+    ],
+    certifications: [
+      { title: "Gestor de Centros Educativos", institution: "UNED", year: 2018 }
+    ],
+    campuses: ["C002"]
+  },
+  {
+    id: "admin-3",
+    first_name: "María",
+    last_name: "García Pérez",
+    email: "maria.garcia@cepcomunicacion.com",
+    phone: "+34 922 111 003",
+    photo: "https://ui-avatars.com/api/?name=Maria+Garcia&background=random",
+    initials: "MG",
+    position: "Recepcionista",
+    department: "Recepción",
+    extension: "100",
+    active: true,
+    bio: "Profesional con 8 años de experiencia en atención al público y gestión de llamadas. Especializada en protocolo de atención al cliente y resolución de consultas. Formación en Administración y Gestión.",
+    responsibilities: [
+      "Atención telefónica y presencial",
+      "Gestión de agenda y citas",
+      "Registro de visitantes",
+      "Coordinación de mensajería"
+    ],
+    certifications: [],
+    campuses: ["C001"]
+  },
+  {
+    id: "admin-4",
+    first_name: "Javier",
+    last_name: "Rodríguez Sánchez",
+    email: "javier.rodriguez@cepcomunicacion.com",
+    phone: "+34 922 111 004",
+    photo: "https://ui-avatars.com/api/?name=Javier+Rodriguez&background=random",
+    initials: "JR",
+    position: "Técnico de Sistemas",
+    department: "Informática",
+    extension: "105",
+    active: true,
+    bio: "Ingeniero informático con 12 años de experiencia en soporte técnico y administración de sistemas. Especializado en infraestructura IT, seguridad informática y plataformas educativas digitales.",
+    responsibilities: [
+      "Mantenimiento de equipos informáticos",
+      "Administración de redes y servidores",
+      "Soporte técnico al personal y alumnado",
+      "Gestión de plataformas educativas online"
+    ],
+    certifications: [
+      { title: "Certificación CCNA", institution: "Cisco", year: 2017 },
+      { title: "Administración de Sistemas Linux", institution: "Red Hat", year: 2019 }
+    ],
+    campuses: ["C001", "C002", "C003"]
+  },
+  {
+    id: "admin-5",
+    first_name: "Ana",
+    last_name: "Fernández Torres",
+    email: "ana.fernandez@cepcomunicacion.com",
+    phone: "+34 922 111 005",
+    photo: "https://ui-avatars.com/api/?name=Ana+Fernandez&background=random",
+    initials: "AF",
+    position: "Responsable de Contabilidad",
+    department: "Contabilidad",
+    extension: "103",
+    active: true,
+    bio: "Contable colegiada con 14 años de experiencia en gestión contable y fiscal. Especializada en contabilidad de entidades educativas, gestión de subvenciones y planificación financiera.",
+    responsibilities: [
+      "Contabilidad general y analítica",
+      "Gestión de tesorería",
+      "Declaraciones fiscales y tributarias",
+      "Gestión de subvenciones y ayudas"
+    ],
+    certifications: [
+      { title: "Grado en Contabilidad y Finanzas", institution: "Universidad de Las Palmas", year: 2010 },
+      { title: "Asesor Fiscal Certificado", institution: "REAF", year: 2016 }
+    ],
+    campuses: ["C002"]
+  },
+  {
+    id: "admin-6",
+    first_name: "Pedro",
+    last_name: "López Ruiz",
+    email: "pedro.lopez@cepcomunicacion.com",
+    phone: "+34 922 111 006",
+    photo: "https://ui-avatars.com/api/?name=Pedro+Lopez&background=random",
+    initials: "PL",
+    position: "Coordinador de Logística",
+    department: "Administración",
+    extension: "104",
+    active: true,
+    bio: "Profesional con 9 años de experiencia en logística y gestión de instalaciones. Responsable de la coordinación de recursos materiales, proveedores y mantenimiento de las sedes.",
+    responsibilities: [
+      "Gestión de proveedores y compras",
+      "Coordinación de mantenimiento de instalaciones",
+      "Control de inventario",
+      "Logística de eventos y actividades"
+    ],
+    certifications: [],
+    campuses: ["C001", "C003"]
+  }
+]
 
 // ============================================================================
 // CURSOS EXPANDIDOS

@@ -7,7 +7,9 @@ import { ProgrammingPage } from "./pages/ProgrammingPage"
 import { PlannerPage } from "./pages/PlannerPage"
 import { TeachersPage } from "./pages/TeachersPage"
 import { StudentsPage } from "./pages/StudentsPage"
+import { AdministrativePage } from "./pages/AdministrativePage"
 import { CampusPage } from "./pages/CampusPage"
+import { CyclesPage } from "./pages/CyclesPage"
 import { ClassroomsPage } from "./pages/ClassroomsPage"
 import { ClassroomsNortePage } from "./pages/ClassroomsNortePage"
 import { ClassroomsSantaCruzPage } from "./pages/ClassroomsSantaCruzPage"
@@ -27,7 +29,9 @@ function App() {
             <Route path="cursos/planner" element={<PlannerPage />} />
             <Route path="profesores" element={<TeachersPage />} />
             <Route path="alumnos" element={<StudentsPage />} />
+            <Route path="personal" element={<AdministrativePage />} />
             <Route path="sedes" element={<CampusPage />} />
+            <Route path="ciclos" element={<CyclesPage />} />
             <Route path="aulas" element={<ClassroomsPage />} />
             <Route path="aulas/cep-norte" element={<ClassroomsNortePage />} />
             <Route path="aulas/cep-santa-cruz" element={<ClassroomsSantaCruzPage />} />
