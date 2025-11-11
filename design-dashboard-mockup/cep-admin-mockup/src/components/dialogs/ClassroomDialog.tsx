@@ -16,10 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Info, Trash } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { EditableList } from "@/components/ui/EditableList"
 
 interface Classroom {
   id: number
@@ -100,35 +100,12 @@ export function ClassroomDialog({ open, onOpenChange, mode = 'create', classroom
             </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label>Equipamiento *</Label>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="eq-proyector" />
-                <label htmlFor="eq-proyector" className="text-sm cursor-pointer">
-                  Proyector
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="eq-ordenadores" />
-                <label htmlFor="eq-ordenadores" className="text-sm cursor-pointer">
-                  Ordenadores
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="eq-pizarra" />
-                <label htmlFor="eq-pizarra" className="text-sm cursor-pointer">
-                  Pizarra Digital
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="eq-audio" />
-                <label htmlFor="eq-audio" className="text-sm cursor-pointer">
-                  Sistema de Audio
-                </label>
-              </div>
-            </div>
-          </div>
+          {/* Equipamiento - Lista dinámica (NO checkboxes fijos) */}
+          <EditableList
+            items={classroom?.equipment || []}
+            label="Equipamiento *"
+            placeholder="ej: Proyector, Ordenadores, Pizarra Digital, Sistema de Audio..."
+          />
 
           <Alert>
             <Info className="h-4 w-4" />
