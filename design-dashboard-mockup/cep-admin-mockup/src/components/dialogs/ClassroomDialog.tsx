@@ -18,22 +18,35 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Info } from "lucide-react"
+import { Info, Trash } from "lucide-react"
+import { cn } from "@/lib/utils"
+
+interface Classroom {
+  id: number
+  name: string
+  capacity: number
+  floor: number
+  equipment: string[]
+}
 
 interface ClassroomDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  mode?: 'create' | 'edit'
+  classroom?: Classroom
   campus?: string
 }
 
-export function ClassroomDialog({ open, onOpenChange, campus }: ClassroomDialogProps) {
+export function ClassroomDialog({ open, onOpenChange, mode = 'create', classroom, campus }: ClassroomDialogProps) {
+  const isEdit = mode === 'edit'
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Agregar Nueva Aula</DialogTitle>
+          <DialogTitle>{isEdit ? 'Editar Aula' : 'Agregar Nueva Aula'}</DialogTitle>
           <DialogDescription>
-            Complete los campos para crear una nueva aula
+            {isEdit ? 'Modifique los campos para actualizar el aula' : 'Complete los campos para crear una nueva aula'}
           </DialogDescription>
         </DialogHeader>
 
@@ -41,17 +54,26 @@ export function ClassroomDialog({ open, onOpenChange, campus }: ClassroomDialogP
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Nombre del Aula *</Label>
-              <Input id="name" placeholder="ej: Aula A1" />
+              <Input
+                id="name"
+                placeholder="ej: Aula A1"
+                defaultValue={classroom?.name}
+              />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="capacity">Capacidad *</Label>
-              <Input id="capacity" type="number" placeholder="ej: 25" />
+              <Input
+                id="capacity"
+                type="number"
+                placeholder="ej: 25"
+                defaultValue={classroom?.capacity}
+              />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="floor">Planta *</Label>
-              <Select>
+              <Select defaultValue={classroom?.floor.toString()}>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccione planta" />
                 </SelectTrigger>
@@ -117,10 +139,25 @@ export function ClassroomDialog({ open, onOpenChange, campus }: ClassroomDialogP
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancelar
-          </Button>
-          <Button onClick={() => onOpenChange(false)}>Guardar Aula</Button>
+          <div className="flex w-full justify-between">
+            {isEdit && (
+              <Button
+                variant="destructive"
+                onClick={() => onOpenChange(false)}
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                Eliminar Aula
+              </Button>
+            )}
+            <div className={cn("flex gap-2", !isEdit && "w-full justify-end")}>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Cancelar
+              </Button>
+              <Button onClick={() => onOpenChange(false)}>
+                {isEdit ? 'Guardar Cambios' : 'Crear Aula'}
+              </Button>
+            </div>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

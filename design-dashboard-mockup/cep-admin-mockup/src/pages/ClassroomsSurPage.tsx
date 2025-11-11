@@ -1,3 +1,4 @@
+import { useState } from "react"
 import {
   Card,
   CardContent,
@@ -6,10 +7,22 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { DoorOpen, Users, Calendar } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { DoorOpen, Users, Calendar, Plus, Edit } from "lucide-react"
+import { ClassroomDialog } from "@/components/dialogs/ClassroomDialog"
+
+interface Classroom {
+  id: number
+  name: string
+  capacity: number
+  floor: number
+  equipment: string[]
+  currentCourse: string | null
+  schedule: Array<{ day: string; time: string; course: string }>
+}
 
 // Mock data para aulas de CEP Sur
-const classrooms = [
+const classrooms: Classroom[] = [
   {
     id: 1,
     name: "Aula E1",
@@ -72,13 +85,35 @@ const classrooms = [
 ]
 
 export function ClassroomsSurPage() {
+  const [showClassroomDialog, setShowClassroomDialog] = useState(false)
+  const [selectedClassroom, setSelectedClassroom] = useState<Classroom | null>(null)
+  const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create')
+
+  const handleAddClassroom = () => {
+    setDialogMode('create')
+    setSelectedClassroom(null)
+    setShowClassroomDialog(true)
+  }
+
+  const handleEditClassroom = (classroom: Classroom) => {
+    setDialogMode('edit')
+    setSelectedClassroom(classroom)
+    setShowClassroomDialog(true)
+  }
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Aulas CEP Sur</h1>
-        <p className="text-muted-foreground">
-          Gestión visual de aulas y asignación de cursos - Sede Sur
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Aulas CEP Sur</h1>
+          <p className="text-muted-foreground">
+            Gestión visual de aulas y asignación de cursos - Sede Sur
+          </p>
+        </div>
+        <Button onClick={handleAddClassroom}>
+          <Plus className="mr-2 h-4 w-4" />
+          Agregar Aula
+        </Button>
       </div>
 
       {/* Grid de Aulas */}
@@ -91,11 +126,21 @@ export function ClassroomsSurPage() {
                   <DoorOpen className="h-5 w-5 text-primary" />
                   <CardTitle>{classroom.name}</CardTitle>
                 </div>
-                {classroom.currentCourse ? (
-                  <Badge>Ocupada</Badge>
-                ) : (
-                  <Badge variant="secondary">Disponible</Badge>
-                )}
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    title="Editar aula"
+                    onClick={() => handleEditClassroom(classroom)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  {classroom.currentCourse ? (
+                    <Badge>Ocupada</Badge>
+                  ) : (
+                    <Badge variant="secondary">Disponible</Badge>
+                  )}
+                </div>
               </div>
               <CardDescription>
                 Planta {classroom.floor} • Capacidad: {classroom.capacity} personas
@@ -183,6 +228,15 @@ export function ClassroomsSurPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modal de Aula */}
+      <ClassroomDialog
+        open={showClassroomDialog}
+        onOpenChange={setShowClassroomDialog}
+        mode={dialogMode}
+        classroom={selectedClassroom || undefined}
+        campus="sur"
+      />
     </div>
   )
 }
