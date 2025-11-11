@@ -272,7 +272,14 @@ export const convocations: Convocation[] = [
   },
 ]
 
-// Teachers
+// Teachers (Expandido a 15 profesores con más datos)
+export interface TeacherExpanded extends Teacher {
+  initials: string
+  photo: string
+  department: string
+  bio: string
+}
+
 export const teachers: Teacher[] = [
   {
     id: "1",
@@ -321,6 +328,220 @@ export const teachers: Teacher[] = [
     email: "ana.lopez@cepcomunicacion.com",
     phone: "+34 600 555 666",
     specialties: ["Fotografía", "Vídeo", "Post-producción"],
+    active: true,
+    courses_count: 3,
+  },
+]
+
+// Teachers con información expandida para el mockup
+export const teachersExpanded: TeacherExpanded[] = [
+  {
+    id: "1",
+    first_name: "María",
+    last_name: "García Pérez",
+    initials: "MG",
+    email: "maria.garcia@cepcomunicacion.com",
+    phone: "+34 612 345 678",
+    photo: "https://i.pravatar.cc/150?img=1",
+    department: "Marketing Digital",
+    specialties: ["SEO", "SEM", "Analytics"],
+    bio: "15 años de experiencia en marketing digital. Certificada en Google Ads y Analytics.",
+    active: true,
+    courses_count: 5,
+  },
+  {
+    id: "2",
+    first_name: "Carlos",
+    last_name: "Rodríguez López",
+    initials: "CR",
+    email: "carlos.rodriguez@cepcomunicacion.com",
+    phone: "+34 623 456 789",
+    photo: "https://i.pravatar.cc/150?img=12",
+    department: "Desarrollo Web",
+    specialties: ["React", "Node.js", "TypeScript"],
+    bio: "Full-stack developer con 10 años de experiencia. Especialista en arquitecturas modernas.",
+    active: true,
+    courses_count: 3,
+  },
+  {
+    id: "3",
+    first_name: "Laura",
+    last_name: "Martínez Sánchez",
+    initials: "LM",
+    email: "laura.martinez@cepcomunicacion.com",
+    phone: "+34 634 567 890",
+    photo: "https://i.pravatar.cc/150?img=5",
+    department: "Diseño Gráfico",
+    specialties: ["Adobe Creative Suite", "Branding", "UI/UX"],
+    bio: "Diseñadora gráfica con 12 años de experiencia. Especialista en identidad corporativa.",
+    active: true,
+    courses_count: 4,
+  },
+  {
+    id: "4",
+    first_name: "Javier",
+    last_name: "Fernández Ruiz",
+    initials: "JF",
+    email: "javier.fernandez@cepcomunicacion.com",
+    phone: "+34 645 678 901",
+    photo: "https://i.pravatar.cc/150?img=15",
+    department: "Audiovisual",
+    specialties: ["Producción", "Edición", "Motion Graphics"],
+    bio: "Productor audiovisual con más de 8 años en el sector.",
+    active: true,
+    courses_count: 6,
+  },
+  {
+    id: "5",
+    first_name: "Ana",
+    last_name: "López Torres",
+    initials: "AL",
+    email: "ana.lopez@cepcomunicacion.com",
+    phone: "+34 656 789 012",
+    photo: "https://i.pravatar.cc/150?img=9",
+    department: "Marketing Digital",
+    specialties: ["Redes Sociales", "Content Marketing", "Copywriting"],
+    bio: "Community Manager con 7 años de experiencia.",
+    active: true,
+    courses_count: 3,
+  },
+  {
+    id: "6",
+    first_name: "David",
+    last_name: "Martín Torres",
+    initials: "DM",
+    email: "david.martin@cepcomunicacion.com",
+    phone: "+34 667 890 123",
+    photo: "https://i.pravatar.cc/150?img=13",
+    department: "Desarrollo Web",
+    specialties: ["PHP", "Laravel", "MySQL"],
+    bio: "Backend developer especializado en arquitecturas escalables.",
+    active: true,
+    courses_count: 4,
+  },
+  {
+    id: "7",
+    first_name: "Carmen",
+    last_name: "López Díaz",
+    initials: "CL",
+    email: "carmen.lopez@cepcomunicacion.com",
+    phone: "+34 678 901 234",
+    photo: "https://i.pravatar.cc/150?img=10",
+    department: "Diseño Gráfico",
+    specialties: ["Ilustración Digital", "Diseño Editorial"],
+    bio: "Ilustradora y diseñadora editorial premiada.",
+    active: true,
+    courses_count: 3,
+  },
+  {
+    id: "8",
+    first_name: "Miguel",
+    last_name: "Romero Castro",
+    initials: "MR",
+    email: "miguel.romero@cepcomunicacion.com",
+    phone: "+34 689 012 345",
+    photo: "https://i.pravatar.cc/150?img=17",
+    department: "Audiovisual",
+    specialties: ["Fotografía", "Iluminación", "Retoque"],
+    bio: "Fotógrafo profesional con 11 años de experiencia.",
+    active: true,
+    courses_count: 4,
+  },
+  {
+    id: "9",
+    first_name: "Silvia",
+    last_name: "Navarro Gil",
+    initials: "SN",
+    email: "silvia.navarro@cepcomunicacion.com",
+    phone: "+34 690 123 456",
+    photo: "https://i.pravatar.cc/150?img=20",
+    department: "Marketing Digital",
+    specialties: ["Email Marketing", "Automation", "CRM"],
+    bio: "Especialista en marketing automation.",
+    active: true,
+    courses_count: 5,
+  },
+  {
+    id: "10",
+    first_name: "Roberto",
+    last_name: "Castro Vega",
+    initials: "RC",
+    email: "roberto.castro@cepcomunicacion.com",
+    phone: "+34 601 234 567",
+    photo: "https://i.pravatar.cc/150?img=33",
+    department: "Desarrollo Web",
+    specialties: ["Vue.js", "Nuxt", "Firebase"],
+    bio: "Frontend developer especializado en aplicaciones SPA.",
+    active: true,
+    courses_count: 3,
+  },
+  {
+    id: "11",
+    first_name: "Isabel",
+    last_name: "Moreno Pardo",
+    initials: "IM",
+    email: "isabel.moreno@cepcomunicacion.com",
+    phone: "+34 612 345 678",
+    photo: "https://i.pravatar.cc/150?img=24",
+    department: "Gestión Empresarial",
+    specialties: ["Gestión de Proyectos", "Scrum", "Agile"],
+    bio: "Project Manager certificada PMP.",
+    active: true,
+    courses_count: 4,
+  },
+  {
+    id: "12",
+    first_name: "Francisco",
+    last_name: "Jiménez Ruiz",
+    initials: "FJ",
+    email: "francisco.jimenez@cepcomunicacion.com",
+    phone: "+34 623 456 789",
+    photo: "https://i.pravatar.cc/150?img=51",
+    department: "Audiovisual",
+    specialties: ["3D Animation", "VFX", "Cinema 4D"],
+    bio: "Animador 3D con 8 años de experiencia.",
+    active: true,
+    courses_count: 3,
+  },
+  {
+    id: "13",
+    first_name: "Patricia",
+    last_name: "Delgado Ríos",
+    initials: "PD",
+    email: "patricia.delgado@cepcomunicacion.com",
+    phone: "+34 634 567 890",
+    photo: "https://i.pravatar.cc/150?img=29",
+    department: "Marketing Digital",
+    specialties: ["E-commerce", "Google Ads", "Meta Ads"],
+    bio: "Especialista en publicidad digital.",
+    active: true,
+    courses_count: 5,
+  },
+  {
+    id: "14",
+    first_name: "Alberto",
+    last_name: "Ortiz Sanz",
+    initials: "AO",
+    email: "alberto.ortiz@cepcomunicacion.com",
+    phone: "+34 645 678 901",
+    photo: "https://i.pravatar.cc/150?img=52",
+    department: "Desarrollo Web",
+    specialties: ["Python", "Django", "Machine Learning"],
+    bio: "Desarrollador backend con experiencia en IA.",
+    active: true,
+    courses_count: 4,
+  },
+  {
+    id: "15",
+    first_name: "Raquel",
+    last_name: "Herrera Campos",
+    initials: "RH",
+    email: "raquel.herrera@cepcomunicacion.com",
+    phone: "+34 656 789 012",
+    photo: "https://i.pravatar.cc/150?img=32",
+    department: "Diseño Gráfico",
+    specialties: ["UX Research", "Wireframing", "Prototyping"],
+    bio: "UX Designer certificada en Nielsen Norman Group.",
     active: true,
     courses_count: 3,
   },
@@ -473,4 +694,129 @@ export const campaigns: Campaign[] = [
     start_date: "2024-11-01",
     end_date: "2025-03-31",
   },
+]
+
+// ============================================================================
+// PERSONAL ADMINISTRATIVO (8 miembros)
+// ============================================================================
+
+export interface StaffMember {
+  id: string
+  first_name: string
+  last_name: string
+  initials: string
+  email: string
+  phone: string
+  photo: string
+  role: string
+  campus: string
+  department: string
+  active: boolean
+}
+
+export const staff: StaffMember[] = [
+  {
+    id: "1",
+    first_name: "Beatriz",
+    last_name: "Ramírez Soto",
+    initials: "BR",
+    email: "beatriz.ramirez@cepcomunicacion.com",
+    phone: "+34 922 345 678",
+    photo: "https://i.pravatar.cc/150?img=16",
+    role: "Directora General",
+    campus: "CEP Madrid Centro",
+    department: "Dirección",
+    active: true
+  },
+  {
+    id: "2",
+    first_name: "Enrique",
+    last_name: "Molina Castro",
+    initials: "EM",
+    email: "enrique.molina@cepcomunicacion.com",
+    phone: "+34 922 456 789",
+    photo: "https://i.pravatar.cc/150?img=53",
+    role: "Coordinador Académico",
+    campus: "CEP Madrid Centro",
+    department: "Coordinación",
+    active: true
+  },
+  {
+    id: "3",
+    first_name: "Cristina",
+    last_name: "Vega Díaz",
+    initials: "CV",
+    email: "cristina.vega@cepcomunicacion.com",
+    phone: "+34 922 567 890",
+    photo: "https://i.pravatar.cc/150?img=44",
+    role: "Secretaria",
+    campus: "CEP Barcelona",
+    department: "Secretaría",
+    active: true
+  },
+  {
+    id: "4",
+    first_name: "Antonio",
+    last_name: "Serrano López",
+    initials: "AS",
+    email: "antonio.serrano@cepcomunicacion.com",
+    phone: "+34 922 678 901",
+    photo: "https://i.pravatar.cc/150?img=58",
+    role: "Administrativo",
+    campus: "CEP Madrid Centro",
+    department: "Administración",
+    active: true
+  },
+  {
+    id: "5",
+    first_name: "Mónica",
+    last_name: "Ramos Gil",
+    initials: "MR",
+    email: "monica.ramos@cepcomunicacion.com",
+    phone: "+34 922 789 012",
+    photo: "https://i.pravatar.cc/150?img=47",
+    role: "Recepcionista",
+    campus: "CEP Madrid Centro",
+    department: "Recepción",
+    active: true
+  },
+  {
+    id: "6",
+    first_name: "Fernando",
+    last_name: "Ortega Ruiz",
+    initials: "FO",
+    email: "fernando.ortega@cepcomunicacion.com",
+    phone: "+34 922 890 123",
+    photo: "https://i.pravatar.cc/150?img=61",
+    role: "Coordinador Académico",
+    campus: "CEP Barcelona",
+    department: "Coordinación",
+    active: true
+  },
+  {
+    id: "7",
+    first_name: "Teresa",
+    last_name: "Blanco Sanz",
+    initials: "TB",
+    email: "teresa.blanco@cepcomunicacion.com",
+    phone: "+34 922 901 234",
+    photo: "https://i.pravatar.cc/150?img=48",
+    role: "Recepcionista",
+    campus: "CEP Valencia",
+    department: "Recepción",
+    active: true
+  },
+  {
+    id: "8",
+    first_name: "Luis Miguel",
+    last_name: "Herrera Castro",
+    initials: "LH",
+    email: "luis.herrera@cepcomunicacion.com",
+    phone: "+34 922 012 345",
+    photo: "https://i.pravatar.cc/150?img=62",
+    role: "Administrativo",
+    campus: "CEP Valencia",
+    department: "Administración",
+    active: true
+  }
 ]

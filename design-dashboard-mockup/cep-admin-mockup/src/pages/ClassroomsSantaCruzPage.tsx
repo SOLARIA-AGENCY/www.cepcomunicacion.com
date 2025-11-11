@@ -1,3 +1,4 @@
+import { useState } from "react"
 import {
   Card,
   CardContent,
@@ -6,7 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { DoorOpen, Users, Calendar } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { DoorOpen, Users, Calendar, Plus, Edit, Trash } from "lucide-react"
+import { ClassroomDialog } from "@/components/dialogs/ClassroomDialog"
 
 // Mock data para aulas de CEP Santa Cruz
 const classrooms = [
@@ -51,13 +54,21 @@ const classrooms = [
 ]
 
 export function ClassroomsSantaCruzPage() {
+  const [showClassroomDialog, setShowClassroomDialog] = useState(false)
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Aulas CEP Santa Cruz</h1>
-        <p className="text-muted-foreground">
-          Gestión visual de aulas y asignación de cursos - Sede Santa Cruz
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Aulas CEP Santa Cruz</h1>
+          <p className="text-muted-foreground">
+            Gestión visual de aulas y asignación de cursos - Sede Santa Cruz
+          </p>
+        </div>
+        <Button onClick={() => setShowClassroomDialog(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Agregar Aula
+        </Button>
       </div>
 
       {/* Grid de Aulas */}
@@ -70,11 +81,19 @@ export function ClassroomsSantaCruzPage() {
                   <DoorOpen className="h-5 w-5 text-primary" />
                   <CardTitle>{classroom.name}</CardTitle>
                 </div>
-                {classroom.currentCourse ? (
-                  <Badge>Ocupada</Badge>
-                ) : (
-                  <Badge variant="secondary">Disponible</Badge>
-                )}
+                <div className="flex items-center gap-2">
+                  <Button size="icon" variant="ghost" title="Editar aula">
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="ghost" title="Eliminar aula">
+                    <Trash className="h-4 w-4 text-destructive" />
+                  </Button>
+                  {classroom.currentCourse ? (
+                    <Badge>Ocupada</Badge>
+                  ) : (
+                    <Badge variant="secondary">Disponible</Badge>
+                  )}
+                </div>
               </div>
               <CardDescription>
                 Planta {classroom.floor} • Capacidad: {classroom.capacity} personas
@@ -162,6 +181,13 @@ export function ClassroomsSantaCruzPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modal de Aula */}
+      <ClassroomDialog
+        open={showClassroomDialog}
+        onOpenChange={setShowClassroomDialog}
+        campus="santa-cruz"
+      />
     </div>
   )
 }
