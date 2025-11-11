@@ -18,14 +18,6 @@ import {
 } from "lucide-react"
 import { dashboardMetrics, convocations, campaigns } from "@/data/mockData"
 import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 export function DashboardPage() {
   const metrics = dashboardMetrics

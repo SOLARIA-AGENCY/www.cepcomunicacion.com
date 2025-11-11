@@ -23,8 +23,6 @@ import {
   Settings,
   ChevronDown,
   GraduationCap,
-  Briefcase,
-  Monitor,
   MapPin,
 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"

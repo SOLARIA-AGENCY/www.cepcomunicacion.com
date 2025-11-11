@@ -3321,3 +3321,557 @@ export const coursesData: CourseDetailed[] = [
     certificate_name: "Certificado Profesional en IA para Marketing"
   }
 ]
+
+// ============================================
+// CAMPAÑAS (10 registros)
+// ============================================
+export interface CampaignDetailed {
+  id: string
+  name: string
+  code: string
+  type: 'email' | 'social' | 'paid_ads' | 'organic' | 'event' | 'referral'
+  status: 'activa' | 'pausada' | 'finalizada' | 'borrador'
+  description: string // OBLIGATORIA
+  start_date: string
+  end_date: string
+  budget: number
+  spent: number
+  objectives: {
+    target_leads: number
+    target_enrollments: number
+  }
+  metrics: {
+    total_leads: number
+    total_enrollments: number
+    conversion_rate: number
+    cost_per_lead: number
+    cost_per_enrollment: number
+  }
+  utm_params: {
+    utm_source: string
+    utm_medium: string
+    utm_campaign: string
+    utm_term?: string
+    utm_content?: string
+  }
+  courses: {
+    id: string
+    name: string
+    code: string
+  }[]
+  campuses: {
+    id: string
+    name: string
+    code: string
+  }[]
+  created_by: string
+  created_at: string
+}
+
+export const campaignsData: CampaignDetailed[] = [
+  {
+    id: "CAMP001",
+    name: "Lanzamiento Cursos Marketing Digital 2025",
+    code: "MKT-LAUNCH-2025-Q1",
+    type: "paid_ads",
+    status: "activa",
+    description: "Campaña de lanzamiento de cursos de marketing digital para el primer trimestre 2025. Incluye Meta Ads (Facebook e Instagram), Google Ads y remarketing. Objetivo: captar 150 leads cualificados con tasa de conversión mínima del 15%. Público objetivo: profesionales de 25-45 años interesados en upskilling digital.",
+    start_date: "2025-01-15",
+    end_date: "2025-03-31",
+    budget: 3500,
+    spent: 1850,
+    objectives: {
+      target_leads: 150,
+      target_enrollments: 25
+    },
+    metrics: {
+      total_leads: 87,
+      total_enrollments: 14,
+      conversion_rate: 16.1,
+      cost_per_lead: 21.26,
+      cost_per_enrollment: 132.14
+    },
+    utm_params: {
+      utm_source: "meta",
+      utm_medium: "cpc",
+      utm_campaign: "mkt-launch-2025-q1",
+      utm_content: "carousel-testimonials"
+    },
+    courses: [
+      {
+        id: "CURSO001",
+        name: "Community Manager Profesional",
+        code: "CM-PRO-2025"
+      },
+      {
+        id: "CURSO002",
+        name: "SEO y SEM Avanzado",
+        code: "SEO-SEM-ADV"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      },
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      }
+    ],
+    created_by: "María García Pérez",
+    created_at: "2025-01-10"
+  },
+  {
+    id: "CAMP002",
+    name: "Email Nurturing - Cursos Desarrollo Web",
+    code: "EMAIL-DEV-NURTURE-Q1",
+    type: "email",
+    status: "activa",
+    description: "Secuencia de 8 emails automatizada para leads que descargaron el ebook 'Guía de Desarrollo Web 2025'. Segmentación por nivel de experiencia (principiante, intermedio, avanzado). Contenido educativo + ofertas exclusivas de cursos React y Node.js. Objetivo: conversión del 8% de la lista.",
+    start_date: "2025-02-01",
+    end_date: "2025-04-30",
+    budget: 450,
+    spent: 180,
+    objectives: {
+      target_leads: 300,
+      target_enrollments: 24
+    },
+    metrics: {
+      total_leads: 156,
+      total_enrollments: 11,
+      conversion_rate: 7.05,
+      cost_per_lead: 1.15,
+      cost_per_enrollment: 16.36
+    },
+    utm_params: {
+      utm_source: "mailchimp",
+      utm_medium: "email",
+      utm_campaign: "dev-nurture-q1",
+      utm_content: "ebook-download"
+    },
+    courses: [
+      {
+        id: "CURSO004",
+        name: "Desarrollo Frontend con React",
+        code: "REACT-2025"
+      },
+      {
+        id: "CURSO005",
+        name: "Backend con Node.js y PostgreSQL",
+        code: "NODE-PSQL"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    created_by: "Carlos Rodríguez Martínez",
+    created_at: "2025-01-25"
+  },
+  {
+    id: "CAMP003",
+    name: "Webinar Gratuito - Introducción a UX/UI",
+    code: "WEBINAR-UX-FEB",
+    type: "event",
+    status: "finalizada",
+    description: "Webinar online gratuito de 90 minutos sobre fundamentos de diseño UX/UI. Incluye demostración en vivo con Figma y Q&A. Estrategia de lead magnet para conversión posterior a curso completo de UX/UI. Promoción vía redes sociales orgánicas (LinkedIn, Instagram) + email marketing a base de datos existente.",
+    start_date: "2025-02-15",
+    end_date: "2025-02-15",
+    budget: 150,
+    spent: 150,
+    objectives: {
+      target_leads: 100,
+      target_enrollments: 8
+    },
+    metrics: {
+      total_leads: 142,
+      total_enrollments: 12,
+      conversion_rate: 8.45,
+      cost_per_lead: 1.06,
+      cost_per_enrollment: 12.50
+    },
+    utm_params: {
+      utm_source: "linkedin",
+      utm_medium: "organic",
+      utm_campaign: "webinar-ux-feb",
+      utm_content: "event-post"
+    },
+    courses: [
+      {
+        id: "CURSO003",
+        name: "Diseño UX/UI con Figma",
+        code: "UX-UI-FIG"
+      }
+    ],
+    campuses: [
+      {
+        id: "C004",
+        name: "CEP Online",
+        code: "ONLINE"
+      }
+    ],
+    created_by: "Laura Martínez Sosa",
+    created_at: "2025-01-30"
+  },
+  {
+    id: "CAMP004",
+    name: "Campaña Orgánica Instagram - Cursos Audiovisuales",
+    code: "INSTA-AV-ORGANIC-Q1",
+    type: "organic",
+    status: "activa",
+    description: "Estrategia de contenido orgánico en Instagram enfocada en cursos audiovisuales (edición vídeo, fotografía, motion graphics). Publicación diaria: carruseles educativos, reels con tips, testimonios de alumnos. Uso de hashtags específicos del sector audiovisual. Colaboraciones con influencers locales del sector creativo. Objetivo: crecimiento de 500 seguidores mensuales y 50 leads orgánicos.",
+    start_date: "2025-01-01",
+    end_date: "2025-03-31",
+    budget: 200,
+    spent: 120,
+    objectives: {
+      target_leads: 150,
+      target_enrollments: 10
+    },
+    metrics: {
+      total_leads: 68,
+      total_enrollments: 5,
+      conversion_rate: 7.35,
+      cost_per_lead: 1.76,
+      cost_per_enrollment: 24.00
+    },
+    utm_params: {
+      utm_source: "instagram",
+      utm_medium: "organic",
+      utm_campaign: "av-organic-q1",
+      utm_content: "bio-link"
+    },
+    courses: [
+      {
+        id: "CURSO007",
+        name: "Edición de Vídeo con Premiere Pro",
+        code: "PREMIERE-PRO"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    created_by: "Ana López Ruiz",
+    created_at: "2024-12-20"
+  },
+  {
+    id: "CAMP005",
+    name: "Programa de Referencias - Alumnos Actuales",
+    code: "REFERRAL-2025-CONTINUOUS",
+    type: "referral",
+    status: "activa",
+    description: "Programa de incentivos para alumnos actuales que recomienden CEP a amigos/conocidos. Por cada referido matriculado, el alumno recibe 50€ de descuento en su próximo curso + el nuevo alumno recibe 25€ de descuento. Sistema de tracking mediante códigos únicos. Comunicación vía email mensual + cartelería en sedes físicas.",
+    start_date: "2025-01-01",
+    end_date: "2025-12-31",
+    budget: 1000,
+    spent: 175,
+    objectives: {
+      target_leads: 80,
+      target_enrollments: 30
+    },
+    metrics: {
+      total_leads: 23,
+      total_enrollments: 9,
+      conversion_rate: 39.13,
+      cost_per_lead: 7.61,
+      cost_per_enrollment: 19.44
+    },
+    utm_params: {
+      utm_source: "referral",
+      utm_medium: "word-of-mouth",
+      utm_campaign: "referral-2025",
+      utm_content: "student-code"
+    },
+    courses: [], // Aplica a todos los cursos
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      },
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      },
+      {
+        id: "C003",
+        name: "CEP Sur",
+        code: "SUR"
+      }
+    ],
+    created_by: "Pedro Sánchez Díaz",
+    created_at: "2024-12-15"
+  },
+  {
+    id: "CAMP006",
+    name: "Google Ads - Certificaciones Cisco",
+    code: "GOOGLE-CISCO-Q1",
+    type: "paid_ads",
+    status: "pausada",
+    description: "Campaña de búsqueda en Google Ads enfocada en keywords de certificaciones Cisco (CCNA, CCNP). Incluye Display Ads con remarketing. Segmentación: profesionales IT de 25-50 años. Landing page específica con testimonios de alumnos certificados + comparativa de precios vs competencia. Pausada temporalmente por optimización de landing page.",
+    start_date: "2025-01-20",
+    end_date: "2025-04-20",
+    budget: 2000,
+    spent: 650,
+    objectives: {
+      target_leads: 60,
+      target_enrollments: 15
+    },
+    metrics: {
+      total_leads: 18,
+      total_enrollments: 3,
+      conversion_rate: 16.67,
+      cost_per_lead: 36.11,
+      cost_per_enrollment: 216.67
+    },
+    utm_params: {
+      utm_source: "google",
+      utm_medium: "cpc",
+      utm_campaign: "cisco-q1",
+      utm_term: "certificacion-ccna"
+    },
+    courses: [
+      {
+        id: "CURSO006",
+        name: "Redes Cisco CCNA",
+        code: "CCNA-2025"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    created_by: "Miguel Hernández Castro",
+    created_at: "2025-01-12"
+  },
+  {
+    id: "CAMP007",
+    name: "Social Media - Cursos Desempleados Gratuitos",
+    code: "SOCIAL-DESEMP-Q1",
+    type: "social",
+    status: "activa",
+    description: "Campaña social orgánica + paid para promocionar cursos gratuitos subvencionados para desempleados. Contenido empático enfocado en reinserción laboral y mejora de empleabilidad. Publicaciones en Facebook (orgánico + ads) + Instagram Stories. Colaboración con oficinas de empleo del Cabildo. Público: desempleados inscritos en DARDE de 30-55 años.",
+    start_date: "2025-02-01",
+    end_date: "2025-03-15",
+    budget: 800,
+    spent: 420,
+    objectives: {
+      target_leads: 120,
+      target_enrollments: 40
+    },
+    metrics: {
+      total_leads: 78,
+      total_enrollments: 28,
+      conversion_rate: 35.90,
+      cost_per_lead: 5.38,
+      cost_per_enrollment: 15.00
+    },
+    utm_params: {
+      utm_source: "facebook",
+      utm_medium: "cpc",
+      utm_campaign: "desemp-q1",
+      utm_content: "carousel-testimonials"
+    },
+    courses: [
+      {
+        id: "CURSO008",
+        name: "Marketing Digital para Desempleados",
+        code: "MKT-DESEMP"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      },
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      }
+    ],
+    created_by: "María García Pérez",
+    created_at: "2025-01-22"
+  },
+  {
+    id: "CAMP008",
+    name: "Email FUNDAE - Empresas Sector Tech",
+    code: "EMAIL-FUNDAE-TECH",
+    type: "email",
+    status: "borrador",
+    description: "Campaña de email marketing B2B dirigida a responsables de RRHH de empresas tecnológicas locales. Promoción de cursos bonificables FUNDAE (Excel, Power BI, Python). Base de datos segmentada: 200 empresas del sector tech con más de 10 empleados. Email personalizado por nombre de empresa. Incluye calculadora de bonificación FUNDAE. Próximo lanzamiento en marzo 2025.",
+    start_date: "2025-03-01",
+    end_date: "2025-05-31",
+    budget: 300,
+    spent: 0,
+    objectives: {
+      target_leads: 40,
+      target_enrollments: 15
+    },
+    metrics: {
+      total_leads: 0,
+      total_enrollments: 0,
+      conversion_rate: 0,
+      cost_per_lead: 0,
+      cost_per_enrollment: 0
+    },
+    utm_params: {
+      utm_source: "mailchimp",
+      utm_medium: "email",
+      utm_campaign: "fundae-tech",
+      utm_content: "b2b-cold"
+    },
+    courses: [
+      {
+        id: "CURSO009",
+        name: "Excel Avanzado para Empresas",
+        code: "EXCEL-ADV-EMP"
+      }
+    ],
+    campuses: [
+      {
+        id: "C004",
+        name: "CEP Online",
+        code: "ONLINE"
+      }
+    ],
+    created_by: "Pedro Sánchez Díaz",
+    created_at: "2025-02-10"
+  },
+  {
+    id: "CAMP009",
+    name: "Retargeting - Abandonos Carrito Matrícula",
+    code: "RETARGET-CART-ABANDON",
+    type: "paid_ads",
+    status: "activa",
+    description: "Campaña de retargeting en Meta Ads (Facebook + Instagram) dirigida a usuarios que iniciaron proceso de matrícula pero no completaron pago. Audiencia custom de píxel de Meta. Creatividades con incentivo: 10% descuento por finalizar matrícula en 48h. Secuencia de 3 impactos en 7 días. ROI esperado: 300%.",
+    start_date: "2025-02-05",
+    end_date: "2025-12-31",
+    budget: 1200,
+    spent: 380,
+    objectives: {
+      target_leads: 0,
+      target_enrollments: 35
+    },
+    metrics: {
+      total_leads: 0,
+      total_enrollments: 18,
+      conversion_rate: 0,
+      cost_per_lead: 0,
+      cost_per_enrollment: 21.11
+    },
+    utm_params: {
+      utm_source: "meta",
+      utm_medium: "retargeting",
+      utm_campaign: "cart-abandon",
+      utm_content: "discount-10pct"
+    },
+    courses: [], // Aplica a todos
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      },
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      },
+      {
+        id: "C003",
+        name: "CEP Sur",
+        code: "SUR"
+      }
+    ],
+    created_by: "Laura Martínez Sosa",
+    created_at: "2025-01-28"
+  },
+  {
+    id: "CAMP010",
+    name: "LinkedIn Organic - Thought Leadership IT",
+    code: "LINKEDIN-IT-ORGANIC",
+    type: "organic",
+    status: "finalizada",
+    description: "Estrategia de contenido orgánico en LinkedIn para posicionar a CEP como referente en formación IT. Publicaciones semanales con artículos técnicos, casos de éxito de alumnos empleados tras cursos, tendencias del sector. Engagement con comunidad IT local. Objetivo: generar autoridad de marca y leads cualificados de alto valor (empresas grandes).",
+    start_date: "2024-12-01",
+    end_date: "2025-01-31",
+    budget: 100,
+    spent: 100,
+    objectives: {
+      target_leads: 25,
+      target_enrollments: 8
+    },
+    metrics: {
+      total_leads: 31,
+      total_enrollments: 10,
+      conversion_rate: 32.26,
+      cost_per_lead: 3.23,
+      cost_per_enrollment: 10.00
+    },
+    utm_params: {
+      utm_source: "linkedin",
+      utm_medium: "organic",
+      utm_campaign: "it-thought-leadership",
+      utm_content: "article-post"
+    },
+    courses: [
+      {
+        id: "CURSO004",
+        name: "Desarrollo Frontend con React",
+        code: "REACT-2025"
+      },
+      {
+        id: "CURSO005",
+        name: "Backend con Node.js y PostgreSQL",
+        code: "NODE-PSQL"
+      },
+      {
+        id: "CURSO006",
+        name: "Redes Cisco CCNA",
+        code: "CCNA-2025"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    created_by: "Carlos Rodríguez Martínez",
+    created_at: "2024-11-25"
+  }
+]
+
+// ============================================
+// PERFIL DE USUARIO ACTUAL
+// ============================================
+export const currentUserProfile = {
+  id: "1",
+  first_name: "María",
+  last_name: "García Pérez",
+  initials: "MG",
+  email: "maria.garcia@cepcomunicacion.com",
+  phone: "+34 922 345 678",
+  role: "Admin",
+  department: "Dirección Académica",
+  photo: "https://i.pravatar.cc/150?img=1",
+  bio: "Directora Académica de CEP Comunicación con más de 15 años de experiencia en formación profesional. Especializada en diseño curricular, gestión de equipos docentes y desarrollo de programas formativos innovadores. Coordinadora de proyectos de transformación digital educativa.",
+  created_at: "2020-01-15"
+}

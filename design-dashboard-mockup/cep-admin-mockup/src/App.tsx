@@ -14,6 +14,9 @@ import { ClassroomsSantaCruzPage } from "./pages/ClassroomsSantaCruzPage"
 import { ClassroomsSurPage } from "./pages/ClassroomsSurPage"
 import { LeadsPage } from "./pages/LeadsPage"
 import { AnalyticsPage } from "./pages/AnalyticsPage"
+import { CampaignsPage } from "./pages/CampaignsPage"
+import { SettingsPage } from "./pages/SettingsPage"
+import { UserProfilePage } from "./pages/UserProfilePage"
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
             <Route path="aulas/cep-sur" element={<ClassroomsSurPage />} />
             <Route path="leads" element={<LeadsPage />} />
             <Route path="analiticas" element={<AnalyticsPage />} />
+            <Route path="campanas" element={<CampaignsPage />} />
+            <Route path="configuracion" element={<SettingsPage />} />
+            <Route path="perfil" element={<UserProfilePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
