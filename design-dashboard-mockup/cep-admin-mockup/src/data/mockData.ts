@@ -272,12 +272,28 @@ export const convocations: Convocation[] = [
   },
 ]
 
-// Teachers (Expandido a 15 profesores con más datos)
+// ============================================
+// TEACHERS EXPANDED - Interfaz completa
+// ============================================
 export interface TeacherExpanded extends Teacher {
   initials: string
   photo: string
   department: string
-  bio: string
+  bio: string // OBLIGATORIO (no opcional)
+  certifications: {
+    title: string
+    institution: string
+    year: number
+  }[]
+  courses: {
+    id: string
+    name: string
+    code: string
+    type: string
+    modality: string
+    students: number
+  }[]
+  campuses: string[] // IDs de sedes asignadas
 }
 
 export const teachers: Teacher[] = [
@@ -344,38 +360,144 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 612 345 678",
     photo: "https://i.pravatar.cc/150?img=1",
     department: "Marketing Digital",
-    specialties: ["SEO", "SEM", "Analytics"],
-    bio: "15 años de experiencia en marketing digital. Certificada en Google Ads y Analytics.",
+    specialties: ["SEO", "SEM", "Analytics", "Google Ads", "Meta Ads"],
+    bio: "15 años de experiencia en marketing digital y publicidad. Especializada en campañas de rendimiento para e-commerce y generación de leads B2B. Ha gestionado presupuestos superiores a 500K€ anuales con ROI promedio del 320%.",
     active: true,
-    courses_count: 5,
+    courses_count: 3,
+    certifications: [
+      {
+        title: "Google Ads Certified",
+        institution: "Google",
+        year: 2023
+      },
+      {
+        title: "Master en Marketing Digital",
+        institution: "ESIC Business School",
+        year: 2019
+      },
+      {
+        title: "Certificación Meta Blueprint",
+        institution: "Meta",
+        year: 2022
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO001",
+        name: "Community Manager Profesional",
+        code: "CM-PRO-2025",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 18
+      },
+      {
+        id: "CURSO002",
+        name: "SEO y SEM Avanzado",
+        code: "SEO-SEM-ADV",
+        type: "Privado",
+        modality: "Presencial",
+        students: 15
+      },
+      {
+        id: "CURSO008",
+        name: "Marketing para Desempleados",
+        code: "MKT-DESEMP",
+        type: "Desempleados",
+        modality: "Semipresencial",
+        students: 20
+      }
+    ],
+    campuses: ["C001", "C002"]
   },
   {
     id: "2",
     first_name: "Carlos",
-    last_name: "Rodríguez López",
+    last_name: "Rodríguez Martínez",
     initials: "CR",
     email: "carlos.rodriguez@cepcomunicacion.com",
-    phone: "+34 623 456 789",
+    phone: "+34 612 345 679",
     photo: "https://i.pravatar.cc/150?img=12",
     department: "Desarrollo Web",
-    specialties: ["React", "Node.js", "TypeScript"],
-    bio: "Full-stack developer con 10 años de experiencia. Especialista en arquitecturas modernas.",
+    specialties: ["React", "Node.js", "TypeScript", "PostgreSQL", "Docker"],
+    bio: "Desarrollador full-stack con 10 años de experiencia en tecnologías web modernas. Ha liderado proyectos para empresas como CaixaBank y Telefónica. Especializado en arquitecturas escalables y metodologías ágiles.",
     active: true,
-    courses_count: 3,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "AWS Certified Solutions Architect",
+        institution: "Amazon Web Services",
+        year: 2023
+      },
+      {
+        title: "Técnico Superior en Desarrollo de Aplicaciones Web",
+        institution: "CEP Comunicación",
+        year: 2015
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO004",
+        name: "Desarrollo Frontend con React",
+        code: "REACT-2025",
+        type: "Ciclo Superior",
+        modality: "Presencial",
+        students: 12
+      },
+      {
+        id: "CURSO005",
+        name: "Backend con Node.js y PostgreSQL",
+        code: "NODE-PSQL",
+        type: "Ciclo Superior",
+        modality: "Semipresencial",
+        students: 9
+      }
+    ],
+    campuses: ["C001"]
   },
   {
     id: "3",
     first_name: "Laura",
-    last_name: "Martínez Sánchez",
+    last_name: "Martínez Sosa",
     initials: "LM",
     email: "laura.martinez@cepcomunicacion.com",
     phone: "+34 634 567 890",
     photo: "https://i.pravatar.cc/150?img=5",
     department: "Diseño Gráfico",
-    specialties: ["Adobe Creative Suite", "Branding", "UI/UX"],
-    bio: "Diseñadora gráfica con 12 años de experiencia. Especialista en identidad corporativa.",
+    specialties: ["Figma", "Adobe XD", "UI/UX", "Design Systems", "Prototipado"],
+    bio: "Diseñadora UX/UI con 12 años de experiencia en diseño centrado en el usuario. Ha trabajado para startups como Glovo y Cabify. Especialista en design systems y metodologías de diseño ágil.",
     active: true,
-    courses_count: 4,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "UX Design Professional Certificate",
+        institution: "Google",
+        year: 2022
+      },
+      {
+        title: "Advanced Figma Certification",
+        institution: "Figma",
+        year: 2023
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO003",
+        name: "Diseño UX/UI con Figma",
+        code: "UX-UI-FIG",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 14
+      },
+      {
+        id: "CURSO006",
+        name: "Design Systems Profesional",
+        code: "DS-PRO",
+        type: "Privado",
+        modality: "Presencial",
+        students: 10
+      }
+    ],
+    campuses: ["C001", "C002"]
   },
   {
     id: "4",
@@ -386,10 +508,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 645 678 901",
     photo: "https://i.pravatar.cc/150?img=15",
     department: "Audiovisual",
-    specialties: ["Producción", "Edición", "Motion Graphics"],
-    bio: "Productor audiovisual con más de 8 años en el sector.",
+    specialties: ["Premiere Pro", "After Effects", "DaVinci Resolve", "Producción", "Motion Graphics"],
+    bio: "Productor audiovisual y editor con más de 8 años en televisión y publicidad. Ha trabajado en producciones para Antena 3 y Mediaset. Especializado en postproducción y motion graphics.",
     active: true,
-    courses_count: 6,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "Adobe Certified Expert - Premiere Pro",
+        institution: "Adobe",
+        year: 2021
+      },
+      {
+        title: "DaVinci Resolve Colorist Certification",
+        institution: "Blackmagic Design",
+        year: 2023
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO007",
+        name: "Edición de Vídeo Profesional",
+        code: "VIDEO-PRO",
+        type: "Privado",
+        modality: "Presencial",
+        students: 11
+      },
+      {
+        id: "CURSO009",
+        name: "Motion Graphics y VFX",
+        code: "MOTION-VFX",
+        type: "Ciclo Superior",
+        modality: "Presencial",
+        students: 13
+      }
+    ],
+    campuses: ["C001", "C003"]
   },
   {
     id: "5",
@@ -400,10 +553,49 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 656 789 012",
     photo: "https://i.pravatar.cc/150?img=9",
     department: "Marketing Digital",
-    specialties: ["Redes Sociales", "Content Marketing", "Copywriting"],
-    bio: "Community Manager con 7 años de experiencia.",
+    specialties: ["Instagram", "TikTok", "Content Marketing", "Copywriting", "Influencer Marketing"],
+    bio: "Community Manager y Content Creator con 7 años de experiencia gestionando cuentas de más de 500K seguidores. Especializada en estrategias de contenido viral y growth hacking en redes sociales.",
     active: true,
     courses_count: 3,
+    certifications: [
+      {
+        title: "Meta Social Media Marketing Professional Certificate",
+        institution: "Meta",
+        year: 2022
+      },
+      {
+        title: "Content Marketing Certified",
+        institution: "HubSpot Academy",
+        year: 2023
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO010",
+        name: "TikTok y Reels para Empresas",
+        code: "TIKTOK-BIZ",
+        type: "Privado",
+        modality: "Telemático",
+        students: 22
+      },
+      {
+        id: "CURSO011",
+        name: "Content Marketing Estratégico",
+        code: "CONTENT-STR",
+        type: "Ocupados",
+        modality: "Semipresencial",
+        students: 17
+      },
+      {
+        id: "CURSO001",
+        name: "Community Manager Profesional",
+        code: "CM-PRO-2025",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 18
+      }
+    ],
+    campuses: ["C002", "C004"]
   },
   {
     id: "6",
@@ -414,10 +606,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 667 890 123",
     photo: "https://i.pravatar.cc/150?img=13",
     department: "Desarrollo Web",
-    specialties: ["PHP", "Laravel", "MySQL"],
-    bio: "Backend developer especializado en arquitecturas escalables.",
+    specialties: ["PHP", "Laravel", "MySQL", "API REST", "Microservicios"],
+    bio: "Backend developer con 9 años de experiencia en PHP y Laravel. Ha desarrollado sistemas de gestión empresarial para compañías con más de 1000 usuarios concurrentes. Experto en optimización de bases de datos y arquitecturas de microservicios.",
     active: true,
-    courses_count: 4,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "Laravel Certified Developer",
+        institution: "Laravel",
+        year: 2022
+      },
+      {
+        title: "MySQL Database Administrator",
+        institution: "Oracle",
+        year: 2020
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO012",
+        name: "Desarrollo Backend con Laravel",
+        code: "LARAVEL-ADV",
+        type: "Ciclo Superior",
+        modality: "Semipresencial",
+        students: 14
+      },
+      {
+        id: "CURSO013",
+        name: "API REST y Microservicios",
+        code: "API-MICRO",
+        type: "Privado",
+        modality: "Telemático",
+        students: 16
+      }
+    ],
+    campuses: ["C001", "C002"]
   },
   {
     id: "7",
@@ -428,10 +651,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 678 901 234",
     photo: "https://i.pravatar.cc/150?img=10",
     department: "Diseño Gráfico",
-    specialties: ["Ilustración Digital", "Diseño Editorial"],
-    bio: "Ilustradora y diseñadora editorial premiada.",
+    specialties: ["Ilustración Digital", "Procreate", "Diseño Editorial", "Branding"],
+    bio: "Ilustradora y diseñadora editorial premiada con más de 10 años de experiencia. Ha ilustrado más de 50 libros infantiles y trabajado para editoriales como Planeta y Anaya. Especialista en ilustración digital con iPad y Procreate.",
     active: true,
-    courses_count: 3,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "Certificado en Ilustración Digital",
+        institution: "Domestika",
+        year: 2021
+      },
+      {
+        title: "Diseño Editorial Avanzado",
+        institution: "EINA Barcelona",
+        year: 2018
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO014",
+        name: "Ilustración Digital con Procreate",
+        code: "PROCREATE-ILL",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 19
+      },
+      {
+        id: "CURSO015",
+        name: "Diseño Editorial y Maquetación",
+        code: "EDITORIAL-DES",
+        type: "Privado",
+        modality: "Presencial",
+        students: 12
+      }
+    ],
+    campuses: ["C002"]
   },
   {
     id: "8",
@@ -442,10 +696,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 689 012 345",
     photo: "https://i.pravatar.cc/150?img=17",
     department: "Audiovisual",
-    specialties: ["Fotografía", "Iluminación", "Retoque"],
-    bio: "Fotógrafo profesional con 11 años de experiencia.",
+    specialties: ["Fotografía Comercial", "Iluminación de Estudio", "Retoque Photoshop", "Fotografía de Producto"],
+    bio: "Fotógrafo profesional con 11 años de experiencia en fotografía comercial y publicitaria. Ha trabajado para marcas como Zara, Mango y Desigual. Especializado en fotografía de moda y producto con iluminación de estudio profesional.",
     active: true,
-    courses_count: 4,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "Certificado en Fotografía Comercial",
+        institution: "Institute of Photography",
+        year: 2019
+      },
+      {
+        title: "Adobe Certified Professional - Photoshop",
+        institution: "Adobe",
+        year: 2022
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO016",
+        name: "Fotografía de Producto Profesional",
+        code: "PHOTO-PROD",
+        type: "Privado",
+        modality: "Presencial",
+        students: 10
+      },
+      {
+        id: "CURSO017",
+        name: "Retoque Fotográfico Avanzado",
+        code: "RETOUCH-ADV",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 15
+      }
+    ],
+    campuses: ["C001", "C003"]
   },
   {
     id: "9",
@@ -456,10 +741,54 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 690 123 456",
     photo: "https://i.pravatar.cc/150?img=20",
     department: "Marketing Digital",
-    specialties: ["Email Marketing", "Automation", "CRM"],
-    bio: "Especialista en marketing automation.",
+    specialties: ["Email Marketing", "Marketing Automation", "HubSpot", "Salesforce", "CRM"],
+    bio: "Especialista en marketing automation y CRM con 8 años de experiencia. Ha implementado sistemas de automatización que han generado aumentos del 300% en conversiones. Certificada en HubSpot y Salesforce.",
     active: true,
-    courses_count: 5,
+    courses_count: 3,
+    certifications: [
+      {
+        title: "HubSpot Marketing Software Certified",
+        institution: "HubSpot Academy",
+        year: 2023
+      },
+      {
+        title: "Salesforce Marketing Cloud Consultant",
+        institution: "Salesforce",
+        year: 2022
+      },
+      {
+        title: "Email Marketing Specialist",
+        institution: "Digital Marketing Institute",
+        year: 2021
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO018",
+        name: "Email Marketing y Automatización",
+        code: "EMAIL-AUTO",
+        type: "Privado",
+        modality: "Telemático",
+        students: 21
+      },
+      {
+        id: "CURSO019",
+        name: "HubSpot para Marketing",
+        code: "HUBSPOT-MKT",
+        type: "Ocupados",
+        modality: "Semipresencial",
+        students: 18
+      },
+      {
+        id: "CURSO020",
+        name: "CRM y Gestión de Clientes",
+        code: "CRM-MGMT",
+        type: "Privado",
+        modality: "Telemático",
+        students: 16
+      }
+    ],
+    campuses: ["C001", "C002", "C004"]
   },
   {
     id: "10",
@@ -470,10 +799,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 601 234 567",
     photo: "https://i.pravatar.cc/150?img=33",
     department: "Desarrollo Web",
-    specialties: ["Vue.js", "Nuxt", "Firebase"],
-    bio: "Frontend developer especializado en aplicaciones SPA.",
+    specialties: ["Vue.js", "Nuxt.js", "Firebase", "Progressive Web Apps", "Tailwind CSS"],
+    bio: "Frontend developer especializado en aplicaciones SPA y PWA con 7 años de experiencia. Ha desarrollado aplicaciones web para más de 30 clientes utilizando Vue.js y Nuxt. Experto en optimización de rendimiento y SEO técnico.",
     active: true,
-    courses_count: 3,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "Vue.js Developer Certification",
+        institution: "VueSchool",
+        year: 2023
+      },
+      {
+        title: "Firebase Certified Developer",
+        institution: "Google",
+        year: 2022
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO021",
+        name: "Desarrollo Frontend con Vue.js",
+        code: "VUE-DEV",
+        type: "Ciclo Superior",
+        modality: "Semipresencial",
+        students: 11
+      },
+      {
+        id: "CURSO022",
+        name: "Progressive Web Apps",
+        code: "PWA-DEV",
+        type: "Privado",
+        modality: "Telemático",
+        students: 13
+      }
+    ],
+    campuses: ["C002"]
   },
   {
     id: "11",
@@ -484,10 +844,54 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 612 345 678",
     photo: "https://i.pravatar.cc/150?img=24",
     department: "Gestión Empresarial",
-    specialties: ["Gestión de Proyectos", "Scrum", "Agile"],
-    bio: "Project Manager certificada PMP.",
+    specialties: ["Gestión de Proyectos", "Scrum", "Agile", "PRINCE2", "Lean"],
+    bio: "Project Manager certificada PMP con 14 años de experiencia gestionando proyectos tecnológicos. Ha liderado equipos de hasta 50 personas en proyectos valorados en más de 5M€. Experta en metodologías ágiles y transformación digital.",
     active: true,
-    courses_count: 4,
+    courses_count: 3,
+    certifications: [
+      {
+        title: "Project Management Professional (PMP)",
+        institution: "PMI",
+        year: 2020
+      },
+      {
+        title: "Certified ScrumMaster (CSM)",
+        institution: "Scrum Alliance",
+        year: 2021
+      },
+      {
+        title: "PRINCE2 Practitioner",
+        institution: "AXELOS",
+        year: 2019
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO023",
+        name: "Gestión de Proyectos Ágiles",
+        code: "AGILE-PM",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 16
+      },
+      {
+        id: "CURSO024",
+        name: "Scrum Master Certification Prep",
+        code: "SCRUM-PREP",
+        type: "Privado",
+        modality: "Telemático",
+        students: 20
+      },
+      {
+        id: "CURSO025",
+        name: "Gestión Empresarial Digital",
+        code: "BIZ-DIGITAL",
+        type: "Ocupados",
+        modality: "Semipresencial",
+        students: 14
+      }
+    ],
+    campuses: ["C001", "C002", "C003"]
   },
   {
     id: "12",
@@ -498,10 +902,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 623 456 789",
     photo: "https://i.pravatar.cc/150?img=51",
     department: "Audiovisual",
-    specialties: ["3D Animation", "VFX", "Cinema 4D"],
-    bio: "Animador 3D con 8 años de experiencia.",
+    specialties: ["Blender", "Cinema 4D", "3D Animation", "VFX", "Unreal Engine"],
+    bio: "Animador 3D y especialista en efectos visuales con 8 años de experiencia en la industria. Ha trabajado en proyectos para Netflix y Movistar+. Experto en Blender, Cinema 4D y Unreal Engine para animación y visualización arquitectónica.",
     active: true,
-    courses_count: 3,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "Blender Certified Trainer",
+        institution: "Blender Foundation",
+        year: 2022
+      },
+      {
+        title: "Cinema 4D Professional",
+        institution: "Maxon",
+        year: 2021
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO026",
+        name: "Animación 3D con Blender",
+        code: "BLENDER-3D",
+        type: "Ciclo Superior",
+        modality: "Presencial",
+        students: 12
+      },
+      {
+        id: "CURSO027",
+        name: "VFX y Efectos Visuales",
+        code: "VFX-PRO",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 9
+      }
+    ],
+    campuses: ["C001", "C003"]
   },
   {
     id: "13",
@@ -512,10 +947,54 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 634 567 890",
     photo: "https://i.pravatar.cc/150?img=29",
     department: "Marketing Digital",
-    specialties: ["E-commerce", "Google Ads", "Meta Ads"],
-    bio: "Especialista en publicidad digital.",
+    specialties: ["E-commerce", "Google Ads", "Meta Ads", "Amazon Ads", "Shopify"],
+    bio: "Especialista en publicidad digital y e-commerce con 9 años de experiencia. Ha gestionado más de 100 tiendas online generando facturaciones superiores a 20M€. Certificada en Google Ads, Meta Ads y Amazon Advertising.",
     active: true,
-    courses_count: 5,
+    courses_count: 3,
+    certifications: [
+      {
+        title: "Google Ads Search Certification",
+        institution: "Google",
+        year: 2023
+      },
+      {
+        title: "Meta Certified Media Planning Professional",
+        institution: "Meta",
+        year: 2023
+      },
+      {
+        title: "Amazon Advertising Accreditation",
+        institution: "Amazon",
+        year: 2022
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO028",
+        name: "E-commerce con Shopify",
+        code: "SHOPIFY-PRO",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 17
+      },
+      {
+        id: "CURSO029",
+        name: "Publicidad Digital Multicanal",
+        code: "ADS-MULTI",
+        type: "Privado",
+        modality: "Telemático",
+        students: 23
+      },
+      {
+        id: "CURSO002",
+        name: "SEO y SEM Avanzado",
+        code: "SEO-SEM-ADV",
+        type: "Privado",
+        modality: "Presencial",
+        students: 15
+      }
+    ],
+    campuses: ["C001", "C002", "C004"]
   },
   {
     id: "14",
@@ -526,10 +1005,54 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 645 678 901",
     photo: "https://i.pravatar.cc/150?img=52",
     department: "Desarrollo Web",
-    specialties: ["Python", "Django", "Machine Learning"],
-    bio: "Desarrollador backend con experiencia en IA.",
+    specialties: ["Python", "Django", "FastAPI", "Machine Learning", "Data Science"],
+    bio: "Desarrollador backend y científico de datos con 10 años de experiencia. Ha implementado sistemas de inteligencia artificial para análisis predictivo y procesamiento de lenguaje natural. Experto en Python, Django y frameworks de ML como TensorFlow y scikit-learn.",
     active: true,
-    courses_count: 4,
+    courses_count: 3,
+    certifications: [
+      {
+        title: "Python for Data Science and AI",
+        institution: "IBM",
+        year: 2022
+      },
+      {
+        title: "Machine Learning Specialization",
+        institution: "Stanford University - Coursera",
+        year: 2021
+      },
+      {
+        title: "Django Certified Developer",
+        institution: "Django Software Foundation",
+        year: 2020
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO030",
+        name: "Desarrollo Backend con Python y Django",
+        code: "PYTHON-DJANGO",
+        type: "Ciclo Superior",
+        modality: "Semipresencial",
+        students: 13
+      },
+      {
+        id: "CURSO031",
+        name: "Machine Learning Aplicado",
+        code: "ML-APPLIED",
+        type: "Privado",
+        modality: "Telemático",
+        students: 15
+      },
+      {
+        id: "CURSO032",
+        name: "Data Science con Python",
+        code: "DATA-PYTHON",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 11
+      }
+    ],
+    campuses: ["C001", "C002"]
   },
   {
     id: "15",
@@ -540,10 +1063,41 @@ export const teachersExpanded: TeacherExpanded[] = [
     phone: "+34 656 789 012",
     photo: "https://i.pravatar.cc/150?img=32",
     department: "Diseño Gráfico",
-    specialties: ["UX Research", "Wireframing", "Prototyping"],
-    bio: "UX Designer certificada en Nielsen Norman Group.",
+    specialties: ["UX Research", "User Testing", "Wireframing", "Prototyping", "Design Thinking"],
+    bio: "UX Designer y UX Researcher certificada con 9 años de experiencia. Ha conducido más de 200 sesiones de investigación con usuarios para empresas como Santander y BBVA. Especialista en metodologías de Design Thinking y tests de usabilidad.",
     active: true,
-    courses_count: 3,
+    courses_count: 2,
+    certifications: [
+      {
+        title: "UX Research Professional Certificate",
+        institution: "Nielsen Norman Group",
+        year: 2022
+      },
+      {
+        title: "Design Thinking Facilitator",
+        institution: "IDEO U",
+        year: 2021
+      }
+    ],
+    courses: [
+      {
+        id: "CURSO033",
+        name: "UX Research y Testing",
+        code: "UX-RESEARCH",
+        type: "Privado",
+        modality: "Semipresencial",
+        students: 12
+      },
+      {
+        id: "CURSO034",
+        name: "Design Thinking Aplicado",
+        code: "DESIGN-THINK",
+        type: "Privado",
+        modality: "Presencial",
+        students: 14
+      }
+    ],
+    campuses: ["C002", "C003"]
   },
 ]
 
@@ -1053,5 +1607,560 @@ export const coursesExpanded = [
     campus: ["1", "2"],
     published: true,
     created_at: "2024-07-10",
+  }
+]
+
+// ============================================
+// INTERFACES PARA CALENDARIOS Y AULAS
+// ============================================
+
+export interface WeeklyScheduleSlot {
+  day: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+  start_time: string // "09:00"
+  end_time: string // "13:00"
+  course_id: string
+  course_name: string
+  teacher_name: string
+  color: string // Para visualización
+}
+
+export interface ClassroomExpanded {
+  id: string
+  name: string
+  capacity: number
+  floor: number
+  equipment: string[] // Array DINÁMICO (no checkboxes fijos)
+  weekly_schedule: WeeklyScheduleSlot[]
+}
+
+export interface CampusExpanded {
+  id: string
+  name: string
+  code: string
+  address: string
+  city: string
+  postal_code: string
+  phone: string
+  email: string
+  manager_name: string
+  manager_email: string
+  opening_hours: string
+  image_url: string
+  classrooms: ClassroomExpanded[]
+  active: boolean
+  description: string // OBLIGATORIO
+  facilities: string[] // Instalaciones disponibles
+}
+
+// ============================================
+// CAMPUSES EXPANDIDOS CON AULAS Y CALENDARIOS
+// ============================================
+
+export const campusesData: CampusExpanded[] = [
+  {
+    id: "C001",
+    name: "CEP Norte",
+    code: "NORTE",
+    address: "Avenida Los Menceyes 45",
+    city: "San Cristóbal de La Laguna",
+    postal_code: "38200",
+    phone: "+34 922 123 456",
+    email: "norte@cepcomunicacion.com",
+    manager_name: "Ana García Pérez",
+    manager_email: "ana.garcia@cepcomunicacion.com",
+    opening_hours: "Lunes a Viernes: 08:00 - 21:00 | Sábados: 09:00 - 14:00",
+    image_url: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=400&fit=crop",
+    description: "Sede principal ubicada en el corazón de La Laguna, con fácil acceso en transporte público. Instalaciones modernas renovadas en 2022 con tecnología de última generación. Cuenta con 4 aulas equipadas, sala de profesores, biblioteca digital y zona de coworking para alumnos.",
+    facilities: [
+      "4 Aulas completamente equipadas",
+      "Biblioteca digital con 500+ recursos",
+      "Zona de coworking con WiFi 6",
+      "Cafetería con máquinas vending",
+      "Aparcamiento privado (20 plazas)",
+      "Acceso para personas con movilidad reducida"
+    ],
+    classrooms: [
+      {
+        id: "A1-NORTE",
+        name: "Aula A1",
+        capacity: 25,
+        floor: 1,
+        equipment: [
+          "Proyector 4K",
+          "Ordenadores (25 unidades)",
+          "Pizarra Digital Interactiva",
+          "Sistema de Audio Profesional",
+          "Cámaras para streaming",
+          "Aire Acondicionado",
+          "Mobiliario ergonómico"
+        ],
+        weekly_schedule: [
+          {
+            day: "monday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO001",
+            course_name: "Community Manager Profesional",
+            teacher_name: "María García Pérez",
+            color: "#3b82f6"
+          },
+          {
+            day: "monday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO004",
+            course_name: "Desarrollo Frontend con React",
+            teacher_name: "Carlos Rodríguez Martínez",
+            color: "#8b5cf6"
+          },
+          {
+            day: "tuesday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO002",
+            course_name: "SEO y SEM Avanzado",
+            teacher_name: "María García Pérez",
+            color: "#3b82f6"
+          },
+          {
+            day: "wednesday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO003",
+            course_name: "Diseño UX/UI con Figma",
+            teacher_name: "Laura Martínez Sosa",
+            color: "#ec4899"
+          },
+          {
+            day: "thursday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO001",
+            course_name: "Community Manager Profesional",
+            teacher_name: "María García Pérez",
+            color: "#3b82f6"
+          },
+          {
+            day: "friday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO005",
+            course_name: "Backend con Node.js",
+            teacher_name: "Carlos Rodríguez Martínez",
+            color: "#8b5cf6"
+          }
+        ]
+      },
+      {
+        id: "A2-NORTE",
+        name: "Aula A2",
+        capacity: 20,
+        floor: 1,
+        equipment: [
+          "Proyector Full HD",
+          "Ordenadores (20 unidades)",
+          "Pizarra blanca",
+          "Sistema de Audio",
+          "Aire Acondicionado"
+        ],
+        weekly_schedule: [
+          {
+            day: "monday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO006",
+            course_name: "Design Systems Profesional",
+            teacher_name: "Laura Martínez Sosa",
+            color: "#ec4899"
+          },
+          {
+            day: "tuesday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO012",
+            course_name: "Desarrollo Backend con Laravel",
+            teacher_name: "David Martín Torres",
+            color: "#f59e0b"
+          },
+          {
+            day: "wednesday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO007",
+            course_name: "Edición de Vídeo Profesional",
+            teacher_name: "Javier Fernández Ruiz",
+            color: "#10b981"
+          },
+          {
+            day: "friday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO023",
+            course_name: "Gestión de Proyectos Ágiles",
+            teacher_name: "Isabel Moreno Pardo",
+            color: "#6366f1"
+          }
+        ]
+      },
+      {
+        id: "A3-NORTE",
+        name: "Aula A3",
+        capacity: 30,
+        floor: 2,
+        equipment: [
+          "Proyector 4K",
+          "Ordenadores (30 unidades - Mac)",
+          "Pizarra Digital Interactiva",
+          "Tabletas gráficas Wacom",
+          "Sistema de Audio Profesional",
+          "Aire Acondicionado"
+        ],
+        weekly_schedule: [
+          {
+            day: "monday",
+            start_time: "10:00",
+            end_time: "14:00",
+            course_id: "CURSO016",
+            course_name: "Fotografía de Producto Profesional",
+            teacher_name: "Miguel Romero Castro",
+            color: "#ef4444"
+          },
+          {
+            day: "tuesday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO026",
+            course_name: "Animación 3D con Blender",
+            teacher_name: "Francisco Jiménez Ruiz",
+            color: "#14b8a6"
+          },
+          {
+            day: "thursday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO030",
+            course_name: "Desarrollo Backend con Python y Django",
+            teacher_name: "Alberto Ortiz Sanz",
+            color: "#8b5cf6"
+          }
+        ]
+      },
+      {
+        id: "A4-NORTE",
+        name: "Estudio Audiovisual",
+        capacity: 15,
+        floor: 2,
+        equipment: [
+          "Cámaras profesionales 4K (3 unidades)",
+          "Iluminación profesional completa",
+          "Fondo croma green screen",
+          "Micrófonos profesionales",
+          "Mezcladora de audio",
+          "Ordenadores de edición (5 unidades)",
+          "Software Adobe Creative Cloud",
+          "Insonorización acústica"
+        ],
+        weekly_schedule: [
+          {
+            day: "wednesday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO009",
+            course_name: "Motion Graphics y VFX",
+            teacher_name: "Javier Fernández Ruiz",
+            color: "#10b981"
+          },
+          {
+            day: "thursday",
+            start_time: "10:00",
+            end_time: "14:00",
+            course_id: "CURSO017",
+            course_name: "Retoque Fotográfico Avanzado",
+            teacher_name: "Miguel Romero Castro",
+            color: "#ef4444"
+          }
+        ]
+      }
+    ],
+    active: true
+  },
+  {
+    id: "C002",
+    name: "CEP Santa Cruz",
+    code: "SANTA-CRUZ",
+    address: "Calle Castillo 82",
+    city: "Santa Cruz de Tenerife",
+    postal_code: "38001",
+    phone: "+34 922 234 567",
+    email: "santacruz@cepcomunicacion.com",
+    manager_name: "Carlos Rodríguez Martínez",
+    manager_email: "carlos.rodriguez@cepcomunicacion.com",
+    opening_hours: "Lunes a Viernes: 08:30 - 21:00 | Sábados: 09:00 - 14:00",
+    image_url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=400&fit=crop",
+    description: "Sede céntrica en pleno corazón de Santa Cruz, a 5 minutos del Auditorio. Completamente renovada en 2023 con espacios modernos y luminosos. Especializada en cursos de marketing digital y diseño gráfico.",
+    facilities: [
+      "3 Aulas totalmente equipadas",
+      "Sala de reuniones para trabajos en grupo",
+      "WiFi de alta velocidad",
+      "Zona de descanso con cafetera",
+      "Próximo a paradas de tranvía y guagua"
+    ],
+    classrooms: [
+      {
+        id: "B1-SC",
+        name: "Aula B1",
+        capacity: 22,
+        floor: 1,
+        equipment: [
+          "Proyector 4K",
+          "Ordenadores (22 unidades)",
+          "Pizarra Digital",
+          "Sistema de Audio",
+          "Aire Acondicionado",
+          "Mobiliario modular"
+        ],
+        weekly_schedule: [
+          {
+            day: "monday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO010",
+            course_name: "TikTok y Reels para Empresas",
+            teacher_name: "Ana López Torres",
+            color: "#ec4899"
+          },
+          {
+            day: "tuesday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO011",
+            course_name: "Content Marketing Estratégico",
+            teacher_name: "Ana López Torres",
+            color: "#ec4899"
+          },
+          {
+            day: "wednesday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO014",
+            course_name: "Ilustración Digital con Procreate",
+            teacher_name: "Carmen López Díaz",
+            color: "#f59e0b"
+          },
+          {
+            day: "friday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO021",
+            course_name: "Desarrollo Frontend con Vue.js",
+            teacher_name: "Roberto Castro Vega",
+            color: "#10b981"
+          }
+        ]
+      },
+      {
+        id: "B2-SC",
+        name: "Aula B2",
+        capacity: 18,
+        floor: 1,
+        equipment: [
+          "Proyector Full HD",
+          "Ordenadores (18 unidades)",
+          "Pizarra blanca",
+          "Sistema de Audio",
+          "Aire Acondicionado"
+        ],
+        weekly_schedule: [
+          {
+            day: "monday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO028",
+            course_name: "E-commerce con Shopify",
+            teacher_name: "Patricia Delgado Ríos",
+            color: "#6366f1"
+          },
+          {
+            day: "wednesday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO033",
+            course_name: "UX Research y Testing",
+            teacher_name: "Raquel Herrera Campos",
+            color: "#8b5cf6"
+          },
+          {
+            day: "thursday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO018",
+            course_name: "Email Marketing y Automatización",
+            teacher_name: "Silvia Navarro Gil",
+            color: "#14b8a6"
+          }
+        ]
+      },
+      {
+        id: "B3-SC",
+        name: "Aula B3",
+        capacity: 25,
+        floor: 2,
+        equipment: [
+          "Proyector 4K",
+          "Ordenadores (25 unidades)",
+          "Pizarra Digital Interactiva",
+          "Sistema de Audio Premium",
+          "Webcam 4K para videoconferencias",
+          "Aire Acondicionado"
+        ],
+        weekly_schedule: [
+          {
+            day: "tuesday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO019",
+            course_name: "HubSpot para Marketing",
+            teacher_name: "Silvia Navarro Gil",
+            color: "#14b8a6"
+          },
+          {
+            day: "thursday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO032",
+            course_name: "Data Science con Python",
+            teacher_name: "Alberto Ortiz Sanz",
+            color: "#8b5cf6"
+          }
+        ]
+      }
+    ],
+    active: true
+  },
+  {
+    id: "C003",
+    name: "CEP Sur",
+    code: "SUR",
+    address: "Avenida de Los Pueblos 23",
+    city: "Arona",
+    postal_code: "38640",
+    phone: "+34 922 345 678",
+    email: "sur@cepcomunicacion.com",
+    manager_name: "Laura Martínez Sosa",
+    manager_email: "laura.martinez@cepcomunicacion.com",
+    opening_hours: "Lunes a Viernes: 09:00 - 21:00 | Sábados: 09:00 - 13:00",
+    image_url: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=400&fit=crop",
+    description: "Sede ubicada en el sur de Tenerife, perfectamente comunicada. Abierta en 2024 con instalaciones de vanguardia. Enfocada en formación presencial de calidad con grupos reducidos.",
+    facilities: [
+      "2 Aulas modernas",
+      "Estudio de fotografía",
+      "WiFi de alta velocidad",
+      "Aparcamiento gratuito (30 plazas)",
+      "Zona de descanso exterior"
+    ],
+    classrooms: [
+      {
+        id: "C1-SUR",
+        name: "Aula C1",
+        capacity: 20,
+        floor: 1,
+        equipment: [
+          "Proyector 4K",
+          "Ordenadores (20 unidades)",
+          "Pizarra Digital",
+          "Sistema de Audio",
+          "Aire Acondicionado"
+        ],
+        weekly_schedule: [
+          {
+            day: "monday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO027",
+            course_name: "VFX y Efectos Visuales",
+            teacher_name: "Francisco Jiménez Ruiz",
+            color: "#14b8a6"
+          },
+          {
+            day: "wednesday",
+            start_time: "16:00",
+            end_time: "20:00",
+            course_id: "CURSO034",
+            course_name: "Design Thinking Aplicado",
+            teacher_name: "Raquel Herrera Campos",
+            color: "#8b5cf6"
+          },
+          {
+            day: "friday",
+            start_time: "09:00",
+            end_time: "13:00",
+            course_id: "CURSO025",
+            course_name: "Gestión Empresarial Digital",
+            teacher_name: "Isabel Moreno Pardo",
+            color: "#6366f1"
+          }
+        ]
+      },
+      {
+        id: "C2-SUR",
+        name: "Estudio Fotográfico",
+        capacity: 12,
+        floor: 1,
+        equipment: [
+          "Iluminación profesional completa",
+          "Fondos varios (blanco, negro, croma)",
+          "Cámaras profesionales (2 unidades)",
+          "Reflectores y difusores",
+          "Mesa de producto",
+          "Ordenadores de edición (3 unidades)"
+        ],
+        weekly_schedule: [
+          {
+            day: "tuesday",
+            start_time: "10:00",
+            end_time: "14:00",
+            course_id: "CURSO016",
+            course_name: "Fotografía de Producto Profesional",
+            teacher_name: "Miguel Romero Castro",
+            color: "#ef4444"
+          },
+          {
+            day: "thursday",
+            start_time: "10:00",
+            end_time: "14:00",
+            course_id: "CURSO017",
+            course_name: "Retoque Fotográfico Avanzado",
+            teacher_name: "Miguel Romero Castro",
+            color: "#ef4444"
+          }
+        ]
+      }
+    ],
+    active: true
+  },
+  {
+    id: "C004",
+    name: "CEP Online Campus",
+    code: "ONLINE",
+    address: "Campus Virtual",
+    city: "Online",
+    postal_code: "00000",
+    phone: "+34 922 000 000",
+    email: "online@cepcomunicacion.com",
+    manager_name: "Silvia Navarro Gil",
+    manager_email: "silvia.navarro@cepcomunicacion.com",
+    opening_hours: "24/7 - Plataforma disponible siempre",
+    image_url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop",
+    description: "Campus virtual con plataforma LMS de última generación. Acceso desde cualquier lugar del mundo. Videoconferencias en directo, contenido grabado, foros, tutorías personalizadas y certificaciones oficiales.",
+    facilities: [
+      "Plataforma LMS Moodle personalizada",
+      "Videoconferencias Zoom integradas",
+      "Biblioteca digital con 1000+ recursos",
+      "Tutorías online 1-a-1",
+      "Foros de estudiantes",
+      "App móvil para iOS y Android"
+    ],
+    classrooms: [],
+    active: true
   }
 ]
