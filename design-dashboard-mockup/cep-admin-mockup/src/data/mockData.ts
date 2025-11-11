@@ -820,3 +820,238 @@ export const staff: StaffMember[] = [
     active: true
   }
 ]
+
+// ============================================================================
+// CICLOS FORMATIVOS
+// ============================================================================
+
+export interface Cycle {
+  id: string
+  name: string
+  code: string
+  level: 'grado-medio' | 'grado-superior'
+  duration_hours: number
+  requirements: string[]
+  description: string
+  courses: string[] // course IDs
+  active: boolean
+}
+
+export const cycles: Cycle[] = [
+  {
+    id: "1",
+    name: "Realización Audiovisual y Espectáculos",
+    code: "IMS0C",
+    level: "grado-superior",
+    duration_hours: 2000,
+    requirements: [
+      "Bachillerato o equivalente",
+      "Prueba de acceso a grado superior"
+    ],
+    description: "Formación profesional en producción y realización de contenidos audiovisuales y eventos.",
+    courses: ["3"],
+    active: true
+  },
+  {
+    id: "2",
+    name: "Marketing y Publicidad",
+    code: "COMG0",
+    level: "grado-superior",
+    duration_hours: 2000,
+    requirements: [
+      "Bachillerato o equivalente",
+      "Prueba de acceso a grado superior"
+    ],
+    description: "Formación en estrategias de marketing, publicidad y comunicación comercial.",
+    courses: ["2", "4"],
+    active: true
+  },
+  {
+    id: "3",
+    name: "Sistemas Microinformáticos y Redes",
+    code: "IFC0C",
+    level: "grado-medio",
+    duration_hours: 2000,
+    requirements: [
+      "ESO o equivalente",
+      "Prueba de acceso a grado medio"
+    ],
+    description: "Instalación, configuración y mantenimiento de sistemas microinformáticos y redes.",
+    courses: [],
+    active: true
+  },
+  {
+    id: "4",
+    name: "Desarrollo de Aplicaciones Web",
+    code: "IFC0D",
+    level: "grado-superior",
+    duration_hours: 2000,
+    requirements: [
+      "Bachillerato o equivalente",
+      "Prueba de acceso a grado superior"
+    ],
+    description: "Desarrollo de aplicaciones web con tecnologías frontend y backend.",
+    courses: [],
+    active: true
+  },
+  {
+    id: "5",
+    name: "Animaciones 3D, Juegos y Entornos Interactivos",
+    code: "IMS0B",
+    level: "grado-superior",
+    duration_hours: 2000,
+    requirements: [
+      "Bachillerato o equivalente",
+      "Prueba de acceso a grado superior"
+    ],
+    description: "Creación de animaciones 3D, videojuegos y experiencias interactivas.",
+    courses: [],
+    active: true
+  }
+]
+
+// ============================================================================
+// PERFIL DE USUARIO
+// ============================================================================
+
+export interface UserProfile {
+  id: string
+  first_name: string
+  last_name: string
+  email: string
+  phone: string
+  role: 'admin' | 'gestor' | 'marketing' | 'asesor' | 'lectura'
+  department: string
+  photo: string
+  language: 'es' | 'en' | 'ca'
+  timezone: string
+  email_notifications: boolean
+  sms_notifications: boolean
+}
+
+export const currentUser: UserProfile = {
+  id: "current-user",
+  first_name: "Carlos",
+  last_name: "Pérez",
+  email: "carlos.perez@cepcomunicacion.com",
+  phone: "+34 600 123 456",
+  role: "admin",
+  department: "Dirección",
+  photo: "https://i.pravatar.cc/150?img=12",
+  language: "es",
+  timezone: "Europe/Madrid",
+  email_notifications: true,
+  sms_notifications: false
+}
+
+// ============================================================================
+// ESTUDIANTES EXPANDIDOS
+// ============================================================================
+
+export interface StudentExpanded {
+  id: string
+  first_name: string
+  last_name: string
+  email: string
+  phone: string
+  dni: string
+  date_of_birth: string
+  address: string
+  city: string
+  postal_code: string
+  emergency_contact: string
+  emergency_phone: string
+  enrolled_courses: string[] // course IDs
+  status: 'active' | 'inactive' | 'graduated'
+}
+
+const firstNames = ["Pablo", "Lucía", "Diego", "Carmen", "Alejandro", "Elena", "Miguel", "Sara", "David", "Marta", "Javier", "Laura", "Carlos", "Ana", "Daniel", "María", "Antonio", "Isabel", "Francisco", "Rosa"]
+const lastNames = ["García", "Martínez", "López", "González", "Rodríguez", "Fernández", "Pérez", "Sánchez", "Romero", "Torres", "Ruiz", "Díaz", "Moreno", "Muñoz", "Álvarez", "Jiménez", "Castro", "Ortiz", "Rubio", "Molina"]
+
+export const studentsExpanded: StudentExpanded[] = Array.from({ length: 25 }, (_, i) => ({
+  id: `student-${i + 1}`,
+  first_name: firstNames[i % firstNames.length],
+  last_name: `${lastNames[i % lastNames.length]} ${lastNames[(i + 5) % lastNames.length]}`,
+  email: `alumno${i + 1}@example.com`,
+  phone: `+34 6${String(i + 10).padStart(8, "0")}`,
+  dni: `${String(12345678 + i).slice(0, 8)}${String.fromCharCode(65 + (i % 23))}`,
+  date_of_birth: `199${5 + (i % 5)}-0${1 + (i % 9)}-${10 + (i % 18)}`,
+  address: `Calle ${lastNames[i % lastNames.length]}, ${i + 1}`,
+  city: ["Madrid", "Barcelona", "Valencia", "Sevilla", "Tenerife"][i % 5],
+  postal_code: `${28000 + (i * 10)}`,
+  emergency_contact: `${firstNames[(i + 3) % firstNames.length]} ${lastNames[(i + 7) % lastNames.length]}`,
+  emergency_phone: `+34 6${String(i + 40).padStart(8, "0")}`,
+  enrolled_courses: [String((i % 5) + 1)],
+  status: i % 7 === 0 ? 'graduated' : i % 11 === 0 ? 'inactive' : 'active'
+}))
+
+// ============================================================================
+// CURSOS EXPANDIDOS
+// ============================================================================
+
+export const coursesExpanded = [
+  ...courses,
+  {
+    id: "6",
+    title: "Diseño Gráfico Profesional con Adobe Creative Suite",
+    description: "Domina Photoshop, Illustrator e InDesign",
+    type: "privados" as const,
+    modality: "presencial" as const,
+    status: "publicado" as const,
+    duration: 180,
+    price: 1800,
+    campus: ["1", "2"],
+    published: true,
+    created_at: "2024-09-15",
+  },
+  {
+    id: "7",
+    title: "Gestión de Redes Sociales Avanzado",
+    description: "Estrategias profesionales para Instagram, TikTok y LinkedIn",
+    type: "ocupados" as const,
+    modality: "telematico" as const,
+    status: "publicado" as const,
+    duration: 120,
+    price: 0,
+    published: true,
+    created_at: "2024-10-01",
+  },
+  {
+    id: "8",
+    title: "Fotografía Digital y Retoque Fotográfico",
+    description: "Técnicas profesionales de fotografía y post-producción",
+    type: "privados" as const,
+    modality: "semipresencial" as const,
+    status: "publicado" as const,
+    duration: 150,
+    price: 1500,
+    campus: ["1"],
+    published: true,
+    created_at: "2024-08-20",
+  },
+  {
+    id: "9",
+    title: "Google Ads y Meta Ads Certificación",
+    description: "Preparación para certificaciones oficiales",
+    type: "privados" as const,
+    modality: "telematico" as const,
+    status: "publicado" as const,
+    duration: 100,
+    price: 900,
+    published: true,
+    created_at: "2024-11-05",
+  },
+  {
+    id: "10",
+    title: "Edición de Vídeo con Adobe Premiere y After Effects",
+    description: "Post-producción profesional de contenidos audiovisuales",
+    type: "desempleados" as const,
+    modality: "presencial" as const,
+    status: "publicado" as const,
+    duration: 250,
+    price: 0,
+    campus: ["1", "2"],
+    published: true,
+    created_at: "2024-07-10",
+  }
+]
