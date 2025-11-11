@@ -57,6 +57,8 @@
     --color-cep-ocupados-dark: #059669;
     --color-cep-desempleados: #3B82F6; /* Azul - TRABAJADORES DESEMPLEADOS */
     --color-cep-desempleados-dark: #2563EB;
+    --color-cep-teleformacion: #ffa800; /* Naranja - TELEFORMACIÓN */
+    --color-cep-teleformacion-dark: #e69500;
 
     --color-neutral-50: #f9fafb;
     --color-neutral-100: #f3f4f6;
@@ -350,6 +352,18 @@
     gap: clamp(1rem, 3vw, 2rem);
   }
 
+  /* Cycle Card - Double width (2 columns) for emphasis */
+  .cycle-card-wide {
+    grid-column: span 2;
+  }
+
+  /* Responsive - Single column on mobile for cycle cards */
+  @media (max-width: 640px) {
+    .cycle-card-wide {
+      grid-column: span 1;
+    }
+  }
+
   /* Course Cards Grid - 3 columns for CEP Formación */
   .courses-grid-3col {
     display: grid;
@@ -462,6 +476,10 @@
   .bg-cep-desempleados { background-color: var(--color-cep-desempleados); }
   .bg-cep-desempleados-dark { background-color: var(--color-cep-desempleados-dark); }
   .text-cep-desempleados { color: var(--color-cep-desempleados); }
+
+  .bg-cep-teleformacion { background-color: var(--color-cep-teleformacion); }
+  .bg-cep-teleformacion-dark { background-color: var(--color-cep-teleformacion-dark); }
+  .text-cep-teleformacion { color: var(--color-cep-teleformacion); }
 
   /* Typography Uppercase Classes - Montserrat Headings */
   .title-uppercase {

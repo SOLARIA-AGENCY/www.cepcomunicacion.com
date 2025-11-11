@@ -72,7 +72,16 @@ export default async function HomePage() {
             <>
               <div className="grid-fluid-cards">
                 {featuredCourses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
+                  <div
+                    key={course.id}
+                    className={
+                      course.course_type === 'ciclo_medio' || course.course_type === 'ciclo_superior'
+                        ? 'cycle-card-wide'
+                        : ''
+                    }
+                  >
+                    <CourseCard course={course} />
+                  </div>
                 ))}
               </div>
 

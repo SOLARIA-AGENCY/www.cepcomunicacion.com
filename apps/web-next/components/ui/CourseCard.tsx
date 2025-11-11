@@ -32,7 +32,7 @@ const COURSE_TYPE_CONFIG = {
   privado: { label: 'PRIVADO', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
   ocupados: { label: 'TRABAJADORES OCUPADOS', color: 'bg-cep-ocupados', buttonColor: 'bg-cep-ocupados hover:bg-cep-ocupados-dark' },
   desempleados: { label: 'TRABAJADORES DESEMPLEADOS', color: 'bg-cep-desempleados', buttonColor: 'bg-cep-desempleados hover:bg-cep-desempleados-dark' },
-  teleformacion: { label: 'TELEFORMACIÓN', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
+  teleformacion: { label: 'TELEFORMACIÓN', color: 'bg-cep-teleformacion', buttonColor: 'bg-cep-teleformacion hover:bg-cep-teleformacion-dark' },
   ciclo_medio: { label: 'CICLO MEDIO', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
   ciclo_superior: { label: 'CICLO SUPERIOR', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
 } as const;
@@ -159,6 +159,16 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         highlight: true,
         colorClass: 'text-cep-desempleados',
         iconColor: 'text-cep-desempleados',
+      };
+    }
+
+    // TELEFORMACIÓN: "CONSULTAR PRECIO"
+    if (courseType === 'teleformacion') {
+      return {
+        text: 'CONSULTAR PRECIO',
+        highlight: false,
+        colorClass: 'text-cep-teleformacion',
+        iconColor: 'text-cep-teleformacion',
       };
     }
 

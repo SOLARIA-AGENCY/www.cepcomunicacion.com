@@ -97,7 +97,7 @@ services:
       - "com.cepcomunicacion.role=edge"
 
   # ========================================
-  # FRONTEND - React SPA
+  # FRONTEND - Next.js 16 Public Website
   # ========================================
   frontend:
     build:
@@ -108,20 +108,27 @@ services:
     container_name: cep-frontend
     restart: unless-stopped
     environment:
+      # Node environment
+      - NODE_ENV=${NODE_ENV:-production}
+
       # API endpoint (internal network)
-      - VITE_API_URL=${VITE_API_URL:-http://cms:3000/api}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://cms:3000/api}
 
       # Analytics (optional)
-      - VITE_ENABLE_ANALYTICS=${VITE_ENABLE_ANALYTICS:-false}
-      - VITE_GA4_ID=${VITE_GA4_ID:-}
-      - VITE_PLAUSIBLE_DOMAIN=${VITE_PLAUSIBLE_DOMAIN:-}
+      - NEXT_PUBLIC_ENABLE_ANALYTICS=${NEXT_PUBLIC_ENABLE_ANALYTICS:-false}
+      - NEXT_PUBLIC_GA4_ID=${NEXT_PUBLIC_GA4_ID:-}
+      - NEXT_PUBLIC_PLAUSIBLE_DOMAIN=${NEXT_PUBLIC_PLAUSIBLE_DOMAIN:-}
 
       # Captcha (optional)
-      - VITE_HCAPTCHA_SITE_KEY=${VITE_HCAPTCHA_SITE_KEY:-}
+      - NEXT_PUBLIC_HCAPTCHA_SITE_KEY=${NEXT_PUBLIC_HCAPTCHA_SITE_KEY:-}
 
       # Feature flags
-      - VITE_ENABLE_LLM=${VITE_ENABLE_LLM:-false}
-      - VITE_ENABLE_WHATSAPP=${VITE_ENABLE_WHATSAPP:-false}
+      - NEXT_PUBLIC_ENABLE_LLM=${NEXT_PUBLIC_ENABLE_LLM:-false}
+      - NEXT_PUBLIC_ENABLE_WHATSAPP=${NEXT_PUBLIC_ENABLE_WHATSAPP:-false}
+
+      # Server configuration
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
     networks:
       - external
     healthcheck:

@@ -220,7 +220,7 @@ MINIO_ROOT_PASSWORD=<GENERATE_STRONG_PASSWORD>
 PAYLOAD_SECRET=<GENERATE_SECRET_32_CHARS_MIN>
 
 # Domain
-VITE_API_URL=https://cepcomunicacion.com/api
+NEXT_PUBLIC_API_URL=https://cepcomunicacion.com/api
 CORS_ORIGINS=https://cepcomunicacion.com
 
 # SSL
