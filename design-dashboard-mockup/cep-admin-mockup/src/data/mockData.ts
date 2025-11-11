@@ -2164,3 +2164,1160 @@ export const campusesData: CampusExpanded[] = [
     active: true
   }
 ]
+
+// Export aliases for backward compatibility
+export const teachersData = teachersExpanded
+export const cyclesData = cycles
+
+// ============================================
+// CURSOS EXPANDIDOS (10 registros detallados)
+// ============================================
+export interface CourseDetailed {
+  id: string
+  name: string
+  code: string
+  type: 'telematico' | 'ocupados' | 'desempleados' | 'privados' | 'ciclo-medio' | 'ciclo-superior'
+  modality: 'presencial' | 'semipresencial' | 'telematico'
+  cycle_id?: string
+  cycle_name?: string
+  duration_hours: number
+  price: number
+  max_students: number
+  current_students: number
+  description: string // OBLIGATORIO
+  objectives: string[]
+  requirements: string[]
+  syllabus: {
+    module: string
+    hours: number
+    topics: string[]
+  }[]
+  teachers: {
+    id: string
+    name: string
+    photo: string
+  }[]
+  campuses: {
+    id: string
+    name: string
+    code: string
+  }[]
+  status: 'draft' | 'published' | 'archived'
+  featured: boolean
+  start_date?: string
+  end_date?: string
+  enrollment_deadline?: string
+  certificate_name?: string
+}
+
+export const coursesData: CourseDetailed[] = [
+  {
+    id: "CURSO001",
+    name: "Community Manager Profesional",
+    code: "CM-PRO-2025",
+    type: "privados",
+    modality: "semipresencial",
+    cycle_id: "1",
+    cycle_name: "Técnico Superior en Marketing y Publicidad",
+    duration_hours: 120,
+    price: 890,
+    max_students: 25,
+    current_students: 18,
+    description: "Curso completo de gestión de redes sociales, estrategia de contenidos y analítica digital. Aprenderás a crear, implementar y medir estrategias efectivas en todas las plataformas sociales principales. Incluye prácticas reales con empresas colaboradoras y certificación reconocida por la industria.",
+    objectives: [
+      "Crear y gestionar estrategias de contenido para redes sociales (Facebook, Instagram, TikTok, LinkedIn, Twitter/X)",
+      "Dominar herramientas de programación y analítica (Hootsuite, Buffer, Meta Business Suite, Google Analytics)",
+      "Diseñar y ejecutar campañas publicitarias en Meta Ads y LinkedIn Ads con presupuesto controlado",
+      "Gestionar crisis de reputación online y protocolo de respuesta en redes sociales",
+      "Crear contenido visual atractivo con Canva y herramientas de edición básicas",
+      "Interpretar métricas y elaborar informes de rendimiento para clientes"
+    ],
+    requirements: [
+      "Conocimientos básicos de informática y navegación en internet",
+      "Acceso a ordenador personal (Windows o Mac) e internet estable",
+      "Tener perfiles personales activos en al menos 3 redes sociales",
+      "Edad mínima: 16 años"
+    ],
+    syllabus: [
+      {
+        module: "Introducción al Social Media Marketing",
+        hours: 15,
+        topics: [
+          "Ecosistema digital actual y evolución de redes sociales",
+          "Principales plataformas: características y públicos objetivos",
+          "Rol y responsabilidades del Community Manager",
+          "Casos de éxito y fracasos en redes sociales"
+        ]
+      },
+      {
+        module: "Estrategia de Contenidos",
+        hours: 20,
+        topics: [
+          "Definición de buyer persona y audiencia objetivo",
+          "Creación de calendario editorial y plan de publicaciones",
+          "Tipos de contenido: educativo, entretenimiento, promocional",
+          "Copywriting para redes sociales y técnicas de engagement",
+          "Storytelling de marca y voz de la empresa"
+        ]
+      },
+      {
+        module: "Gestión de Plataformas",
+        hours: 25,
+        topics: [
+          "Facebook e Instagram: algoritmo, formatos, mejores prácticas",
+          "LinkedIn: estrategia B2B y personal branding",
+          "TikTok: tendencias, challenges y contenido viral",
+          "Twitter/X: actualidad, engagement y gestión de crisis",
+          "YouTube: estrategia de vídeo marketing y optimización SEO"
+        ]
+      },
+      {
+        module: "Publicidad en Redes Sociales",
+        hours: 25,
+        topics: [
+          "Meta Ads Manager: configuración de campañas completas",
+          "Segmentación avanzada y públicos personalizados",
+          "Creatividades publicitarias: imágenes, vídeos, carruseles",
+          "Presupuestos, pujas y optimización de costes",
+          "LinkedIn Ads: campañas B2B y lead generation"
+        ]
+      },
+      {
+        module: "Herramientas y Analítica",
+        hours: 20,
+        topics: [
+          "Hootsuite, Buffer y herramientas de programación",
+          "Meta Business Suite y estadísticas nativas",
+          "Google Analytics 4 para tráfico desde redes sociales",
+          "Elaboración de informes y dashboards con Looker Studio",
+          "KPIs clave: alcance, engagement, conversión, ROI"
+        ]
+      },
+      {
+        module: "Proyecto Final",
+        hours: 15,
+        topics: [
+          "Desarrollo de estrategia completa para marca real",
+          "Presentación de plan de contenidos mensual",
+          "Configuración y lanzamiento de campaña publicitaria",
+          "Defensa del proyecto ante tribunal y compañeros"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "1",
+        name: "María García Pérez",
+        photo: "https://i.pravatar.cc/150?img=1"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      },
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      }
+    ],
+    status: "published",
+    featured: true,
+    start_date: "2025-02-01",
+    end_date: "2025-05-30",
+    enrollment_deadline: "2025-01-25",
+    certificate_name: "Certificado Profesional en Community Management"
+  },
+  {
+    id: "CURSO002",
+    name: "SEO y SEM Avanzado",
+    code: "SEO-SEM-ADV",
+    type: "privados",
+    modality: "presencial",
+    cycle_id: "1",
+    cycle_name: "Técnico Superior en Marketing y Publicidad",
+    duration_hours: 80,
+    price: 750,
+    max_students: 20,
+    current_students: 15,
+    description: "Posicionamiento web orgánico (SEO) y campañas de pago (SEM) con Google Ads. Aprenderás a optimizar sitios web para aparecer en las primeras posiciones de Google y a crear campañas rentables de publicidad en buscadores. Incluye certificación oficial de Google Ads.",
+    objectives: [
+      "Optimizar sitios web para buscadores siguiendo las directrices de Google",
+      "Realizar auditorías SEO técnicas completas con herramientas profesionales",
+      "Investigar palabras clave y crear estrategias de contenido SEO",
+      "Construir estrategias de link building éticas y efectivas",
+      "Crear y optimizar campañas SEM rentables en Google Ads",
+      "Analizar y mejorar el ROI de campañas de búsqueda pagada"
+    ],
+    requirements: [
+      "Conocimientos básicos de marketing digital",
+      "Comprensión de HTML y CSS (nivel básico)",
+      "Acceso a un sitio web propio o de prueba (se puede proporcionar)"
+    ],
+    syllabus: [
+      {
+        module: "Fundamentos SEO",
+        hours: 15,
+        topics: [
+          "Cómo funcionan los motores de búsqueda",
+          "Algoritmos de Google y actualizaciones principales",
+          "SEO On-Page vs Off-Page vs Técnico",
+          "Herramientas esenciales: Google Search Console, Analytics, Ahrefs, SEMrush"
+        ]
+      },
+      {
+        module: "SEO Técnico",
+        hours: 20,
+        topics: [
+          "Arquitectura web y estructura de URLs",
+          "Velocidad de carga y Core Web Vitals",
+          "Indexabilidad y rastreo: robots.txt, sitemap.xml",
+          "Mobile-first indexing y responsive design",
+          "Datos estructurados y rich snippets"
+        ]
+      },
+      {
+        module: "SEO On-Page",
+        hours: 15,
+        topics: [
+          "Investigación de palabras clave con herramientas profesionales",
+          "Optimización de títulos, meta descripciones y encabezados",
+          "Contenido de calidad y estrategia de contenidos",
+          "Imágenes: alt text, compresión, lazy loading",
+          "Enlaces internos y siloing"
+        ]
+      },
+      {
+        module: "SEO Off-Page",
+        hours: 10,
+        topics: [
+          "Link building: estrategias white-hat",
+          "Guest posting y colaboraciones",
+          "Digital PR y menciones de marca",
+          "Análisis de backlinks y desautorización"
+        ]
+      },
+      {
+        module: "Google Ads (SEM)",
+        hours: 20,
+        topics: [
+          "Estructura de cuentas y campañas en Google Ads",
+          "Tipos de concordancia de palabras clave",
+          "Redacción de anuncios efectivos y extensiones",
+          "Estrategias de puja y presupuestos",
+          "Quality Score y optimización de landing pages",
+          "Remarketing y audiencias personalizadas"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "1",
+        name: "María García Pérez",
+        photo: "https://i.pravatar.cc/150?img=1"
+      }
+    ],
+    campuses: [
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      }
+    ],
+    status: "published",
+    featured: true,
+    start_date: "2025-02-15",
+    end_date: "2025-04-30",
+    enrollment_deadline: "2025-02-08",
+    certificate_name: "Certificado en SEO y SEM Avanzado + Google Ads Certification"
+  },
+  {
+    id: "CURSO003",
+    name: "Diseño UX/UI con Figma",
+    code: "UX-UI-FIG",
+    type: "privados",
+    modality: "telematico",
+    cycle_id: "1",
+    cycle_name: "Técnico Superior en Marketing y Publicidad",
+    duration_hours: 100,
+    price: 680,
+    max_students: 30,
+    current_students: 22,
+    description: "Diseño de interfaces y experiencias de usuario con metodologías ágiles y herramientas profesionales. Aprenderás a crear prototipos interactivos, realizar pruebas de usabilidad y aplicar principios de diseño centrado en el usuario. 100% online con clases en directo y proyecto final real.",
+    objectives: [
+      "Crear prototipos interactivos profesionales en Figma",
+      "Aplicar principios de diseño centrado en el usuario (UCD)",
+      "Realizar investigación de usuarios con entrevistas y encuestas",
+      "Diseñar wireframes, mockups y prototipos de alta fidelidad",
+      "Realizar pruebas de usabilidad y analizar resultados",
+      "Implementar design systems y componentes reutilizables"
+    ],
+    requirements: [
+      "Conocimientos básicos de diseño gráfico (recomendado pero no obligatorio)",
+      "Ordenador con al menos 8GB RAM",
+      "Cuenta gratuita en Figma"
+    ],
+    syllabus: [
+      {
+        module: "Fundamentos UX",
+        hours: 20,
+        topics: [
+          "Qué es UX y por qué es importante",
+          "Diferencias entre UX, UI y CX",
+          "Metodología Design Thinking",
+          "Investigación de usuarios: entrevistas, encuestas, personas",
+          "Customer Journey Maps y User Flows"
+        ]
+      },
+      {
+        module: "Fundamentos UI",
+        hours: 20,
+        topics: [
+          "Principios de diseño visual: jerarquía, contraste, espacio",
+          "Teoría del color aplicada a interfaces",
+          "Tipografía para pantallas",
+          "Sistemas de grids y layouts responsivos",
+          "Accesibilidad web (WCAG 2.1)"
+        ]
+      },
+      {
+        module: "Figma Avanzado",
+        hours: 25,
+        topics: [
+          "Herramientas y atajos de Figma",
+          "Auto Layout y constraints",
+          "Componentes, variantes y propiedades",
+          "Prototipos interactivos con animaciones",
+          "Colaboración en tiempo real",
+          "Plugins esenciales y flujo de trabajo optimizado"
+        ]
+      },
+      {
+        module: "Design Systems",
+        hours: 15,
+        topics: [
+          "Qué es un design system y por qué crearlo",
+          "Atomic Design: átomos, moléculas, organismos",
+          "Creación de biblioteca de componentes",
+          "Tokens de diseño y consistencia visual",
+          "Documentación y handoff a desarrollo"
+        ]
+      },
+      {
+        module: "Testing y Validación",
+        hours: 10,
+        topics: [
+          "Pruebas de usabilidad moderadas y no moderadas",
+          "A/B testing y test multivariante",
+          "Heatmaps y análisis de comportamiento",
+          "Herramientas: Hotjar, Maze, UserTesting"
+        ]
+      },
+      {
+        module: "Proyecto Final",
+        hours: 10,
+        topics: [
+          "Desarrollo de app móvil o web completa",
+          "Research, wireframes, diseño y prototipo",
+          "Pruebas de usabilidad con usuarios reales",
+          "Presentación del proyecto"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "3",
+        name: "Laura Martínez Sosa",
+        photo: "https://i.pravatar.cc/150?img=3"
+      }
+    ],
+    campuses: [
+      {
+        id: "C004",
+        name: "CEP Online",
+        code: "ONLINE"
+      }
+    ],
+    status: "published",
+    featured: false,
+    start_date: "2025-03-01",
+    end_date: "2025-06-15",
+    enrollment_deadline: "2025-02-22",
+    certificate_name: "Certificado Profesional en Diseño UX/UI"
+  },
+  {
+    id: "CURSO004",
+    name: "Desarrollo Frontend con React",
+    code: "REACT-2025",
+    type: "ciclo-superior",
+    modality: "presencial",
+    cycle_id: "4",
+    cycle_name: "Técnico Superior en Desarrollo de Aplicaciones Web",
+    duration_hours: 150,
+    price: 1200,
+    max_students: 18,
+    current_students: 12,
+    description: "Desarrollo de aplicaciones web modernas con React, TypeScript, TailwindCSS y despliegue en producción. Aprenderás a crear SPAs escalables, gestionar estado complejo y desplegar aplicaciones en la nube. Incluye prácticas con proyectos reales de empresas.",
+    objectives: [
+      "Crear aplicaciones SPA con React 18+ y React Router",
+      "Dominar TypeScript para desarrollo type-safe",
+      "Gestionar estado con Context API, Zustand y React Query",
+      "Estilizar componentes con TailwindCSS y CSS Modules",
+      "Implementar autenticación JWT y protección de rutas",
+      "Desplegar aplicaciones en Vercel/Netlify con CI/CD"
+    ],
+    requirements: [
+      "JavaScript ES6+ nivel intermedio-avanzado",
+      "HTML5 y CSS3 nivel avanzado",
+      "Conocimientos de Git y GitHub",
+      "Comprensión de conceptos de programación orientada a objetos"
+    ],
+    syllabus: [
+      {
+        module: "Fundamentos React",
+        hours: 25,
+        topics: [
+          "JSX, componentes funcionales y hooks básicos",
+          "useState, useEffect y ciclo de vida",
+          "Props, children y composición de componentes",
+          "Renderizado condicional y listas",
+          "Eventos y formularios controlados"
+        ]
+      },
+      {
+        module: "TypeScript para React",
+        hours: 20,
+        topics: [
+          "Tipos básicos e interfaces",
+          "Tipado de props y hooks",
+          "Generics y utility types",
+          "Configuración de tsconfig.json"
+        ]
+      },
+      {
+        module: "Estado y Routing",
+        hours: 30,
+        topics: [
+          "Context API y useContext",
+          "React Router v6: rutas, navegación, parámetros",
+          "Zustand para estado global ligero",
+          "React Query para gestión de datos asíncronos",
+          "Optimistic updates y cache"
+        ]
+      },
+      {
+        module: "Estilos y UI",
+        hours: 25,
+        topics: [
+          "TailwindCSS: configuración y customización",
+          "Componentes reutilizables con shadcn/ui",
+          "CSS Modules y Styled Components",
+          "Responsive design y mobile-first",
+          "Animaciones con Framer Motion"
+        ]
+      },
+      {
+        module: "Autenticación y Seguridad",
+        hours: 20,
+        topics: [
+          "JSON Web Tokens (JWT)",
+          "Protected routes y roles",
+          "OAuth 2.0 con Google/GitHub",
+          "Secure storage y XSS prevention"
+        ]
+      },
+      {
+        module: "Testing y Deployment",
+        hours: 20,
+        topics: [
+          "Vitest y React Testing Library",
+          "Unit tests y integration tests",
+          "GitHub Actions para CI/CD",
+          "Deployment en Vercel y Netlify",
+          "Environment variables y secrets"
+        ]
+      },
+      {
+        module: "Proyecto Final",
+        hours: 10,
+        topics: [
+          "Desarrollo de aplicación full-stack completa",
+          "Integración con backend (Node.js/Express)",
+          "Deploy a producción",
+          "Presentación y defensa"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "2",
+        name: "Carlos Rodríguez Martínez",
+        photo: "https://i.pravatar.cc/150?img=2"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    status: "published",
+    featured: true,
+    start_date: "2025-02-10",
+    end_date: "2025-07-15",
+    enrollment_deadline: "2025-02-03",
+    certificate_name: "Certificado Profesional en Desarrollo Frontend React"
+  },
+  {
+    id: "CURSO005",
+    name: "Backend con Node.js y PostgreSQL",
+    code: "NODE-PSQL",
+    type: "ciclo-superior",
+    modality: "semipresencial",
+    cycle_id: "4",
+    cycle_name: "Técnico Superior en Desarrollo de Aplicaciones Web",
+    duration_hours: 140,
+    price: 1150,
+    max_students: 18,
+    current_students: 9,
+    description: "Desarrollo de APIs REST con Node.js, Express, autenticación JWT y bases de datos relacionales. Aprenderás a construir backends escalables, seguros y bien documentados. Incluye integración con frontend React y despliegue en servidores cloud.",
+    objectives: [
+      "Diseñar y desarrollar APIs RESTful escalables con Express.js",
+      "Implementar autenticación y autorización segura con JWT",
+      "Trabajar con PostgreSQL y ORMs (Prisma/TypeORM)",
+      "Validar datos con Zod y manejar errores correctamente",
+      "Documentar APIs con Swagger/OpenAPI",
+      "Desplegar en Railway/Render con Docker"
+    ],
+    requirements: [
+      "JavaScript avanzado y comprensión de asincronía (Promises, async/await)",
+      "Conocimientos de bases de datos SQL (SELECT, JOIN, WHERE)",
+      "Git y terminal de comandos",
+      "Conceptos de HTTP y arquitectura cliente-servidor"
+    ],
+    syllabus: [
+      {
+        module: "Node.js y Express",
+        hours: 25,
+        topics: [
+          "Introducción a Node.js y el event loop",
+          "NPM, package.json y gestión de dependencias",
+          "Express: routing, middleware, controllers",
+          "Request/Response cycle y manejo de errores",
+          "CORS y seguridad básica"
+        ]
+      },
+      {
+        module: "PostgreSQL y ORMs",
+        hours: 30,
+        topics: [
+          "Diseño de esquemas relacionales",
+          "Prisma ORM: modelos, migraciones, relaciones",
+          "Queries complejas y optimización",
+          "Transacciones y atomicidad",
+          "Indexación y performance"
+        ]
+      },
+      {
+        module: "Autenticación y Autorización",
+        hours: 25,
+        topics: [
+          "Hashing de contraseñas con bcrypt",
+          "JSON Web Tokens (JWT): creación y verificación",
+          "Refresh tokens y token rotation",
+          "Role-Based Access Control (RBAC)",
+          "Rate limiting y brute-force protection"
+        ]
+      },
+      {
+        module: "Validación y Seguridad",
+        hours: 20,
+        topics: [
+          "Validación de schemas con Zod",
+          "SQL injection prevention",
+          "XSS y CSRF protection",
+          "Helmet.js y security headers",
+          "Environment variables y secrets management"
+        ]
+      },
+      {
+        module: "Testing y Documentación",
+        hours: 20,
+        topics: [
+          "Unit tests con Vitest",
+          "Integration tests con Supertest",
+          "Mocking de base de datos",
+          "Swagger/OpenAPI para documentación",
+          "Postman collections"
+        ]
+      },
+      {
+        module: "Deployment",
+        hours: 20,
+        topics: [
+          "Docker: Dockerfile, docker-compose",
+          "Deploy en Railway/Render",
+          "PostgreSQL en Supabase/Neon",
+          "Monitoring con Sentry",
+          "CI/CD con GitHub Actions"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "2",
+        name: "Carlos Rodríguez Martínez",
+        photo: "https://i.pravatar.cc/150?img=2"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    status: "published",
+    featured: false,
+    start_date: "2025-03-15",
+    end_date: "2025-07-30",
+    enrollment_deadline: "2025-03-08"
+  },
+  {
+    id: "CURSO006",
+    name: "Redes Cisco CCNA",
+    code: "CCNA-2025",
+    type: "ciclo-medio",
+    modality: "presencial",
+    cycle_id: "3",
+    cycle_name: "Técnico en Sistemas Microinformáticos y Redes",
+    duration_hours: 200,
+    price: 1500,
+    max_students: 15,
+    current_students: 15,
+    description: "Preparación para certificación CCNA con configuración de routers, switches y protocolos de enrutamiento. Incluye laboratorios con equipos reales Cisco y simulador Packet Tracer. Al finalizar estarás preparado para el examen oficial CCNA 200-301.",
+    objectives: [
+      "Configurar dispositivos Cisco IOS mediante CLI",
+      "Implementar VLANs, trunking y enrutamiento inter-VLAN",
+      "Configurar protocolos de enrutamiento dinámico (OSPF, EIGRP)",
+      "Implementar NAT, ACLs y seguridad básica",
+      "Troubleshooting de redes complejas",
+      "Aprobar el examen CCNA 200-301"
+    ],
+    requirements: [
+      "Conocimientos básicos de redes TCP/IP",
+      "Comprensión del modelo OSI",
+      "Familiaridad con sistemas operativos (Windows/Linux)"
+    ],
+    syllabus: [
+      {
+        module: "Fundamentos de Redes",
+        hours: 30,
+        topics: [
+          "Modelo OSI y TCP/IP",
+          "Direccionamiento IPv4 y subnetting",
+          "Introducción a IPv6",
+          "Cables, conectores y medios de transmisión"
+        ]
+      },
+      {
+        module: "Switching",
+        hours: 40,
+        topics: [
+          "Operación de switches y tabla MAC",
+          "VLANs: creación, asignación, beneficios",
+          "Trunking (802.1Q) y VTP",
+          "STP, RSTP y PortFast",
+          "EtherChannel y agregación de enlaces"
+        ]
+      },
+      {
+        module: "Routing",
+        hours: 50,
+        topics: [
+          "Enrutamiento estático",
+          "Routing dinámico: RIP, OSPF, EIGRP",
+          "Default routes y rutas sumarias",
+          "Inter-VLAN routing (router-on-a-stick, SVI)",
+          "Métricas y administrative distance"
+        ]
+      },
+      {
+        module: "Servicios de Red",
+        hours: 30,
+        topics: [
+          "DHCP: servidor, relay, snooping",
+          "NAT: estática, dinámica, PAT",
+          "ACLs: estándar y extendidas",
+          "DNS y resolución de nombres"
+        ]
+      },
+      {
+        module: "Seguridad y Gestión",
+        hours: 25,
+        topics: [
+          "Seguridad de switches (port security, DHCP snooping)",
+          "SSH y acceso seguro a dispositivos",
+          "SNMP para monitorización",
+          "Syslog y troubleshooting"
+        ]
+      },
+      {
+        module: "Preparación Examen",
+        hours: 25,
+        topics: [
+          "Repaso de todos los temas del temario CCNA",
+          "Exámenes de práctica",
+          "Laboratorios intensivos",
+          "Estrategias para el examen oficial"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "6",
+        name: "Miguel Hernández Castro",
+        photo: "https://i.pravatar.cc/150?img=6"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    status: "published",
+    featured: false,
+    start_date: "2025-02-01",
+    end_date: "2025-08-31",
+    enrollment_deadline: "2025-01-25",
+    certificate_name: "Preparación Certificación Cisco CCNA 200-301"
+  },
+  {
+    id: "CURSO007",
+    name: "Edición de Vídeo con Premiere Pro",
+    code: "PREMIERE-PRO",
+    type: "privados",
+    modality: "presencial",
+    cycle_id: "5",
+    cycle_name: "Técnico Superior en Producción Audiovisual",
+    duration_hours: 90,
+    price: 820,
+    max_students: 20,
+    current_students: 14,
+    description: "Edición profesional de vídeo, corrección de color, efectos visuales y exportación para diferentes plataformas. Aprenderás a editar vídeos profesionales para YouTube, redes sociales, publicidad y cine. Incluye proyecto final con material real de producción.",
+    objectives: [
+      "Dominar la interfaz y flujo de trabajo de Adobe Premiere Pro",
+      "Aplicar transiciones, efectos y corrección de color profesional",
+      "Editar audio: limpieza, mezcla, sincronización",
+      "Trabajar con multicámara y proxies para proyectos 4K",
+      "Exportar vídeos optimizados para YouTube, Instagram, TikTok",
+      "Integración con After Effects y Adobe Audition"
+    ],
+    requirements: [
+      "Conocimientos básicos de edición de vídeo (opcional)",
+      "Ordenador potente: Intel i7/AMD Ryzen 7, 16GB RAM, GPU dedicada",
+      "Adobe Creative Cloud (se puede usar versión de prueba)"
+    ],
+    syllabus: [
+      {
+        module: "Interfaz y Flujo de Trabajo",
+        hours: 15,
+        topics: [
+          "Panels, workspaces y personalización",
+          "Importación de medios y organización",
+          "Secuencias y ajustes de proyecto",
+          "Atajos de teclado esenciales",
+          "Proxies y transcoding para rendimiento"
+        ]
+      },
+      {
+        module: "Edición Básica",
+        hours: 20,
+        topics: [
+          "Herramientas de corte: razor, ripple, rolling",
+          "Inserts, overwrite y tres puntos de edición",
+          "Trim mode y refinamiento de cortes",
+          "Transiciones: cortes, fundidos, wipes",
+          "Velocidad y tiempo: slow motion, time remapping"
+        ]
+      },
+      {
+        module: "Color Grading",
+        hours: 20,
+        topics: [
+          "Lumetri Color: ruedas, curvas, HSL",
+          "Corrección de color primaria y secundaria",
+          "LUTs y looks cinematográficos",
+          "Matching de color entre clips",
+          "Scopes: waveform, vectorscope, histogram"
+        ]
+      },
+      {
+        module: "Audio",
+        hours: 15,
+        topics: [
+          "Sincronización de audio y vídeo",
+          "Limpieza de audio con Essential Sound",
+          "Mezcla de audio: música, diálogos, efectos",
+          "Keyframes y automatización de volumen",
+          "Integración con Adobe Audition"
+        ]
+      },
+      {
+        module: "Efectos y Motion Graphics",
+        hours: 10,
+        topics: [
+          "Efectos de vídeo: estabilización, desenfoques",
+          "Keyframes y animación de efectos",
+          "Títulos y gráficos esenciales",
+          "Dynamic Link con After Effects",
+          "Masking y composición básica"
+        ]
+      },
+      {
+        module: "Exportación y Entrega",
+        hours: 10,
+        topics: [
+          "Codecs y formatos: H.264, ProRes, DNxHD",
+          "Ajustes para YouTube (1080p, 4K)",
+          "Optimización para Instagram, TikTok, Facebook",
+          "Media Encoder para batch export",
+          "Archivado de proyectos"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "7",
+        name: "Ana López Ruiz",
+        photo: "https://i.pravatar.cc/150?img=7"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      }
+    ],
+    status: "published",
+    featured: true,
+    start_date: "2025-02-20",
+    end_date: "2025-05-15",
+    enrollment_deadline: "2025-02-13",
+    certificate_name: "Certificado Profesional en Edición de Vídeo"
+  },
+  {
+    id: "CURSO008",
+    name: "Marketing Digital para Desempleados",
+    code: "MKT-DESEMP",
+    type: "desempleados",
+    modality: "semipresencial",
+    duration_hours: 60,
+    price: 0,
+    max_students: 25,
+    current_students: 20,
+    description: "Curso gratuito de marketing digital básico para personas desempleadas con certificación oficial. Subvencionado 100% por el Servicio Canario de Empleo. Aprenderás los fundamentos del marketing digital, redes sociales y herramientas básicas para mejorar tu empleabilidad.",
+    objectives: [
+      "Conocer los fundamentos del marketing digital y sus canales",
+      "Crear perfiles profesionales optimizados en LinkedIn",
+      "Gestionar páginas de empresa en redes sociales",
+      "Realizar campañas básicas en Facebook e Instagram",
+      "Utilizar Google My Business para negocios locales",
+      "Obtener certificación oficial de empleabilidad digital"
+    ],
+    requirements: [
+      "Estar en situación de desempleo inscrito en el DARDE (Servicio Canario de Empleo)",
+      "Conocimientos básicos de informática y navegación web",
+      "Disponer de ordenador e internet para clases online"
+    ],
+    syllabus: [
+      {
+        module: "Introducción al Marketing Digital",
+        hours: 10,
+        topics: [
+          "Qué es el marketing digital y sus ventajas",
+          "Canales principales: web, email, redes, buscadores",
+          "Casos de éxito de pequeñas empresas",
+          "Herramientas gratuitas esenciales"
+        ]
+      },
+      {
+        module: "Redes Sociales Básicas",
+        hours: 20,
+        topics: [
+          "Creación y optimización de perfil de LinkedIn",
+          "Páginas de Facebook para negocios",
+          "Instagram Business y publicaciones efectivas",
+          "Estrategia básica de contenidos",
+          "Programación con Meta Business Suite"
+        ]
+      },
+      {
+        module: "Google My Business",
+        hours: 10,
+        topics: [
+          "Creación de ficha de empresa en Google",
+          "Optimización para búsquedas locales",
+          "Gestión de reseñas",
+          "Publicaciones y actualizaciones"
+        ]
+      },
+      {
+        module: "Email Marketing Básico",
+        hours: 10,
+        topics: [
+          "Herramientas gratuitas: Mailchimp, Brevo",
+          "Creación de campañas sencillas",
+          "Listas de contactos y segmentación básica",
+          "Análisis de resultados"
+        ]
+      },
+      {
+        module: "Proyecto Final",
+        hours: 10,
+        topics: [
+          "Desarrollo de estrategia digital para negocio propio o simulado",
+          "Presentación de plan de acción",
+          "Obtención de certificado oficial"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "1",
+        name: "María García Pérez",
+        photo: "https://i.pravatar.cc/150?img=1"
+      }
+    ],
+    campuses: [
+      {
+        id: "C001",
+        name: "CEP Norte",
+        code: "NORTE"
+      },
+      {
+        id: "C002",
+        name: "CEP Santa Cruz",
+        code: "SANTA-CRUZ"
+      }
+    ],
+    status: "published",
+    featured: false,
+    start_date: "2025-03-01",
+    end_date: "2025-04-15",
+    enrollment_deadline: "2025-02-20",
+    certificate_name: "Certificado Oficial de Empleabilidad Digital (SCE)"
+  },
+  {
+    id: "CURSO009",
+    name: "Excel Avanzado para Empresas",
+    code: "EXCEL-ADV-EMP",
+    type: "ocupados",
+    modality: "telematico",
+    duration_hours: 40,
+    price: 0,
+    max_students: 35,
+    current_students: 28,
+    description: "Bonificado por FUNDAE para trabajadores en activo. Tablas dinámicas, macros y automatización con VBA. Aprenderás a dominar Excel a nivel profesional para análisis de datos, informes automáticos y dashboards interactivos. 100% bonificable por la Seguridad Social.",
+    objectives: [
+      "Crear tablas dinámicas y gráficos avanzados para análisis de datos",
+      "Automatizar tareas repetitivas con macros y VBA básico",
+      "Trabajar con bases de datos en Excel: filtros, tablas, Power Query",
+      "Crear dashboards interactivos con segmentadores y gráficos dinámicos",
+      "Dominar funciones avanzadas: BUSCARV, SI.ERROR, SUMAR.SI.CONJUNTO",
+      "Proteger y compartir libros de trabajo de forma segura"
+    ],
+    requirements: [
+      "Estar dado de alta en el régimen general de la Seguridad Social (trabajador en activo)",
+      "Excel nivel básico-intermedio (conocer fórmulas básicas, formato de celdas)",
+      "Microsoft Excel 2016 o superior (Office 365 recomendado)"
+    ],
+    syllabus: [
+      {
+        module: "Funciones Avanzadas",
+        hours: 10,
+        topics: [
+          "BUSCARV, BUSCARH, INDICE, COINCIDIR",
+          "Funciones lógicas avanzadas: SI.ERROR, Y, O",
+          "Funciones de fecha y hora",
+          "Funciones de texto: CONCATENAR, EXTRAE, ENCONTRAR",
+          "Funciones estadísticas: CONTAR.SI, SUMAR.SI.CONJUNTO"
+        ]
+      },
+      {
+        module: "Tablas Dinámicas",
+        hours: 10,
+        topics: [
+          "Creación y configuración de tablas dinámicas",
+          "Agrupación de datos por fechas, rangos, categorías",
+          "Campos calculados y elementos calculados",
+          "Gráficos dinámicos y segmentadores",
+          "Actualización y refresh de datos"
+        ]
+      },
+      {
+        module: "Power Query y Power Pivot",
+        hours: 10,
+        topics: [
+          "Importación de datos desde múltiples fuentes",
+          "Transformación y limpieza de datos con Power Query",
+          "Combinar consultas (merge y append)",
+          "Introducción a Power Pivot y modelo de datos",
+          "Medidas DAX básicas"
+        ]
+      },
+      {
+        module: "Automatización con Macros",
+        hours: 10,
+        topics: [
+          "Grabadora de macros",
+          "Edición básica de código VBA",
+          "Automatización de tareas repetitivas",
+          "Botones y controles de formulario",
+          "Debugging y gestión de errores"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "5",
+        name: "Pedro Sánchez Díaz",
+        photo: "https://i.pravatar.cc/150?img=5"
+      }
+    ],
+    campuses: [
+      {
+        id: "C004",
+        name: "CEP Online",
+        code: "ONLINE"
+      }
+    ],
+    status: "published",
+    featured: false,
+    start_date: "2025-03-10",
+    end_date: "2025-04-10",
+    enrollment_deadline: "2025-03-03",
+    certificate_name: "Certificado FUNDAE Excel Avanzado Empresarial"
+  },
+  {
+    id: "CURSO010",
+    name: "Inteligencia Artificial para Marketing",
+    code: "AI-MKT-2025",
+    type: "privados",
+    modality: "telematico",
+    duration_hours: 50,
+    price: 590,
+    max_students: 40,
+    current_students: 0,
+    description: "Uso de ChatGPT, Midjourney y herramientas IA para automatizar tareas de marketing y crear contenido. Aprenderás a utilizar las últimas herramientas de inteligencia artificial para generar textos, imágenes, vídeos y automatizar workflows completos de marketing. Próximamente en marzo 2025.",
+    objectives: [
+      "Generar textos publicitarios profesionales con ChatGPT y Claude",
+      "Crear imágenes para redes sociales con Midjourney y DALL-E 3",
+      "Automatizar workflows de marketing con Make y Zapier + IA",
+      "Generar vídeos con IA: scripts, locución, edición",
+      "Análisis de datos y predicciones con herramientas IA",
+      "Ética y limitaciones de la IA en marketing"
+    ],
+    requirements: [
+      "Conocimientos básicos de marketing digital",
+      "Familiaridad con redes sociales y creación de contenido",
+      "No se requieren conocimientos técnicos o programación"
+    ],
+    syllabus: [
+      {
+        module: "Fundamentos IA para Marketing",
+        hours: 8,
+        topics: [
+          "Qué es la IA generativa y cómo funciona",
+          "Principales herramientas: ChatGPT, Claude, Gemini",
+          "Prompt engineering: técnicas y mejores prácticas",
+          "Limitaciones y sesgos de los modelos de IA",
+          "Aspectos legales: derechos de autor, privacidad"
+        ]
+      },
+      {
+        module: "Generación de Textos",
+        hours: 12,
+        topics: [
+          "ChatGPT para copywriting: ads, emails, landing pages",
+          "Creación de calendarios de contenido automatizados",
+          "Generación de artículos de blog optimizados para SEO",
+          "Personalización masiva de mensajes",
+          "Traducción y adaptación multiidioma"
+        ]
+      },
+      {
+        module: "Generación de Imágenes",
+        hours: 10,
+        topics: [
+          "Midjourney: prompts avanzados y estilos",
+          "DALL-E 3 y Adobe Firefly",
+          "Generación de logos, mockups y diseños",
+          "Edición de imágenes con IA: remove.bg, Photoshop IA",
+          "Consideraciones éticas y watermarks"
+        ]
+      },
+      {
+        module: "Vídeo y Audio",
+        hours: 8,
+        topics: [
+          "Generación de scripts de vídeo con IA",
+          "Text-to-speech profesional: ElevenLabs, Play.ht",
+          "Generación de vídeos con IA: Synthesia, D-ID",
+          "Subtitulado automático y traducción",
+          "Edición automatizada con IA"
+        ]
+      },
+      {
+        module: "Automatización y Análisis",
+        hours: 10,
+        topics: [
+          "Zapier y Make para workflows automáticos",
+          "Integración de IA en CRM y email marketing",
+          "Análisis predictivo y segmentación con IA",
+          "Chatbots inteligentes para atención al cliente",
+          "A/B testing automatizado con IA"
+        ]
+      },
+      {
+        module: "Proyecto Final",
+        hours: 2,
+        topics: [
+          "Desarrollo de campaña completa con herramientas IA",
+          "Presentación de resultados y ROI",
+          "Mejores prácticas y lecciones aprendidas"
+        ]
+      }
+    ],
+    teachers: [
+      {
+        id: "1",
+        name: "María García Pérez",
+        photo: "https://i.pravatar.cc/150?img=1"
+      },
+      {
+        id: "3",
+        name: "Laura Martínez Sosa",
+        photo: "https://i.pravatar.cc/150?img=3"
+      }
+    ],
+    campuses: [
+      {
+        id: "C004",
+        name: "CEP Online",
+        code: "ONLINE"
+      }
+    ],
+    status: "draft",
+    featured: false,
+    start_date: "2025-03-15",
+    enrollment_deadline: "2025-03-08",
+    certificate_name: "Certificado Profesional en IA para Marketing"
+  }
+]
