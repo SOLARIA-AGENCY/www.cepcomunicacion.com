@@ -2,14 +2,11 @@ import { useState } from "react"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Select,
   SelectContent,
@@ -18,18 +15,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  Users,
-  Clock,
-  Euro,
   Plus,
-  Edit,
   Search,
   Star,
-  MapPin,
-  GraduationCap,
-  Calendar
 } from "lucide-react"
 import { CourseDialog } from "@/components/dialogs/CourseDialog"
+import { CourseCard } from "@/components/ui/CourseCard"
 import { coursesData } from "@/data/mockData"
 
 export function CoursesPage() {
@@ -68,27 +59,6 @@ export function CoursesPage() {
     return matchesSearch && matchesType && matchesModality && matchesStatus && matchesFeatured
   })
 
-  const getTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      'telematico': 'Telemático',
-      'ocupados': 'Ocupados',
-      'desempleados': 'Desempleados',
-      'privados': 'Privados',
-      'ciclo-medio': 'Ciclo Medio',
-      'ciclo-superior': 'Ciclo Superior'
-    }
-    return labels[type] || type
-  }
-
-  const getModalityLabel = (modality: string) => {
-    const labels: Record<string, string> = {
-      'presencial': 'Presencial',
-      'semipresencial': 'Semipresencial',
-      'telematico': 'Telemático'
-    }
-    return labels[modality] || modality
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -125,12 +95,42 @@ export function CoursesPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos los tipos</SelectItem>
-                <SelectItem value="privados">Privados</SelectItem>
-                <SelectItem value="telematico">Telemático</SelectItem>
-                <SelectItem value="ocupados">Ocupados</SelectItem>
-                <SelectItem value="desempleados">Desempleados</SelectItem>
-                <SelectItem value="ciclo-medio">Ciclo Medio</SelectItem>
-                <SelectItem value="ciclo-superior">Ciclo Superior</SelectItem>
+                <SelectItem value="privados">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-600" />
+                    Privados
+                  </div>
+                </SelectItem>
+                <SelectItem value="teleformacion">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-orange-600" />
+                    Teleformación
+                  </div>
+                </SelectItem>
+                <SelectItem value="ocupados">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-green-600" />
+                    Ocupados
+                  </div>
+                </SelectItem>
+                <SelectItem value="desempleados">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-blue-600" />
+                    Desempleados
+                  </div>
+                </SelectItem>
+                <SelectItem value="ciclo-medio">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    Ciclo Medio
+                  </div>
+                </SelectItem>
+                <SelectItem value="ciclo-superior">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-600" />
+                    Ciclo Superior
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
 
@@ -175,139 +175,17 @@ export function CoursesPage() {
       {/* Grid de Cursos */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredCourses.map((course) => (
-          <Card
-            key={course.id}
-            className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    {course.featured && (
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    )}
-                    <CardTitle className="text-base leading-tight">
-                      {course.name}
-                    </CardTitle>
-                  </div>
-                  <CardDescription className="text-xs">
-                    {course.code}
-                  </CardDescription>
-                </div>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleEdit(course)
-                  }}
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
+          <div key={course.id} className="relative">
+            {course.featured && (
+              <div className="absolute -top-2 -right-2 z-10">
+                <Star className="h-6 w-6 fill-yellow-400 text-yellow-400 drop-shadow-md" />
               </div>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              {/* Badges de Tipo y Modalidad */}
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="text-xs">
-                  {getTypeLabel(course.type)}
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  {getModalityLabel(course.modality)}
-                </Badge>
-              </div>
-
-              {/* Ciclo */}
-              {course.cycle_name && (
-                <div className="flex items-start gap-2 text-sm">
-                  <GraduationCap className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                  <span className="text-xs text-muted-foreground">{course.cycle_name}</span>
-                </div>
-              )}
-
-              {/* Descripción - OBLIGATORIA */}
-              <p className="text-sm text-muted-foreground line-clamp-3">
-                {course.description}
-              </p>
-
-              {/* Métricas Clave */}
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t">
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs">{course.duration_hours}h</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Euro className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs font-medium">
-                    {course.price === 0 ? 'Gratis' : `${course.price}€`}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs">
-                    {course.current_students}/{course.max_students}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs">{course.campuses.length} {course.campuses.length === 1 ? 'sede' : 'sedes'}</span>
-                </div>
-              </div>
-
-              {/* Profesores */}
-              <div>
-                <p className="text-xs font-medium mb-2">Profesores:</p>
-                <div className="flex -space-x-2">
-                  {course.teachers.slice(0, 3).map((teacher) => (
-                    <Avatar key={teacher.id} className="h-8 w-8 border-2 border-background">
-                      <AvatarImage src={teacher.photo} />
-                      <AvatarFallback className="text-xs">{teacher.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                  ))}
-                  {course.teachers.length > 3 && (
-                    <div className="h-8 w-8 rounded-full border-2 border-background bg-muted flex items-center justify-center">
-                      <span className="text-xs">+{course.teachers.length - 3}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Fechas */}
-              {course.start_date && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Calendar className="h-3.5 w-3.5" />
-                  <span>
-                    {new Date(course.start_date).toLocaleDateString('es-ES', {
-                      day: 'numeric',
-                      month: 'short'
-                    })}
-                    {course.end_date && ` - ${new Date(course.end_date).toLocaleDateString('es-ES', {
-                      day: 'numeric',
-                      month: 'short'
-                    })}`}
-                  </span>
-                </div>
-              )}
-
-              {/* Estado */}
-              <div className="flex items-center justify-between pt-2 border-t">
-                {course.status === 'published' && (
-                  <Badge variant="default" className="text-xs">Publicado</Badge>
-                )}
-                {course.status === 'draft' && (
-                  <Badge variant="secondary" className="text-xs">Borrador</Badge>
-                )}
-                {course.status === 'archived' && (
-                  <Badge variant="outline" className="text-xs">Archivado</Badge>
-                )}
-
-                <span className="text-xs text-muted-foreground">
-                  {Math.round((course.current_students / course.max_students) * 100)}% ocupado
-                </span>
-              </div>
-            </CardContent>
-          </Card>
+            )}
+            <CourseCard
+              course={course}
+              onClick={() => handleEdit(course)}
+            />
+          </div>
         ))}
       </div>
 

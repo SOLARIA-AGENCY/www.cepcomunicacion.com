@@ -4,7 +4,6 @@ import type {
   Campus,
   Classroom,
   Teacher,
-  Student,
   Lead,
   Campaign,
   DashboardMetrics,
@@ -1101,17 +1100,17 @@ export const teachersExpanded: TeacherExpanded[] = [
   },
 ]
 
-// Students
-export const students: Student[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `${i + 1}`,
-  first_name: ["Pablo", "Lucía", "Diego", "Carmen", "Alejandro", "Elena", "Miguel", "Sara", "David", "Marta"][i % 10],
-  last_name: ["García", "Martínez", "López", "González", "Rodríguez", "Fernández", "Pérez", "Sánchez", "Romero", "Torres"][i % 10],
-  email: `alumno${i + 1}@example.com`,
-  phone: `+34 6${String(i).padStart(8, "0")}`,
-  enrollments_count: Math.floor(Math.random() * 3) + 1,
-  active: Math.random() > 0.1,
-  created_at: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
-}))
+// Students (simple version - deprecated, use studentsData instead)
+// export const students: Student[] = Array.from({ length: 20 }, (_, i) => ({
+//   id: `${i + 1}`,
+//   first_name: ["Pablo", "Lucía", "Diego", "Carmen", "Alejandro", "Elena", "Miguel", "Sara", "David", "Marta"][i % 10],
+//   last_name: ["García", "Martínez", "López", "González", "Rodríguez", "Fernández", "Pérez", "Sánchez", "Romero", "Torres"][i % 10],
+//   email: `alumno${i + 1}@example.com`,
+//   phone: `+34 6${String(i).padStart(8, "0")}`,
+//   enrollments_count: Math.floor(Math.random() * 3) + 1,
+//   active: Math.random() > 0.1,
+//   created_at: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+// }))
 
 // Leads
 export const leads: Lead[] = [
@@ -1387,7 +1386,13 @@ export interface Cycle {
   duration_hours: number
   requirements: string[]
   description: string
-  courses: string[] // course IDs
+  courses: Array<{
+    id: string
+    name: string
+    code: string
+    mandatory?: boolean
+  }>
+  career_opportunities?: string[]
   active: boolean
 }
 
@@ -1403,7 +1408,16 @@ export const cycles: Cycle[] = [
       "Prueba de acceso a grado superior"
     ],
     description: "Formación profesional en producción y realización de contenidos audiovisuales y eventos.",
-    courses: ["3"],
+    courses: [
+      { id: "3", name: "Producción Audiovisual", code: "PA-101", mandatory: true }
+    ],
+    career_opportunities: [
+      "Realizador/a de audiovisuales",
+      "Director/a de fotografía",
+      "Productor/a de eventos",
+      "Técnico/a de sonido",
+      "Editor/a de vídeo"
+    ],
     active: true
   },
   {
@@ -1417,7 +1431,17 @@ export const cycles: Cycle[] = [
       "Prueba de acceso a grado superior"
     ],
     description: "Formación en estrategias de marketing, publicidad y comunicación comercial.",
-    courses: ["2", "4"],
+    courses: [
+      { id: "2", name: "Marketing Digital", code: "MD-202", mandatory: true },
+      { id: "4", name: "Estrategias de Publicidad", code: "EP-204", mandatory: false }
+    ],
+    career_opportunities: [
+      "Especialista en Marketing Digital",
+      "Community Manager",
+      "Director/a de Publicidad",
+      "Analista de Marketing",
+      "Consultor/a de Comunicación"
+    ],
     active: true
   },
   {
@@ -1432,6 +1456,12 @@ export const cycles: Cycle[] = [
     ],
     description: "Instalación, configuración y mantenimiento de sistemas microinformáticos y redes.",
     courses: [],
+    career_opportunities: [
+      "Técnico/a de Soporte Informático",
+      "Administrador/a de Redes",
+      "Técnico/a de Sistemas",
+      "Especialista en Ciberseguridad"
+    ],
     active: true
   },
   {
@@ -1446,6 +1476,13 @@ export const cycles: Cycle[] = [
     ],
     description: "Desarrollo de aplicaciones web con tecnologías frontend y backend.",
     courses: [],
+    career_opportunities: [
+      "Desarrollador/a Full Stack",
+      "Programador/a Frontend",
+      "Programador/a Backend",
+      "Arquitecto/a de Software",
+      "DevOps Engineer"
+    ],
     active: true
   },
   {
@@ -1460,6 +1497,13 @@ export const cycles: Cycle[] = [
     ],
     description: "Creación de animaciones 3D, videojuegos y experiencias interactivas.",
     courses: [],
+    career_opportunities: [
+      "Animador/a 3D",
+      "Desarrollador/a de Videojuegos",
+      "Diseñador/a de Entornos Virtuales",
+      "Artista de VFX",
+      "Modelador/a 3D"
+    ],
     active: true
   }
 ]
@@ -2176,7 +2220,7 @@ export interface CourseDetailed {
   id: string
   name: string
   code: string
-  type: 'telematico' | 'ocupados' | 'desempleados' | 'privados' | 'ciclo-medio' | 'ciclo-superior'
+  type: 'privados' | 'ocupados' | 'desempleados' | 'teleformacion' | 'ciclo-medio' | 'ciclo-superior'
   modality: 'presencial' | 'semipresencial' | 'telematico'
   cycle_id?: string
   cycle_name?: string
@@ -3856,6 +3900,492 @@ export const campaignsData: CampaignDetailed[] = [
     ],
     created_by: "Carlos Rodríguez Martínez",
     created_at: "2024-11-25"
+  }
+]
+
+// ============================================
+// ESTUDIANTES - CON CURSOS MATRICULADOS
+// ============================================
+export interface Student {
+  id: string
+  first_name: string
+  last_name: string
+  initials: string
+  email: string
+  phone: string
+  dni: string
+  date_of_birth: string
+  photo?: string
+  address: string
+  city: string
+  postal_code: string
+  campus_id: string
+  emergency_contact: string
+  emergency_phone: string
+  enrolled_courses: {
+    id: string
+    name: string
+    code: string
+    status: 'active' | 'completed' | 'dropped'
+    grade?: number
+  }[]
+  academic_notes: string // OBLIGATORIO
+  status: 'active' | 'inactive' | 'graduated'
+}
+
+export const studentsData: Student[] = [
+  {
+    id: "S001",
+    first_name: "Ana",
+    last_name: "Martín López",
+    initials: "AM",
+    dni: "12345678A",
+    date_of_birth: "1998-05-15",
+    email: "ana.martin@email.com",
+    phone: "+34 612 345 001",
+    photo: "https://i.pravatar.cc/150?img=10",
+    address: "Calle Mayor 45, 3º B",
+    city: "San Cristóbal de La Laguna",
+    postal_code: "38200",
+    campus_id: "C001",
+    emergency_contact: "María López García",
+    emergency_phone: "+34 612 111 001",
+    status: "active",
+    academic_notes: "Alumna destacada con excelente participación en clase. Demuestra gran interés por las redes sociales y marketing digital. Ha completado todos los proyectos con nota superior a 85. Participa activamente en debates y aporta ideas creativas. Recomendada para prácticas en empresas del sector.",
+    enrolled_courses: [
+      { id: "CURSO001", name: "Community Manager Profesional", code: "CM-2025", status: "active", grade: 88 },
+      { id: "CURSO002", name: "SEO y SEM Avanzado", code: "SEO-2025", status: "active", grade: 92 }
+    ]
+  },
+  {
+    id: "S002",
+    first_name: "Carlos",
+    last_name: "Rodríguez Pérez",
+    initials: "CR",
+    dni: "23456789B",
+    date_of_birth: "1997-08-22",
+    email: "carlos.rodriguez@email.com",
+    phone: "+34 612 345 002",
+    photo: "https://i.pravatar.cc/150?img=12",
+    address: "Avenida Trinidad 78, 1º A",
+    city: "Santa Cruz de Tenerife",
+    postal_code: "38005",
+    campus_id: "C002",
+    emergency_contact: "José Rodríguez Martín",
+    emergency_phone: "+34 612 111 002",
+    status: "active",
+    academic_notes: "Estudiante con sólidas bases técnicas en desarrollo web. Destaca en programación frontend y tiene experiencia previa en HTML/CSS. Necesita mejorar trabajo en equipo pero individualmente entrega proyectos de alta calidad. Ha asistido a todos los talleres opcionales.",
+    enrolled_courses: [
+      { id: "CURSO004", name: "Desarrollo Frontend con React", code: "REACT-2025", status: "active", grade: 90 },
+      { id: "CURSO005", name: "Backend con Node.js", code: "NODE-PSQL", status: "active", grade: 85 }
+    ]
+  },
+  {
+    id: "S003",
+    first_name: "Laura",
+    last_name: "González Sánchez",
+    initials: "LG",
+    dni: "34567890C",
+    date_of_birth: "1999-02-10",
+    email: "laura.gonzalez@email.com",
+    phone: "+34 612 345 003",
+    photo: "https://i.pravatar.cc/150?img=20",
+    address: "Calle La Rosa 23, Bajo",
+    city: "Santa Cruz de Tenerife",
+    postal_code: "38001",
+    campus_id: "C002",
+    emergency_contact: "Carmen Sánchez Torres",
+    emergency_phone: "+34 612 111 003",
+    status: "graduated",
+    academic_notes: "Graduada con honores. Completó el ciclo formativo con nota media de 9.2. Destacó en proyectos de diseño visual y branding. Obtuvo prácticas en agencia reconocida durante el último trimestre. Actualmente trabaja como diseñadora junior en el sector.",
+    enrolled_courses: [
+      { id: "CURSO003", name: "Diseño UX/UI con Figma", code: "UXUI-2024", status: "completed", grade: 94 },
+      { id: "CURSO006", name: "Design Systems Profesional", code: "DS-2024", status: "completed", grade: 91 }
+    ]
+  },
+  {
+    id: "S004",
+    first_name: "David",
+    last_name: "Fernández Torres",
+    initials: "DF",
+    dni: "45678901D",
+    date_of_birth: "2000-11-03",
+    email: "david.fernandez@email.com",
+    phone: "+34 612 345 004",
+    photo: "https://i.pravatar.cc/150?img=15",
+    address: "Calle Tabares 56, 2º D",
+    city: "San Cristóbal de La Laguna",
+    postal_code: "38201",
+    campus_id: "C001",
+    emergency_contact: "Ana Torres Ruiz",
+    emergency_phone: "+34 612 111 004",
+    status: "active",
+    academic_notes: "Alumno con potencial pero asistencia irregular durante el primer mes. Ha mejorado significativamente tras mentoría personalizada. Demuestra habilidades en edición de vídeo y motion graphics. Pendiente recuperar 2 entregas atrasadas antes de finalizar trimestre.",
+    enrolled_courses: [
+      { id: "CURSO007", name: "Edición de Vídeo Profesional", code: "VIDEO-2025", status: "active", grade: 75 },
+      { id: "CURSO008", name: "Motion Graphics con After Effects", code: "MOGRAPH-2025", status: "active", grade: 78 }
+    ]
+  },
+  {
+    id: "S005",
+    first_name: "Elena",
+    last_name: "Jiménez Mora",
+    initials: "EJ",
+    dni: "56789012E",
+    date_of_birth: "1998-07-19",
+    email: "elena.jimenez@email.com",
+    phone: "+34 612 345 005",
+    photo: "https://i.pravatar.cc/150?img=25",
+    address: "Avenida Los Menceyes 90, 4º C",
+    city: "San Cristóbal de La Laguna",
+    postal_code: "38205",
+    campus_id: "C001",
+    emergency_contact: "Pedro Jiménez Vega",
+    emergency_phone: "+34 612 111 005",
+    status: "inactive",
+    academic_notes: "Alumna que solicitó baja temporal por motivos personales tras completar el 60% del programa. Buen rendimiento académico previo (nota media 8.5). Expreso interés en retomar estudios en próxima convocatoria. Mantiene contacto con departamento académico.",
+    enrolled_courses: [
+      { id: "CURSO009", name: "Analítica Web con Google Analytics", code: "GA4-2025", status: "dropped" },
+      { id: "CURSO010", name: "Email Marketing Avanzado", code: "EMAIL-2025", status: "dropped" }
+    ]
+  },
+  {
+    id: "S006",
+    first_name: "Miguel",
+    last_name: "Castro Díaz",
+    initials: "MC",
+    dni: "67890123F",
+    date_of_birth: "1999-12-08",
+    email: "miguel.castro@email.com",
+    phone: "+34 612 345 006",
+    photo: "https://i.pravatar.cc/150?img=33",
+    address: "Calle San Agustín 12, 1º Izq",
+    city: "Santa Cruz de Tenerife",
+    postal_code: "38003",
+    campus_id: "C002",
+    emergency_contact: "Rosa Díaz Suárez",
+    emergency_phone: "+34 612 111 006",
+    status: "active",
+    academic_notes: "Alumno muy motivado con background previo en administración. Está realizando transición profesional hacia marketing digital. Destaca por su capacidad analítica y visión estratégica. Excelente en presentaciones orales y trabajo en equipo. Potencial para liderar proyectos grupales.",
+    enrolled_courses: [
+      { id: "CURSO001", name: "Community Manager Profesional", code: "CM-2025", status: "active", grade: 87 },
+      { id: "CURSO009", name: "Analítica Web con Google Analytics", code: "GA4-2025", status: "active", grade: 93 }
+    ]
+  },
+  {
+    id: "S007",
+    first_name: "Sara",
+    last_name: "Ruiz Morales",
+    initials: "SR",
+    dni: "78901234G",
+    date_of_birth: "2001-04-25",
+    email: "sara.ruiz@email.com",
+    phone: "+34 612 345 007",
+    photo: "https://i.pravatar.cc/150?img=28",
+    address: "Calle El Pilar 34, 3º A",
+    city: "San Cristóbal de La Laguna",
+    postal_code: "38202",
+    campus_id: "C001",
+    emergency_contact: "Luis Ruiz Delgado",
+    emergency_phone: "+34 612 111 007",
+    status: "active",
+    academic_notes: "Alumna proactiva con gran creatividad visual. Ha ganado el concurso interno de diseño de campaña social. Demuestra dominio avanzado de herramientas Adobe. Participa activamente en eventos del centro. Recomendada para representar el centro en concursos regionales de diseño.",
+    enrolled_courses: [
+      { id: "CURSO003", name: "Diseño UX/UI con Figma", code: "UXUI-2025", status: "active", grade: 95 },
+      { id: "CURSO011", name: "Branding y Diseño de Identidad", code: "BRAND-2025", status: "active", grade: 90 }
+    ]
+  },
+  {
+    id: "S008",
+    first_name: "Javier",
+    last_name: "Ortiz Navarro",
+    initials: "JO",
+    dni: "89012345H",
+    date_of_birth: "1997-09-14",
+    email: "javier.ortiz@email.com",
+    phone: "+34 612 345 008",
+    photo: "https://i.pravatar.cc/150?img=51",
+    address: "Avenida Canarias 67, 2º B",
+    city: "Santa Cruz de Tenerife",
+    postal_code: "38007",
+    campus_id: "C002",
+    emergency_contact: "Marta Navarro Gil",
+    emergency_phone: "+34 612 111 008",
+    status: "graduated",
+    academic_notes: "Graduado en 2024 con especialización en desarrollo backend. Completó proyecto final sobre arquitectura de microservicios que fue presentado en evento tech local. Actualmente trabaja como developer full-stack en startup tecnológica. Mantiene colaboración con el centro como mentor de nuevos alumnos.",
+    enrolled_courses: [
+      { id: "CURSO005", name: "Backend con Node.js", code: "NODE-PSQL", status: "completed", grade: 96 },
+      { id: "CURSO012", name: "Desarrollo Backend con Laravel", code: "LARAVEL-2024", status: "completed", grade: 89 }
+    ]
+  }
+]
+
+// ============================================
+// PERSONAL ADMINISTRATIVO
+// ============================================
+export interface AdministrativeStaff {
+  id: string
+  first_name: string
+  last_name: string
+  initials: string
+  email: string
+  phone: string
+  extension?: string
+  photo?: string
+  position: string
+  department: string
+  campuses: string[] // IDs de sedes asignadas
+  responsibilities: string[] // Lista dinámica
+  certifications: {
+    title: string
+    institution: string
+    year: number
+  }[]
+  bio: string // OBLIGATORIO
+  active: boolean
+}
+
+export const administrativeStaffData: AdministrativeStaff[] = [
+  {
+    id: "AD001",
+    first_name: "Carmen",
+    last_name: "Suárez Vega",
+    initials: "CS",
+    email: "carmen.suarez@cepcomunicacion.com",
+    phone: "+34 922 100 001",
+    extension: "101",
+    photo: "https://i.pravatar.cc/150?img=5",
+    position: "Coordinadora de Secretaría Académica",
+    department: "Secretaría Académica",
+    campuses: ["C001", "C002"],
+    responsibilities: [
+      "Gestión de matrículas y expedientes académicos",
+      "Coordinación de calendarios de exámenes",
+      "Atención personalizada a estudiantes",
+      "Tramitación de certificados y títulos",
+      "Supervisión del equipo de secretaría"
+    ],
+    certifications: [
+      {
+        title: "Gestión Administrativa Universitaria",
+        institution: "UNED",
+        year: 2019
+      },
+      {
+        title: "RGPD en Centros Educativos",
+        institution: "Cámara de Comercio de Tenerife",
+        year: 2021
+      }
+    ],
+    bio: "Coordinadora de Secretaría Académica con más de 12 años de experiencia en centros de formación profesional. Especializada en gestión de expedientes académicos, digitalización de procesos administrativos y atención al estudiante. Ha liderado la implementación del sistema de gestión académica digital en CEP Comunicación. Responsable de asegurar el cumplimiento normativo en todos los procesos de matrícula y certificación.",
+    active: true
+  },
+  {
+    id: "AD002",
+    first_name: "Pedro",
+    last_name: "Hernández Gil",
+    initials: "PH",
+    email: "pedro.hernandez@cepcomunicacion.com",
+    phone: "+34 922 100 002",
+    extension: "102",
+    photo: "https://i.pravatar.cc/150?img=14",
+    position: "Responsable de Administración y Finanzas",
+    department: "Administración",
+    campuses: ["C001", "C002", "C003"],
+    responsibilities: [
+      "Gestión presupuestaria y control financiero",
+      "Elaboración de informes económicos mensuales",
+      "Coordinación con proveedores y contratos",
+      "Supervisión de facturación y cobros",
+      "Planificación financiera anual"
+    ],
+    certifications: [
+      {
+        title: "Máster en Dirección Financiera",
+        institution: "EAE Business School",
+        year: 2017
+      },
+      {
+        title: "Contabilidad Avanzada para PYMEs",
+        institution: "Colegio de Economistas",
+        year: 2020
+      }
+    ],
+    bio: "Responsable de Administración y Finanzas con amplia trayectoria en gestión económica de centros educativos. Experto en optimización de recursos, control presupuestario y planificación financiera estratégica. Ha implementado sistemas de reporting financiero que han mejorado la transparencia y eficiencia económica del centro. Colabora estrechamente con dirección en la toma de decisiones estratégicas basadas en análisis económico-financiero.",
+    active: true
+  },
+  {
+    id: "AD003",
+    first_name: "Isabel",
+    last_name: "Moreno Campos",
+    initials: "IM",
+    email: "isabel.moreno@cepcomunicacion.com",
+    phone: "+34 922 100 003",
+    photo: "https://i.pravatar.cc/150?img=9",
+    position: "Recepcionista Senior",
+    department: "Recepción",
+    campuses: ["C001"],
+    responsibilities: [
+      "Atención presencial y telefónica a visitantes",
+      "Gestión de registro de entrada y salida",
+      "Coordinación de salas de reuniones",
+      "Recepción y distribución de correspondencia",
+      "Primera orientación a alumnos potenciales"
+    ],
+    certifications: [
+      {
+        title: "Atención al Cliente de Excelencia",
+        institution: "INEM",
+        year: 2018
+      }
+    ],
+    bio: "Recepcionista senior con más de 8 años de experiencia en el centro. Primera cara visible de CEP Comunicación, reconocida por su trato amable y eficiente. Experta en gestión de agendas y coordinación de espacios. Ha desarrollado protocolos de atención que han mejorado significativamente la experiencia del visitante. Su conocimiento profundo del centro la convierte en punto de referencia para orientación inicial de nuevos alumnos.",
+    active: true
+  },
+  {
+    id: "AD004",
+    first_name: "Antonio",
+    last_name: "Delgado Cruz",
+    initials: "AD",
+    email: "antonio.delgado@cepcomunicacion.com",
+    phone: "+34 922 100 004",
+    extension: "104",
+    photo: "https://i.pravatar.cc/150?img=52",
+    position: "Técnico de Sistemas y Soporte IT",
+    department: "Informática",
+    campuses: ["C001", "C002"],
+    responsibilities: [
+      "Mantenimiento de infraestructura tecnológica",
+      "Soporte técnico a profesores y personal",
+      "Gestión de plataformas de aprendizaje online",
+      "Administración de redes y servidores",
+      "Seguridad informática y backups"
+    ],
+    certifications: [
+      {
+        title: "Cisco CCNA",
+        institution: "Cisco Networking Academy",
+        year: 2020
+      },
+      {
+        title: "Microsoft Azure Administrator",
+        institution: "Microsoft",
+        year: 2022
+      },
+      {
+        title: "Ciberseguridad Aplicada",
+        institution: "Universidad de La Laguna",
+        year: 2023
+      }
+    ],
+    bio: "Técnico de Sistemas especializado en infraestructura educativa con más de 10 años de experiencia. Responsable de mantener operativos todos los sistemas tecnológicos del centro. Ha liderado la migración a cloud y la implementación de soluciones de ciberseguridad. Proporciona formación técnica al personal docente en nuevas herramientas. Su trabajo garantiza el funcionamiento 24/7 de las plataformas de aprendizaje online que utilizan más de 1200 estudiantes.",
+    active: true
+  },
+  {
+    id: "AD005",
+    first_name: "Lucía",
+    last_name: "Ramírez Santos",
+    initials: "LR",
+    email: "lucia.ramirez@cepcomunicacion.com",
+    phone: "+34 922 100 005",
+    extension: "105",
+    photo: "https://i.pravatar.cc/150?img=44",
+    position: "Responsable de Contabilidad",
+    department: "Contabilidad",
+    campuses: ["C001"],
+    responsibilities: [
+      "Contabilidad general y registro de operaciones",
+      "Conciliaciones bancarias",
+      "Preparación de documentación fiscal",
+      "Control de tesorería",
+      "Auditorías internas"
+    ],
+    certifications: [
+      {
+        title: "Grado en Administración y Dirección de Empresas",
+        institution: "Universidad de La Laguna",
+        year: 2015
+      },
+      {
+        title: "Experto en Contabilidad y Fiscalidad",
+        institution: "Colegio de Economistas",
+        year: 2018
+      }
+    ],
+    bio: "Responsable de Contabilidad con sólida formación académica y experiencia práctica en gestión contable de organizaciones educativas. Garantiza el correcto registro de todas las operaciones económicas y el cumplimiento de obligaciones fiscales. Ha implementado procedimientos de control interno que han reducido errores contables en un 95%. Colabora estrechamente con auditoría externa para asegurar transparencia y compliance financiero.",
+    active: true
+  },
+  {
+    id: "AD006",
+    first_name: "Francisco",
+    last_name: "Torres Abad",
+    initials: "FT",
+    email: "francisco.torres@cepcomunicacion.com",
+    phone: "+34 922 100 006",
+    photo: "https://i.pravatar.cc/150?img=68",
+    position: "Auxiliar Administrativo",
+    department: "Administración",
+    campuses: ["C002"],
+    responsibilities: [
+      "Archivo y gestión documental",
+      "Apoyo en tareas administrativas generales",
+      "Preparación de documentación",
+      "Atención telefónica y emails",
+      "Gestión de suministros de oficina"
+    ],
+    certifications: [],
+    bio: "Auxiliar administrativo polivalente que presta apoyo esencial en múltiples áreas del centro. Con 5 años de experiencia, ha demostrado gran capacidad de adaptación y aprendizaje. Destaca por su organización, atención al detalle y disposición para asumir nuevas responsabilidades. Su trabajo eficiente en gestión documental y archivo ha facilitado la digitalización progresiva de los procesos administrativos del centro.",
+    active: true
+  },
+  {
+    id: "AD007",
+    first_name: "Rosa",
+    last_name: "Méndez Flores",
+    initials: "RM",
+    email: "rosa.mendez@cepcomunicacion.com",
+    phone: "+34 922 100 007",
+    photo: "https://i.pravatar.cc/150?img=38",
+    position: "Coordinadora de Sede Sur",
+    department: "Administración",
+    campuses: ["C003"],
+    responsibilities: [
+      "Gestión integral de sede sur",
+      "Coordinación con dirección académica",
+      "Supervisión de instalaciones y recursos",
+      "Atención a estudiantes y profesores de la sede",
+      "Elaboración de informes de actividad"
+    ],
+    certifications: [
+      {
+        title: "Gestión de Centros Educativos",
+        institution: "Universidad Internacional de La Rioja",
+        year: 2019
+      }
+    ],
+    bio: "Coordinadora de la sede sur con capacidad demostrada para gestión autónoma de campus educativo. Responsable del funcionamiento diario de la sede incluyendo aspectos académicos, logísticos y administrativos. Ha conseguido aumentar la satisfacción de estudiantes de la sede en un 30% mediante mejoras en servicios y comunicación. Su liderazgo cercano y eficiente la convierte en referente para el equipo local.",
+    active: true
+  },
+  {
+    id: "AD008",
+    first_name: "José",
+    last_name: "Álvarez Pino",
+    initials: "JA",
+    email: "jose.alvarez@cepcomunicacion.com",
+    phone: "+34 922 100 008",
+    photo: "https://i.pravatar.cc/150?img=60",
+    position: "Administrativo Junior",
+    department: "Secretaría Académica",
+    campuses: ["C002"],
+    responsibilities: [
+      "Apoyo en gestión de matrículas",
+      "Atención de consultas académicas",
+      "Preparación de certificados académicos",
+      "Actualización de bases de datos",
+      "Apoyo logístico en eventos"
+    ],
+    certifications: [],
+    bio: "Administrativo junior incorporado recientemente al equipo de secretaría académica. Licenciado en Administración y Dirección de Empresas, aporta conocimientos actualizados y gran entusiasmo. En proceso de formación continua sobre normativa académica y sistemas de gestión del centro. Destaca por su capacidad de trabajo, actitud proactiva y excelente manejo de herramientas ofimáticas. Gran potencial de desarrollo profesional.",
+    active: true
   }
 ]
 

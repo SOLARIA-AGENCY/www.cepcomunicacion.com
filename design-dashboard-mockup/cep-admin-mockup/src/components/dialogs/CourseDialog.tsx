@@ -32,6 +32,7 @@ import {
   Clock
 } from "lucide-react"
 import { teachersData, campusesData, cyclesData, type CourseDetailed } from "@/data/mockData"
+import { COURSE_TYPE_CONFIG, type CourseType } from "@/lib/courseTypeConfig"
 
 interface CourseDialogProps {
   open: boolean
@@ -217,14 +218,51 @@ export function CourseDialog({ open, onOpenChange, mode, course }: CourseDialogP
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="privados">Privados</SelectItem>
-                    <SelectItem value="telematico">Telemático</SelectItem>
-                    <SelectItem value="ocupados">Ocupados</SelectItem>
-                    <SelectItem value="desempleados">Desempleados</SelectItem>
-                    <SelectItem value="ciclo-medio">Ciclo Medio</SelectItem>
-                    <SelectItem value="ciclo-superior">Ciclo Superior</SelectItem>
+                    <SelectItem value="privados">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-600" />
+                        Privados
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="teleformacion">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-orange-600" />
+                        Teleformación
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="ocupados">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-green-600" />
+                        Ocupados
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="desempleados">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-blue-600" />
+                        Desempleados
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="ciclo-medio">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500" />
+                        Ciclo Medio
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="ciclo-superior">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-600" />
+                        Ciclo Superior
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
+
+                {/* Color Preview Badge */}
+                {formData.type && COURSE_TYPE_CONFIG[formData.type as CourseType] && (
+                  <Badge className={`${COURSE_TYPE_CONFIG[formData.type as CourseType].bgColor} text-white text-xs font-bold uppercase tracking-wide mt-2`}>
+                    Vista Previa: {COURSE_TYPE_CONFIG[formData.type as CourseType].label}
+                  </Badge>
+                )}
               </div>
 
               <div className="space-y-2">

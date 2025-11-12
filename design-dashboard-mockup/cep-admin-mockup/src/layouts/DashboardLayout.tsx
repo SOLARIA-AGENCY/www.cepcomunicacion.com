@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { Bell, Search, User, Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,7 @@ import { AppSidebar } from "./AppSidebar"
 export function DashboardLayout() {
   const { theme, setTheme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const navigate = useNavigate()
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -104,18 +105,12 @@ export function DashboardLayout() {
                 <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault()
-                    console.log("Perfil próximamente")
-                  }}
+                  onClick={() => navigate("/perfil")}
                 >
                   Perfil
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault()
-                    console.log("Configuración próximamente")
-                  }}
+                  onClick={() => navigate("/configuracion")}
                 >
                   Configuración
                 </DropdownMenuItem>

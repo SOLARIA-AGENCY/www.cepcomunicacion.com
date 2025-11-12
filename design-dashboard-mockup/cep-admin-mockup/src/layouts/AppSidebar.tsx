@@ -35,6 +35,11 @@ const menuItems = [
     url: "/",
   },
   {
+    title: "CURSOS",
+    icon: BookOpen,
+    url: "/cursos",
+  },
+  {
     title: "PROGRAMACIÓN",
     icon: Calendar,
     url: "/cursos/programacion",
@@ -67,7 +72,7 @@ const menuItems = [
     icon: Users,
     items: [
       { title: "Profesores", icon: UserCircle, url: "/profesores" },
-      { title: "Administración", icon: UserPlus, url: "/asesores" },
+      { title: "Administrativos", icon: UserPlus, url: "/administrativo" },
       { title: "Alumnos", icon: Users, url: "/alumnos" },
     ],
   },
