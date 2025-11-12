@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Card,
   CardContent,
@@ -13,6 +14,7 @@ import { CampusDialog } from "@/components/dialogs/CampusDialog"
 import { campusesData } from "@/data/mockData"
 
 export function CampusPage() {
+  const navigate = useNavigate()
   const [showDialog, setShowDialog] = useState(false)
   const [selected, setSelected] = useState<typeof campusesData[0] | null>(null)
   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create')
@@ -154,9 +156,9 @@ export function CampusPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {/* Navigate to classrooms */}}
+                  onClick={() => navigate(`/sedes/${campus.code}`)}
                 >
-                  Ver Aulas
+                  Ver Sede
                 </Button>
               </div>
             </CardContent>
