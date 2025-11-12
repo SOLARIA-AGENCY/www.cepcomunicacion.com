@@ -145,3 +145,93 @@ export interface DashboardMetrics {
   total_campuses: number
   classroom_utilization: number
 }
+
+// ==========================================
+// CICLOS FORMATIVOS - SISTEMA PLANTILLA + INSTANCIAS
+// ==========================================
+
+export type TipoCiclo = 'medio' | 'superior'
+
+export interface CursoCiclo {
+  id: string
+  ciclo_plantilla_id: string // Relación obligatoria
+  nombre: string
+  codigo: string
+  descripcion: string
+  duracion_horas: number
+  orden: number // Orden dentro del ciclo (1, 2, 3...)
+  objetivos: string[]
+  contenidos: string[]
+  // NOTA: NO tiene foto propia (hereda del ciclo)
+  // NOTA: NO tiene sede propia (hereda de la instancia)
+}
+
+export interface CicloPlantilla {
+  id: string
+  nombre: string
+  codigo: string
+  tipo: TipoCiclo // 'medio' | 'superior'
+  familia_profesional: string // Ej: "Comunicación, Imagen y Sonido"
+  descripcion: string
+  objetivos: string[]
+  perfil_profesional: string
+  duracion_total_horas: number
+  image: string // ⭐ NUEVO: Foto del ciclo
+  color: string // Color temático del ciclo
+
+  // Cursos que componen el ciclo
+  cursos: CursoCiclo[]
+
+  // Estadísticas
+  total_instancias: number
+  instancias_activas: number
+  total_alumnos: number
+
+  created_at: string
+  updated_at: string
+}
+
+export interface InstanciaGrado {
+  id: string
+  ciclo_plantilla_id: string
+  ciclo_plantilla: CicloPlantilla // Relación cargada
+
+  // Datos específicos de la convocatoria
+  nombre_convocatoria: string // Ej: "Septiembre 2025 - Turno Mañana"
+  codigo_convocatoria: string // Ej: "GSAE-SEP25-M"
+
+  // Sede y ubicación
+  campus: { id: string; name: string }
+  aula?: { id: string; nombre: string }
+
+  // Fechas
+  fecha_inicio: string
+  fecha_fin: string
+
+  // Horario
+  horario: string // Ej: "Lunes a Viernes 9:00-14:00"
+  turno: 'mañana' | 'tarde' | 'noche'
+
+  // Matrícula
+  precio: number
+  plazas_totales: number
+  plazas_ocupadas: number
+  lista_espera: number
+
+  // Estado
+  estado: 'planificada' | 'abierta' | 'en_curso' | 'finalizada' | 'cancelada'
+
+  // Profesores asignados
+  profesores: Array<{ id: string; nombre: string; foto?: string; asignatura?: string }>
+
+  created_at: string
+  updated_at: string
+}
+
+// Extensión para vista de detalle
+export interface CicloDetalleView extends CicloPlantilla {
+  instancias: InstanciaGrado[]
+  alumnos_actuales: number
+  tasa_empleabilidad: number // %
+  salidas_profesionales: string[]
+}

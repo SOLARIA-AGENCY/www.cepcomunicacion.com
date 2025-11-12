@@ -10,6 +10,8 @@ import { StudentsPage } from "./pages/StudentsPage"
 import { AdministrativePage } from "./pages/AdministrativePage"
 import { CampusPage } from "./pages/CampusPage"
 import { CyclesPage } from "./pages/CyclesPage"
+import { CiclosPage } from "./pages/CiclosPage"
+import { CicloDetailPage } from "./pages/CicloDetailPage"
 import { ClassroomsPage } from "./pages/ClassroomsPage"
 import { ClassroomsNortePage } from "./pages/ClassroomsNortePage"
 import { ClassroomsSantaCruzPage } from "./pages/ClassroomsSantaCruzPage"
@@ -34,7 +36,9 @@ function App() {
             <Route path="administrativo" element={<AdministrativePage />} />
             <Route path="alumnos" element={<StudentsPage />} />
             <Route path="sedes" element={<CampusPage />} />
-            <Route path="ciclos" element={<CyclesPage />} />
+            <Route path="ciclos-old" element={<CyclesPage />} />
+            <Route path="ciclos" element={<CiclosPage />} />
+            <Route path="ciclos/:cicloId" element={<CicloDetailPage />} />
             <Route path="aulas" element={<ClassroomsPage />} />
             <Route path="aulas/cep-norte" element={<ClassroomsNortePage />} />
             <Route path="aulas/cep-santa-cruz" element={<ClassroomsSantaCruzPage />} />
