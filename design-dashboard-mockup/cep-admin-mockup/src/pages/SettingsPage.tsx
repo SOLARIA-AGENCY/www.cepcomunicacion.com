@@ -25,7 +25,9 @@ import {
   Bell,
   Plug,
   Shield,
-  Save
+  Save,
+  Upload,
+  X
 } from "lucide-react"
 
 export function SettingsPage() {
@@ -40,6 +42,10 @@ export function SettingsPage() {
     primaryColor: '#3b82f6',
     secondaryColor: '#8b5cf6'
   })
+
+  // Estado para el logotipo
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
   // Estados para notificaciones
   const [notificationSettings, setNotificationSettings] = useState({
@@ -77,8 +83,43 @@ export function SettingsPage() {
     twoFactorEnabled: false
   })
 
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      // Validar tipo de archivo
+      const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+      if (!validTypes.includes(file.type)) {
+        alert('Por favor, sube un archivo PNG, JPG o SVG')
+        return
+      }
+
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('El archivo es demasiado grande. Máximo 5MB')
+        return
+      }
+
+      setLogoFile(file)
+
+      // Crear preview
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setLogoPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleRemoveLogo = () => {
+    setLogoFile(null)
+    setLogoPreview(null)
+  }
+
   const handleSaveGeneral = () => {
-    console.log('Guardar configuración general (MOCKUP):', generalSettings)
+    console.log('Guardar configuración general (MOCKUP):', {
+      ...generalSettings,
+      logo: logoFile
+    })
   }
 
   const handleSaveNotifications = () => {
@@ -191,6 +232,58 @@ export function SettingsPage() {
                   value={generalSettings.address}
                   onChange={(e) => setGeneralSettings({ ...generalSettings, address: e.target.value })}
                 />
+              </div>
+
+              <div className="space-y-2 border-t pt-4">
+                <Label htmlFor="logo">Logotipo de la Academia</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Formatos aceptados: PNG, JPG, SVG. Tamaño máximo: 5MB
+                </p>
+
+                {logoPreview ? (
+                  <div className="space-y-2">
+                    <div className="relative inline-block">
+                      <div className="border rounded-lg p-4 bg-white dark:bg-gray-800">
+                        <img
+                          src={logoPreview}
+                          alt="Preview del logotipo"
+                          className="max-h-24 max-w-xs object-contain"
+                        />
+                      </div>
+                      <button
+                        onClick={handleRemoveLogo}
+                        className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
+                        title="Eliminar logotipo"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {logoFile?.name} ({(logoFile!.size / 1024).toFixed(1)} KB)
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="logo"
+                      type="file"
+                      accept=".png,.jpg,.jpeg,.svg"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('logo')?.click()}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Subir Logotipo
+                    </Button>
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground italic">
+                  El logotipo se mostrará en la esquina superior izquierda de la barra lateral
+                </p>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
