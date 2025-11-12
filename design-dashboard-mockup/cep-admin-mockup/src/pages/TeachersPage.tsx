@@ -17,10 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { GraduationCap, Mail, Phone, Plus, Edit, BookOpen, Award, Building2, Search } from "lucide-react"
+import { GraduationCap, Mail, Phone, Plus, Edit, BookOpen, Award, Building2, Search, Shield } from "lucide-react"
 import { TeacherDialog } from "@/components/dialogs/TeacherDialog"
 import { CourseCardMini } from "@/components/ui/CourseCard"
 import { teachersExpanded } from "@/data/mockData"
+import { esStaffConAcceso } from "@/data/mockAdministracion"
 
 export function TeachersPage() {
   const [showTeacherDialog, setShowTeacherDialog] = useState(false)
@@ -112,34 +113,47 @@ export function TeachersPage() {
 
       {/* Grid de Profesores */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredTeachers.map((teacher) => (
-          <Card key={teacher.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-16 w-16">
-                    <AvatarImage src={teacher.photo} alt={`${teacher.first_name} ${teacher.last_name}`} />
-                    <AvatarFallback>{teacher.initials}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <CardTitle className="text-base">
-                      {teacher.first_name} {teacher.last_name}
-                    </CardTitle>
-                    <CardDescription className="text-xs">
-                      {teacher.department}
-                    </CardDescription>
-                  </div>
+        {filteredTeachers.map((teacher) => {
+          const acceso = esStaffConAcceso(teacher.id)
+
+          return (
+            <Card key={teacher.id} className="overflow-hidden hover:shadow-lg transition-shadow relative">
+              {/* Badge de acceso al dashboard */}
+              {acceso.tiene_acceso && acceso.usuario && (
+                <div className="absolute top-3 right-3 z-10">
+                  <Badge className={`${acceso.usuario.rol.color} text-white flex items-center gap-1 text-[10px] px-2 py-0.5`}>
+                    <Shield className="h-3 w-3" />
+                    {acceso.usuario.rol.nombre}
+                  </Badge>
                 </div>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  title="Editar profesor"
-                  onClick={() => handleEditTeacher(teacher)}
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
+              )}
+
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-16 w-16">
+                      <AvatarImage src={teacher.photo} alt={`${teacher.first_name} ${teacher.last_name}`} />
+                      <AvatarFallback>{teacher.initials}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle className="text-base">
+                        {teacher.first_name} {teacher.last_name}
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        {teacher.department}
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    title="Editar profesor"
+                    onClick={() => handleEditTeacher(teacher)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
             <CardContent className="space-y-4">
               {/* Información de contacto */}
               <div className="space-y-2 text-sm">
@@ -246,7 +260,8 @@ export function TeachersPage() {
               </div>
             </CardContent>
           </Card>
-        ))}
+          )
+        })}
       </div>
 
       {/* Stats Card */}

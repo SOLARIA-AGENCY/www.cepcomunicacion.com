@@ -26,6 +26,7 @@ import {
   ChevronRight,
   GraduationCap,
   MapPin,
+  Shield,
 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -137,6 +138,15 @@ const menuItems = [
     title: "Configuración",
     icon: Settings,
     url: "/configuracion",
+  },
+  {
+    title: "Administración",
+    icon: Shield,
+    items: [
+      { title: "Usuarios", icon: Users, url: "/admin/usuarios" },
+      { title: "Roles y Permisos", icon: Shield, url: "/admin/roles" },
+      { title: "Registro de Actividad", icon: FileText, url: "/admin/actividad" },
+    ],
   },
 ]
 
