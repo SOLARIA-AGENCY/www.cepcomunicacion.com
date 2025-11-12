@@ -22,6 +22,8 @@ import {
   BarChart3,
   Settings,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   GraduationCap,
   MapPin,
 } from "lucide-react"
@@ -30,27 +32,27 @@ import { Link, useLocation } from "react-router-dom"
 // Menu structure
 const menuItems = [
   {
-    title: "DASHBOARD",
+    title: "Dashboard",
     icon: LayoutDashboard,
     url: "/",
   },
   {
-    title: "CURSOS",
+    title: "Cursos",
     icon: BookOpen,
     url: "/cursos",
   },
   {
-    title: "PROGRAMACIÓN",
+    title: "Programación",
     icon: Calendar,
     url: "/cursos/programacion",
   },
   {
-    title: "PLANNER VISUAL",
+    title: "Planner Visual",
     icon: CalendarDays,
     url: "/cursos/planner",
   },
   {
-    title: "CICLOS",
+    title: "Ciclos",
     icon: GraduationCap,
     items: [
       { title: "Ciclo Medio", icon: GraduationCap, url: "/ciclos/medio" },
@@ -58,17 +60,38 @@ const menuItems = [
     ],
   },
   {
-    title: "SEDES",
+    title: "Sedes",
     icon: MapPin,
     items: [
       { title: "Todas las Sedes", icon: Building2, url: "/sedes" },
-      { title: "CEP Norte", icon: MapPin, url: "/sedes/cep-norte" },
-      { title: "CEP Santa Cruz", icon: MapPin, url: "/sedes/cep-santa-cruz" },
-      { title: "CEP Sur", icon: MapPin, url: "/sedes/cep-sur" },
+      {
+        title: "CEP Norte",
+        icon: MapPin,
+        url: "/sedes/cep-norte",
+        items: [
+          { title: "Aulas CEP Norte", icon: DoorOpen, url: "/aulas/cep-norte" }
+        ]
+      },
+      {
+        title: "CEP Santa Cruz",
+        icon: MapPin,
+        url: "/sedes/cep-santa-cruz",
+        items: [
+          { title: "Aulas CEP Santa Cruz", icon: DoorOpen, url: "/aulas/cep-santa-cruz" }
+        ]
+      },
+      {
+        title: "CEP Sur",
+        icon: MapPin,
+        url: "/sedes/cep-sur",
+        items: [
+          { title: "Aulas CEP Sur", icon: DoorOpen, url: "/aulas/cep-sur" }
+        ]
+      },
     ],
   },
   {
-    title: "PERSONAL",
+    title: "Personal",
     icon: Users,
     items: [
       { title: "Profesores", icon: UserCircle, url: "/profesores" },
@@ -77,16 +100,7 @@ const menuItems = [
     ],
   },
   {
-    title: "AULAS",
-    icon: DoorOpen,
-    items: [
-      { title: "Aulas CEP Norte", icon: DoorOpen, url: "/aulas/cep-norte" },
-      { title: "Aulas CEP Santa Cruz", icon: DoorOpen, url: "/aulas/cep-santa-cruz" },
-      { title: "Aulas CEP Sur", icon: DoorOpen, url: "/aulas/cep-sur" },
-    ],
-  },
-  {
-    title: "LEADS E INSCRIPCIONES",
+    title: "Leads e Inscripciones",
     icon: FileText,
     items: [
       { title: "Leads", icon: FileText, url: "/leads" },
@@ -95,7 +109,7 @@ const menuItems = [
     ],
   },
   {
-    title: "MARKETING",
+    title: "Marketing",
     icon: Megaphone,
     items: [
       { title: "Campañas", icon: Megaphone, url: "/campanas" },
@@ -103,7 +117,7 @@ const menuItems = [
     ],
   },
   {
-    title: "CONTENIDO WEB",
+    title: "Contenido Web",
     icon: FileEdit,
     items: [
       { title: "Páginas", icon: FileEdit, url: "/contenido/paginas" },
@@ -115,12 +129,12 @@ const menuItems = [
     ],
   },
   {
-    title: "ANALÍTICAS",
+    title: "Analíticas",
     icon: BarChart3,
     url: "/analiticas",
   },
   {
-    title: "CONFIGURACIÓN",
+    title: "Configuración",
     icon: Settings,
     url: "/configuracion",
   },
@@ -128,31 +142,33 @@ const menuItems = [
 
 interface AppSidebarProps {
   isCollapsed?: boolean
+  onToggle?: () => void
 }
 
-export function AppSidebar({ isCollapsed = false }: AppSidebarProps) {
+export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
   const location = useLocation()
   const [openSections, setOpenSections] = React.useState<string[]>([])
 
+  // Accordion behavior: only one section open at a time
   const toggleSection = (title: string) => {
     if (isCollapsed) return
     setOpenSections((prev) =>
       prev.includes(title)
         ? prev.filter((item) => item !== title)
-        : [...prev, title]
+        : [title] // Only keep the new section open, close all others
     )
   }
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-sidebar text-sidebar-foreground">
       {/* Header */}
-      <div className="flex h-16 items-center border-b border-sidebar-border px-4">
+      <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
         {isCollapsed ? (
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground mx-auto">
             <BookOpen className="h-5 w-5" />
           </div>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <BookOpen className="h-5 w-5" />
             </div>
@@ -161,6 +177,20 @@ export function AppSidebar({ isCollapsed = false }: AppSidebarProps) {
               <span className="text-xs opacity-70">Dashboard v2.0</span>
             </div>
           </div>
+        )}
+        {/* Toggle Button */}
+        {onToggle && (
+          <button
+            onClick={onToggle}
+            className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors"
+            title={isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </button>
         )}
       </div>
 
@@ -216,17 +246,58 @@ export function AppSidebar({ isCollapsed = false }: AppSidebarProps) {
                     {item.items?.map((subItem) => {
                       const SubIcon = subItem.icon
                       const isSubActive = location.pathname === subItem.url
+                      const hasNestedItems = subItem.items && subItem.items.length > 0
+                      const [nestedOpen, setNestedOpen] = React.useState(false)
+
                       return (
                         <li key={subItem.title}>
-                          <Link
-                            to={subItem.url}
-                            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                              isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
-                            }`}
-                          >
-                            <SubIcon className="h-4 w-4 shrink-0" />
-                            <span>{subItem.title}</span>
-                          </Link>
+                          {hasNestedItems ? (
+                            <>
+                              <button
+                                onClick={() => setNestedOpen(!nestedOpen)}
+                                className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                              >
+                                <SubIcon className="h-4 w-4 shrink-0" />
+                                <span className="flex-1 text-left">{subItem.title}</span>
+                                <ChevronDown
+                                  className={`h-3 w-3 transition-transform ${
+                                    nestedOpen ? "rotate-180" : ""
+                                  }`}
+                                />
+                              </button>
+                              {nestedOpen && (
+                                <ul className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
+                                  {subItem.items?.map((nestedItem) => {
+                                    const NestedIcon = nestedItem.icon
+                                    const isNestedActive = location.pathname === nestedItem.url
+                                    return (
+                                      <li key={nestedItem.title}>
+                                        <Link
+                                          to={nestedItem.url}
+                                          className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                                            isNestedActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                                          }`}
+                                        >
+                                          <NestedIcon className="h-3 w-3 shrink-0" />
+                                          <span>{nestedItem.title}</span>
+                                        </Link>
+                                      </li>
+                                    )
+                                  })}
+                                </ul>
+                              )}
+                            </>
+                          ) : (
+                            <Link
+                              to={subItem.url}
+                              className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                                isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                              }`}
+                            >
+                              <SubIcon className="h-4 w-4 shrink-0" />
+                              <span>{subItem.title}</span>
+                            </Link>
+                          )}
                         </li>
                       )
                     })}

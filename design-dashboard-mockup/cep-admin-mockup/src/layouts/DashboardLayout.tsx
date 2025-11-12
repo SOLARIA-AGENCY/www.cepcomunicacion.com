@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { Bell, Search, User, Moon, Sun, Menu, X } from "lucide-react"
+import { Bell, Search, User, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -20,14 +20,14 @@ export function DashboardLayout() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 z-40 h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300 ${
           sidebarOpen ? "w-64" : "w-16"
         }`}
       >
-        <AppSidebar isCollapsed={!sidebarOpen} />
+        <AppSidebar isCollapsed={!sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       </aside>
 
       {/* Main Content Area */}
@@ -37,17 +37,7 @@ export function DashboardLayout() {
         }`}
       >
         {/* Fixed Header */}
-        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b bg-background px-4 md:px-6">
-          {/* Hamburger Button */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="shrink-0 border-2"
-          >
-            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-
+        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b bg-white dark:bg-gray-800 px-4 md:px-6">
           {/* Search */}
           <div className="flex-1 max-w-md">
             <div className="relative hidden lg:block">
