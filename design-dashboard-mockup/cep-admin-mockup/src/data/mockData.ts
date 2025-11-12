@@ -8,6 +8,11 @@ import type {
   Campaign,
   DashboardMetrics,
 } from "../types"
+import type {
+  InstanciaVistaCompleta,
+  EntidadFinanciadora,
+  CourseType,
+} from "../types/courses"
 
 // Dashboard Metrics
 export const dashboardMetrics: DashboardMetrics = {
@@ -4404,4 +4409,225 @@ export const currentUserProfile = {
   photo: "https://i.pravatar.cc/150?img=1",
   bio: "Directora Académica de CEP Comunicación con más de 15 años de experiencia en formación profesional. Especializada en diseño curricular, gestión de equipos docentes y desarrollo de programas formativos innovadores. Coordinadora de proyectos de transformación digital educativa.",
   created_at: "2020-01-15"
+}
+
+// ============================================
+// ENTIDADES FINANCIADORAS
+// ============================================
+export const entidadesFinanciadoras: EntidadFinanciadora[] = [
+  {
+    id: "ent-001",
+    nombre: "SEPE - Servicio Público de Empleo Estatal",
+    codigo: "sepe",
+    logo: "https://www.sepe.es/content/dam/sepe/es/assets/images/logo_sepe.svg",
+    descripcion: "Servicio Público de Empleo Estatal - Formación para el Empleo"
+  },
+  {
+    id: "ent-002",
+    nombre: "FUNDAE - Fundación Estatal para la Formación en el Empleo",
+    codigo: "fundae",
+    logo: "https://www.fundae.es/images/logo-fundae.svg",
+    descripcion: "Bonificaciones en la Seguridad Social para formación de trabajadores"
+  },
+  {
+    id: "ent-003",
+    nombre: "Gobierno de Canarias - Consejería de Educación",
+    codigo: "gobierno-canarias",
+    logo: "https://www.gobiernodecanarias.org/cmsweb/export/sites/educacion/image/logo-gobierno-canarias.png",
+    descripcion: "Formación Profesional para el Empleo del Gobierno de Canarias"
+  },
+  {
+    id: "ent-004",
+    nombre: "Fondo Social Europeo (FSE)",
+    codigo: "ue-fse",
+    logo: "https://ec.europa.eu/regional_policy/images/information-sources/logo-download-center/logo_fse_es.png",
+    descripcion: "Cofinanciado por el Fondo Social Europeo"
+  }
+]
+
+// ============================================
+// GENERADOR DE INSTANCIAS DE CURSOS
+// ============================================
+
+/**
+ * Genera instancias de cursos para múltiples sedes y fechas
+ * Crea 3 instancias por cada curso en coursesData
+ */
+function generarInstanciasCursos(): InstanciaVistaCompleta[] {
+  const instancias: InstanciaVistaCompleta[] = []
+
+  // Sedes rotativas
+  const sedes = [
+    { id: "sede-norte", nombre: "CEP Norte", codigo: "NORTE" },
+    { id: "sede-sur", nombre: "CEP Sur", codigo: "SUR" },
+    { id: "sede-santa-cruz", nombre: "CEP Santa Cruz", codigo: "SC" }
+  ]
+
+  // Configuraciones de horario
+  const horarios = [
+    {
+      horario: "L-V: 18:00-21:00",
+      diasSemana: ["lunes", "martes", "miércoles", "jueves", "viernes"]
+    },
+    {
+      horario: "Sábados: 09:00-14:00",
+      diasSemana: ["sábado"]
+    },
+    {
+      horario: "L-J: 19:00-22:00",
+      diasSemana: ["lunes", "martes", "miércoles", "jueves"]
+    }
+  ]
+
+  // Convocatorias
+  const convocatorias = [
+    {
+      convocatoria: "Enero 2025",
+      fechaInicio: new Date("2025-01-15"),
+      mesesDuracion: 6
+    },
+    {
+      convocatoria: "Febrero 2025",
+      fechaInicio: new Date("2025-02-01"),
+      mesesDuracion: 6
+    },
+    {
+      convocatoria: "Marzo 2025",
+      fechaInicio: new Date("2025-03-01"),
+      mesesDuracion: 5
+    }
+  ]
+
+  // Profesores de ejemplo
+  const profesores = [
+    { id: "prof-001", nombre: "María García Pérez", avatar: "https://i.pravatar.cc/150?img=1" },
+    { id: "prof-002", nombre: "Juan Pérez López", avatar: "https://i.pravatar.cc/150?img=33" },
+    { id: "prof-003", nombre: "Ana Martínez Ruiz", avatar: "https://i.pravatar.cc/150?img=5" },
+    { id: "prof-004", nombre: "Carlos Rodríguez Silva", avatar: "https://i.pravatar.cc/150?img=12" },
+    { id: "prof-005", nombre: "Laura Fernández Torres", avatar: "https://i.pravatar.cc/150?img=9" },
+    { id: "prof-006", nombre: "Miguel Sánchez Díaz", avatar: "https://i.pravatar.cc/150?img=15" }
+  ]
+
+  // Estados con distribución realista
+  const estados = ["abierta", "abierta", "abierta", "abierta", "planificada"] as const
+
+  // Iterar sobre cada curso en coursesData
+  coursesData.forEach((curso, cursoIndex) => {
+    // Generar 3 instancias por curso
+    convocatorias.forEach((conv, convIndex) => {
+      const sede = sedes[convIndex]
+      const horarioData = horarios[convIndex]
+      const profesor = profesores[cursoIndex % profesores.length]
+
+      // Calcular fecha fin
+      const fechaFin = new Date(conv.fechaInicio)
+      fechaFin.setMonth(fechaFin.getMonth() + conv.mesesDuracion)
+
+      // Generar capacidad y ocupación
+      const plazasTotales = 20 + Math.floor(Math.random() * 15) // 20-35 plazas
+      const ocupacionBase = 0.6 + Math.random() * 0.35 // 60-95%
+      const plazasOcupadas = Math.floor(plazasTotales * ocupacionBase)
+      const plazasDisponibles = plazasTotales - plazasOcupadas
+      const porcentajeOcupacion = Math.round((plazasOcupadas / plazasTotales) * 100)
+
+      // Generar código completo
+      const codigoMes = conv.convocatoria.split(" ")[0].substring(0, 3).toUpperCase()
+      const codigoCompleto = `${curso.code}-${sede.codigo}-${codigoMes}`
+
+      // Determinar estado
+      const estado = estados[Math.floor(Math.random() * estados.length)]
+
+      // Precio con descuento ocasional (20% de probabilidad)
+      const tieneDescuento = Math.random() < 0.2
+      const precioConDescuento = tieneDescuento && curso.price > 0
+        ? Math.round(curso.price * 0.85) // 15% descuento
+        : undefined
+
+      // Determinar entidades financiadoras según el tipo de curso
+      let financiadoras: EntidadFinanciadora[] = []
+      let subvencionado: "no" | "parcial" | "total" = "no"
+
+      if (curso.type === "ocupados") {
+        financiadoras = [entidadesFinanciadoras[1], entidadesFinanciadoras[3]] // FUNDAE + FSE
+        subvencionado = "total"
+      } else if (curso.type === "desempleados") {
+        financiadoras = [entidadesFinanciadoras[0], entidadesFinanciadoras[2], entidadesFinanciadoras[3]] // SEPE + Gobierno + FSE
+        subvencionado = "total"
+      } else if (curso.type === "ciclo-medio" || curso.type === "ciclo-superior") {
+        financiadoras = [entidadesFinanciadoras[2]] // Gobierno de Canarias
+        subvencionado = "parcial"
+      }
+
+      // Crear instancia completa
+      const instancia: InstanciaVistaCompleta = {
+        // Datos de instancia
+        id: `inst-${cursoIndex}-${convIndex}`,
+        plantillaId: curso.id,
+        codigoCompleto,
+
+        sedeId: sede.id,
+        sedeNombre: sede.nombre,
+        aulaId: `aula-${convIndex + 1}`,
+        aulaNombre: `Aula ${String.fromCharCode(65 + convIndex)}${convIndex + 1}`,
+        profesorId: profesor.id,
+        profesorNombre: profesor.nombre,
+        profesorAvatar: profesor.avatar,
+
+        fechaInicio: conv.fechaInicio,
+        fechaFin: fechaFin,
+        horario: horarioData.horario,
+        diasSemana: horarioData.diasSemana,
+
+        plazasTotales,
+        plazasOcupadas,
+        plazasDisponibles,
+        porcentajeOcupacion,
+
+        precio: curso.price,
+        precioConDescuento,
+
+        estado,
+        convocatoria: conv.convocatoria,
+
+        fechaLimiteInscripcion: new Date(conv.fechaInicio.getTime() - 7 * 24 * 60 * 60 * 1000), // 7 días antes
+
+        fechaCreacion: new Date("2024-12-01"),
+        creadoPor: "admin",
+
+        // Datos heredados de plantilla
+        nombreCurso: curso.name,
+        descripcionCurso: curso.description,
+        objetivosCurso: curso.objectives,
+        requisitosCurso: curso.requirements,
+        modalidad: curso.modality as "presencial" | "semipresencial" | "telematico",
+        duracionHoras: curso.duration_hours,
+        tipo: curso.type as CourseType,
+        temario: curso.syllabus,
+        imagenPortada: `https://images.unsplash.com/photo-${1500000000000 + cursoIndex * 1000000}`,
+        subvencionado,
+        entidadesFinanciadoras: financiadoras,
+        nombreCertificado: curso.certificate_name
+      }
+
+      instancias.push(instancia)
+    })
+  })
+
+  return instancias
+}
+
+// Generar instancias automáticamente
+export const instanciasData: InstanciaVistaCompleta[] = generarInstanciasCursos()
+
+// Estadísticas de instancias
+export const instanciasStats = {
+  total: instanciasData.length,
+  abiertas: instanciasData.filter(i => i.estado === "abierta").length,
+  planificadas: instanciasData.filter(i => i.estado === "planificada").length,
+  enCurso: instanciasData.filter(i => i.estado === "en_curso").length,
+  plazasTotales: instanciasData.reduce((acc, i) => acc + i.plazasTotales, 0),
+  plazasOcupadas: instanciasData.reduce((acc, i) => acc + i.plazasOcupadas, 0),
+  ocupacionPromedio: Math.round(
+    instanciasData.reduce((acc, i) => acc + i.porcentajeOcupacion, 0) / instanciasData.length
+  )
 }

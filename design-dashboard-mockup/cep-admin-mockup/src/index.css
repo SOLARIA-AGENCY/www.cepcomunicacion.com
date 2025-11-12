@@ -90,3 +90,48 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+/* ============================================================================
+   ESTILOS PARA INSTANCIAS DE CURSOS (Course Cards)
+   ============================================================================ */
+
+/* Estandarización de altura de CourseCards */
+.course-instance-card {
+  min-height: 580px;
+  max-height: 580px;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-instance-card > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título truncado a 1 línea con ellipsis */
+.course-instance-card h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Logos de entidades financiadoras */
+.entity-logo {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(0.2);
+  transition: filter 0.2s ease, opacity 0.2s ease;
+  opacity: 0.85;
+}
+
+.entity-logo:hover {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* Asegurar que el botón CTA esté siempre al final */
+.course-instance-card button {
+  margin-top: auto;
+}
