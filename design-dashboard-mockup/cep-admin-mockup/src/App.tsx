@@ -21,6 +21,9 @@ import { AnalyticsPage } from "./pages/AnalyticsPage"
 import { CampaignsPage } from "./pages/CampaignsPage"
 import { SettingsPage } from "./pages/SettingsPage"
 import { UserProfilePage } from "./pages/UserProfilePage"
+import { UsuariosPage } from "./pages/admin/UsuariosPage"
+import { RolesPage } from "./pages/admin/RolesPage"
+import { PermisoRoute } from "./components/auth/PermisoRoute"
 
 function App() {
   return (
@@ -48,6 +51,22 @@ function App() {
             <Route path="campanas" element={<CampaignsPage />} />
             <Route path="configuracion" element={<SettingsPage />} />
             <Route path="perfil" element={<UserProfilePage />} />
+            <Route
+              path="admin/usuarios"
+              element={
+                <PermisoRoute modulo="administracion" accion="ver">
+                  <UsuariosPage />
+                </PermisoRoute>
+              }
+            />
+            <Route
+              path="admin/roles"
+              element={
+                <PermisoRoute modulo="administracion" accion="ver">
+                  <RolesPage />
+                </PermisoRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>
