@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { dashboardMetrics, convocations, campaigns } from '@payload-config/data/mockDashboard'
 import { Badge } from '@payload-config/components/ui/badge'
+import type { Convocation, Campaign } from '@/types'
 
 export default function DashboardPage() {
   const metrics = dashboardMetrics
@@ -153,7 +154,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {convocations.slice(0, 5).map((conv) => (
+              {convocations.slice(0, 5).map((conv: Convocation) => (
                 <div
                   key={conv.id}
                   className="flex items-center justify-between border-b pb-2 last:border-0"
@@ -185,7 +186,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {campaigns.slice(0, 5).map((campaign) => (
+              {campaigns.slice(0, 5).map((campaign: Campaign) => (
                 <div
                   key={campaign.id}
                   className="flex items-center justify-between border-b pb-2 last:border-0"

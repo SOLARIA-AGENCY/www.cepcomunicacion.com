@@ -11,6 +11,9 @@
     "paths": {
       "@payload-config": ["./src/payload.config.ts"],
       "@payload-config/*": ["./@payload-config/*"],
+      "@/lib/*": ["./@payload-config/lib/*"],
+      "@/hooks/*": ["./@payload-config/hooks/*"],
+      "@/components/*": ["./@payload-config/components/*"],
       "@/*": ["./*"]
     },
     "plugins": [
@@ -19,6 +22,6 @@
       }
     ]
   },
-  "include": ["src/**/*", "tests/**/*", "app/**/*", "next-env.d.ts", ".next/types/**/*.ts"],
+  "include": ["src/**/*", "tests/**/*", "app/**/*", "@payload-config/**/*", "types/**/*", "next-env.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules", "dist", ".next"]
 }

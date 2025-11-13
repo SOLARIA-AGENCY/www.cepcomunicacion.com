@@ -77,7 +77,7 @@ export default function DashboardLayout({
               variant="ghost"
               size="icon"
               className="relative"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.preventDefault()
                 console.log('Notificaciones próximamente')
               }}
@@ -106,7 +106,7 @@ export default function DashboardLayout({
                 <DropdownMenuItem>Configuración</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                     e.preventDefault()
                     console.log('Cerrar sesión')
                   }}
