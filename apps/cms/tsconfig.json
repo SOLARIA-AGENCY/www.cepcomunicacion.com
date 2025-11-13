@@ -9,7 +9,9 @@
     "jsx": "preserve",
     "types": ["node", "vitest/globals"],
     "paths": {
-      "@payload-config": ["./src/payload.config.ts"]
+      "@payload-config": ["./src/payload.config.ts"],
+      "@payload-config/*": ["./@payload-config/*"],
+      "@/*": ["./*"]
     },
     "plugins": [
       {
