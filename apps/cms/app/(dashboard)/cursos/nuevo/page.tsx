@@ -280,7 +280,12 @@ export default function NuevoCursoPage() {
 
       if (response.ok && result.success) {
         alert(`✅ Curso creado exitosamente con código: ${result.data.codigo}`)
-        router.push('/cursos')
+        // Invalidar cache de Next.js antes de navegar para forzar fresh fetch
+        router.refresh()
+        // Pequeño delay para asegurar que refresh se procese
+        setTimeout(() => {
+          router.push('/cursos')
+        }, 100)
       } else {
         alert(`❌ Error al crear curso: ${result.error || 'Error desconocido'}`)
       }

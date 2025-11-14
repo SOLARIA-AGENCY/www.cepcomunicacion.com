@@ -41,6 +41,7 @@ export default function CursosPage() {
   // Cargar cursos desde API con retry logic
   useEffect(() => {
     const fetchCursosWithRetry = async (retries = 2) => {
+      console.log(`[CURSOS] Iniciando fetch de cursos (intentos restantes: ${retries})`)
       try {
         setLoading(true)
 
@@ -48,13 +49,21 @@ export default function CursosPage() {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 15000)
 
+        const startTime = Date.now()
         const response = await fetch('/api/cursos', {
           signal: controller.signal,
           cache: 'no-cache', // Forzar fresh data en primera carga
         })
         clearTimeout(timeoutId)
+        const elapsed = Date.now() - startTime
+        console.log(`[CURSOS] Respuesta recibida en ${elapsed}ms`)
 
         const result = await response.json()
+        console.log(`[CURSOS] Datos recibidos:`, {
+          success: result.success,
+          total: result.total,
+          count: result.data?.length,
+        })
 
         if (result.success) {
           // Transformar datos de API a formato esperado por el componente
@@ -68,15 +77,17 @@ export default function CursosPage() {
           }))
           setCursos(cursosTransformados)
           setError(null)
+          console.log(`[CURSOS] ✅ ${cursosTransformados.length} cursos cargados exitosamente`)
         } else {
+          console.error('[CURSOS] ❌ Error en respuesta:', result.error)
           setError(result.error || 'Error al cargar cursos')
         }
       } catch (err: any) {
-        console.error('Error fetching courses:', err)
+        console.error('[CURSOS] ❌ Error fetching courses:', err)
 
         // Retry en caso de timeout o error de red
         if (retries > 0 && (err.name === 'AbortError' || err.message.includes('fetch'))) {
-          console.log(`Reintentando... (${retries} intentos restantes)`)
+          console.log(`[CURSOS] 🔄 Reintentando... (${retries} intentos restantes)`)
           setTimeout(() => fetchCursosWithRetry(retries - 1), 1000)
           return
         }
