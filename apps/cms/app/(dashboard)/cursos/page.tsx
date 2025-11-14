@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
@@ -33,15 +33,53 @@ export default function CursosPage() {
   const [filterType, setFilterType] = useState(tipo || 'all')
   const [filterArea, setFilterArea] = useState('all')
 
-  // TODO: Fetch from API
-  const plantillasCursosData: any[] = []
+  // State para cursos y carga
+  const [cursos, setCursos] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Cargar cursos desde API
+  useEffect(() => {
+    const fetchCursos = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/cursos')
+        const result = await response.json()
+
+        if (result.success) {
+          // Transformar datos de API a formato esperado por el componente
+          const cursosTransformados = result.data.map((curso: any) => ({
+            id: curso.id,
+            codigo: curso.codigo,
+            nombre: curso.nombre,
+            descripcion: '', // TODO: Agregar cuando esté en API
+            tipo: curso.tipo,
+            area: '', // TODO: Mapear desde area_formativa
+          }))
+          setCursos(cursosTransformados)
+          setError(null)
+        } else {
+          setError(result.error || 'Error al cargar cursos')
+        }
+      } catch (err) {
+        console.error('Error fetching courses:', err)
+        setError('Error de conexión al cargar cursos')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCursos()
+  }, [])
+
+  // Calcular estadísticas desde los cursos cargados
   const cursosStats = {
-    total: 0,
-    activos: 0,
-    privados: 0,
-    ocupados: 0,
-    desempleados: 0,
-    teleformacion: 0,
+    total: cursos.length,
+    activos: cursos.length,
+    privados: cursos.filter((c) => c.tipo === 'privado').length,
+    ocupados: cursos.filter((c) => c.tipo === 'ocupados').length,
+    desempleados: cursos.filter((c) => c.tipo === 'desempleados').length,
+    teleformacion: cursos.filter((c) => c.tipo === 'teleformacion').length,
     totalConvocatorias: 0,
     porArea: {
       marketing: 0,
@@ -62,11 +100,11 @@ export default function CursosPage() {
   }
 
   // Filtrado de cursos
-  const filteredCourses = plantillasCursosData.filter((course) => {
+  const filteredCourses = cursos.filter((course) => {
     const matchesSearch =
       course.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.area.toLowerCase().includes(searchTerm.toLowerCase())
+      (course.descripcion && course.descripcion.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (course.area && course.area.toLowerCase().includes(searchTerm.toLowerCase()))
 
     const matchesType = filterType === 'all' || course.tipo === filterType
     const matchesArea = filterArea === 'all' || course.area === filterArea
@@ -125,7 +163,7 @@ export default function CursosPage() {
             </h1>
             <p className="text-muted-foreground mt-1">
               {config?.description ||
-                `${filteredCourses.length} cursos de ${plantillasCursosData.length} totales`}
+                `${filteredCourses.length} cursos de ${cursos.length} totales`}
             </p>
           </div>
         </div>
@@ -224,8 +262,26 @@ export default function CursosPage() {
         </CardContent>
       </Card>
 
+      {/* Loading State */}
+      {loading && (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">Cargando cursos...</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Error State */}
+      {error && !loading && (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-destructive">❌ {error}</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Grid o Lista de Cursos */}
-      {view === 'grid' ? (
+      {!loading && !error && view === 'grid' && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredCourses.map((course) => (
             <CourseTemplateCard
@@ -235,7 +291,9 @@ export default function CursosPage() {
             />
           ))}
         </div>
-      ) : (
+      )}
+
+      {!loading && !error && view === 'list' && (
         <div className="flex flex-col gap-2">
           {filteredCourses.map((course) => (
             <CourseListItem
@@ -248,7 +306,7 @@ export default function CursosPage() {
       )}
 
       {/* Si no hay resultados */}
-      {filteredCourses.length === 0 && (
+      {!loading && !error && filteredCourses.length === 0 && (
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">
