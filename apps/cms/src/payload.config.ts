@@ -24,6 +24,7 @@ import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
 import { Media } from './collections/Media';
 import { AuditLogs } from './collections/AuditLogs/AuditLogs';
+import { AreasFormativas } from './collections/AreasFormativas/AreasFormativas';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 
 // Export factory function for lazy evaluation (ESM + --env-file compatibility)
@@ -42,6 +43,7 @@ export const getPayloadConfig = () => buildConfig({
     Users, // IMPORTANT: Users collection MUST be first for auth to work properly
     Cycles,
     Campuses,
+    AreasFormativas, // ✅ Knowledge areas for course categorization
 
     // Courses
     Courses,

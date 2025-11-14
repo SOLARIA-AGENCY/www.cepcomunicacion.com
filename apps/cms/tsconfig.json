@@ -4,24 +4,57 @@
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "target": "ES2022",
     "jsx": "preserve",
-    "types": ["node", "vitest/globals"],
+    "types": [
+      "node",
+      "vitest/globals"
+    ],
     "paths": {
-      "@payload-config": ["./src/payload.config.ts"],
-      "@payload-config/*": ["./@payload-config/*"],
-      "@/lib/*": ["./@payload-config/lib/*"],
-      "@/hooks/*": ["./@payload-config/hooks/*"],
-      "@/components/*": ["./@payload-config/components/*"],
-      "@/*": ["./*"]
+      "@payload-config": [
+        "./src/payload.config.ts"
+      ],
+      "@payload-config/*": [
+        "./@payload-config/*"
+      ],
+      "@/lib/*": [
+        "./@payload-config/lib/*"
+      ],
+      "@/hooks/*": [
+        "./@payload-config/hooks/*"
+      ],
+      "@/components/*": [
+        "./@payload-config/components/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "noEmit": true,
+    "isolatedModules": true
   },
-  "include": ["src/**/*", "tests/**/*", "app/**/*", "@payload-config/**/*", "types/**/*", "next-env.d.ts", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "dist", ".next"]
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "app/**/*",
+    "@payload-config/**/*",
+    "types/**/*",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next"
+  ]
 }
