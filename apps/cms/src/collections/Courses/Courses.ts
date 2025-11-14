@@ -84,6 +84,31 @@ export const Courses: CollectionConfig = {
 
   fields: [
     /**
+     * Codigo - Unique auto-generated course code
+     * Format: {AREA_CODE}-{TIPO_CODE}-{SEQUENTIAL}
+     * Examples: MKT-PRIV-0001, DEV-OCUP-0012
+     */
+    {
+      name: 'codigo',
+      type: 'text',
+      required: true,
+      unique: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'Código único auto-generado (ej: MKT-PRIV-0001)',
+      },
+      validate: (val: string | undefined) => {
+        if (!val) return 'El código es obligatorio';
+        if (!/^[A-Z]{3,4}-[A-Z]{4}-\d{4}$/.test(val)) {
+          return 'Formato inválido. Debe ser: AREA-TIPO-0001';
+        }
+        return true;
+      },
+    },
+
+    /**
      * Slug - URL-friendly unique identifier
      * Auto-generated from name if not provided
      */
@@ -140,17 +165,17 @@ export const Courses: CollectionConfig = {
     },
 
     /**
-     * Cycle - Educational cycle relationship (required)
+     * Cycle - Educational cycle relationship (optional)
      * Many-to-One relationship
      */
     {
       name: 'cycle',
       type: 'relationship',
       relationTo: 'cycles',
-      required: true,
+      required: false,
       index: true,
       admin: {
-        description: 'The educational cycle this course belongs to',
+        description: 'The educational cycle this course belongs to (optional)',
       },
     },
 
@@ -229,6 +254,21 @@ export const Courses: CollectionConfig = {
       ],
       admin: {
         description: 'Type of course offering (determines pricing and visibility)',
+      },
+    },
+
+    /**
+     * Area Formativa - Categorization by knowledge area
+     */
+    {
+      name: 'area_formativa',
+      type: 'relationship',
+      relationTo: 'areas-formativas',
+      required: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Área de conocimiento del curso',
       },
     },
 
