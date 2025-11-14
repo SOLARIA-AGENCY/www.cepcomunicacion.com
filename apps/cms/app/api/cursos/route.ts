@@ -151,15 +151,26 @@ export async function GET() {
       collection: 'courses',
       limit: 100,
       sort: '-createdAt',
+      depth: 2, // Populate relationships (area_formativa)
     });
 
     const response = NextResponse.json({
       success: true,
-      data: cursos.docs.map((curso) => ({
+      data: cursos.docs.map((curso: any) => ({
         id: curso.id,
         codigo: curso.codigo,
         nombre: curso.name,
         tipo: curso.course_type,
+        descripcion: curso.short_description || 'Curso de formación profesional',
+        // Extraer nombre del área formativa (puede ser objeto o ID)
+        area: typeof curso.area_formativa === 'object'
+          ? curso.area_formativa?.nombre || 'Sin área'
+          : 'Sin área',
+        duracionReferencia: curso.duration_hours || 0,
+        precioReferencia: curso.base_price || 0,
+        // Placeholder de imagen (URL relativa o absoluta)
+        imagenPortada: '/placeholder-course.svg', // TODO: Agregar campo imagen en Payload
+        totalConvocatorias: 0, // TODO: Contar convocatorias activas
       })),
       total: cursos.totalDocs,
     });

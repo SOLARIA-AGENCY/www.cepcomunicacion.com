@@ -21,11 +21,6 @@ import {
   GraduationCap,
 } from 'lucide-react'
 import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
-// TODO: Fetch from Payload API
-// import { plantillasCursosData } from '@payload-config/data/mockCourseTemplatesData'
-// import { instanciasData } from '@payload-config/data/mockCoursesData'
-const plantillasCursosData: any[] = []
-const instanciasData: any[] = []
 import { ConvocationCard } from '@payload-config/components/ui/ConvocationCard'
 import {
   ConvocationGeneratorModal,
@@ -45,16 +40,72 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
   // Modal state
   const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-  // Find course template by ID
-  const courseTemplate = plantillasCursosData.find((c) => c.id === id)
+  // Data state
+  const [courseTemplate, setCourseTemplate] = React.useState<any>(null)
+  const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState<string | null>(null)
 
-  if (!courseTemplate) {
+  // Fetch course data
+  React.useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true)
+        console.log(`[CURSO_DETALLE] Cargando curso ID: ${id}`)
+
+        const response = await fetch(`/api/cursos`, {
+          cache: 'no-cache',
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          // Find course by ID (convert to number if needed)
+          const course = result.data.find((c: any) => c.id === parseInt(id) || c.id === id)
+
+          if (course) {
+            setCourseTemplate(course)
+            console.log(`[CURSO_DETALLE] ✅ Curso cargado:`, course.nombre)
+          } else {
+            setError('Curso no encontrado')
+            console.log(`[CURSO_DETALLE] ❌ Curso ID ${id} no encontrado`)
+          }
+        } else {
+          setError(result.error || 'Error al cargar curso')
+        }
+      } catch (err) {
+        console.error('[CURSO_DETALLE] ❌ Error fetching course:', err)
+        setError('Error de conexión al cargar el curso')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCourse()
+  }, [id])
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Card className="w-full max-w-md">
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">Cargando curso...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Error or not found
+  if (error || !courseTemplate) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Curso no encontrado</CardTitle>
-            <CardDescription>El curso con ID {id} no existe</CardDescription>
+            <CardDescription>
+              {error || `El curso con ID ${id} no existe`}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => router.push('/cursos')}>
@@ -69,10 +120,8 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
 
   const typeConfig = COURSE_TYPE_CONFIG[courseTemplate.tipo] || COURSE_TYPE_CONFIG.privados
 
-  // Find all convocations (instances) for this course
-  const courseConvocations = instanciasData.filter(
-    (instance) => instance.plantillaId === courseTemplate.id
-  )
+  // TODO: Load convocations from API
+  const courseConvocations: any[] = []
 
   const handleViewConvocation = (convocationId: string) => {
     router.push(`/cursos/${id}/convocatoria/${convocationId}`)

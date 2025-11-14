@@ -47,7 +47,9 @@ export default function CursosPage() {
 
         // Timeout de 15 segundos
         const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 15000)
+        const timeoutId = setTimeout(() => {
+          controller.abort(new Error('Timeout de 15 segundos alcanzado'))
+        }, 15000)
 
         const startTime = Date.now()
         const response = await fetch('/api/cursos', {
@@ -66,18 +68,10 @@ export default function CursosPage() {
         })
 
         if (result.success) {
-          // Transformar datos de API a formato esperado por el componente
-          const cursosTransformados = result.data.map((curso: any) => ({
-            id: curso.id,
-            codigo: curso.codigo,
-            nombre: curso.nombre,
-            descripcion: '', // TODO: Agregar cuando esté en API
-            tipo: curso.tipo,
-            area: '', // TODO: Mapear desde area_formativa
-          }))
-          setCursos(cursosTransformados)
+          // La API ya retorna los datos en el formato correcto
+          setCursos(result.data)
           setError(null)
-          console.log(`[CURSOS] ✅ ${cursosTransformados.length} cursos cargados exitosamente`)
+          console.log(`[CURSOS] ✅ ${result.data.length} cursos cargados exitosamente`)
         } else {
           console.error('[CURSOS] ❌ Error en respuesta:', result.error)
           setError(result.error || 'Error al cargar cursos')
