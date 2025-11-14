@@ -38,6 +38,7 @@ export { BlogPosts } from './BlogPosts/BlogPosts';
 export { FAQs } from './FAQs/FAQs';
 export { Media } from './Media/Media';
 export { AuditLogs } from './AuditLogs/AuditLogs';
+export { AreasFormativas } from './AreasFormativas';
 // ... more collections to come
 
 export const collections = [
