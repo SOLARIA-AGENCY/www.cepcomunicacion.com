@@ -2,6 +2,25 @@
 
 Backend CMS for lead management and marketing automation platform.
 
+## ⚠️ Critical Configuration
+
+### TailwindCSS v4 Setup
+
+**IMPORTANT:** This project uses TailwindCSS v4.x which has a breaking change from v3.x.
+
+**Colors MUST be defined in `theme.colors` (NOT `theme.extend.colors`)**
+
+If configured incorrectly, utility classes like `.bg-background`, `.text-foreground` will NOT be generated and the dashboard will appear completely unstyled.
+
+**Correct configuration:**
+- `tailwind.config.js` - Colors in `theme.colors` ✅
+- `postcss.config.cjs` - Uses `@tailwindcss/postcss` plugin ✅
+- `app/globals.css` - CSS variables defined in `:root` ✅
+
+For complete configuration details and verification steps, see `../../agents.md`.
+
+---
+
 ## Architecture
 
 This CMS follows **Test-Driven Development (TDD)** methodology:

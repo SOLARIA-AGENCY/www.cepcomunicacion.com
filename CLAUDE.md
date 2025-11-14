@@ -108,6 +108,152 @@ METODOLOGIA SOLARIA/        # Complete methodology docs
 - **Analytics:** GA4, Meta Pixel, Plausible
 - **AI/LLM:** OpenAI/Claude/Ollama for content generation
 
+## ⚠️ CRITICAL CONFIGURATION: TailwindCSS v4 Setup
+
+**MEMORIZAR:** Esta configuración se ha perdido 2 veces. **NO OLVIDAR.**
+
+### Problema Recurrente
+Después de recuperar archivos del stash o perder trabajo, el CSS deja de funcionar porque Tailwind v4 no genera las clases de utilidad (`bg-background`, `text-foreground`, etc.).
+
+### Root Cause
+Tailwind CSS v4 cambió la forma de definir colores personalizados con variables CSS. **Los colores DEBEN estar en `theme.colors` directamente, NO en `theme.extend.colors`.**
+
+### ✅ Configuración Correcta (apps/cms/tailwind.config.js)
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+    './@payload-config/**/*.{ts,tsx}',
+  ],
+  prefix: "",
+  theme: {
+    // ✅ COLORES EN theme.colors (NO en extend)
+    colors: {
+      border: "hsl(var(--border))",
+      input: "hsl(var(--input))",
+      ring: "hsl(var(--ring))",
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
+      primary: {
+        DEFAULT: "hsl(var(--primary))",
+        foreground: "hsl(var(--primary-foreground))",
+      },
+      secondary: {
+        DEFAULT: "hsl(var(--secondary))",
+        foreground: "hsl(var(--secondary-foreground))",
+      },
+      destructive: {
+        DEFAULT: "hsl(var(--destructive))",
+        foreground: "hsl(var(--destructive-foreground))",
+      },
+      muted: {
+        DEFAULT: "hsl(var(--muted))",
+        foreground: "hsl(var(--muted-foreground))",
+      },
+      accent: {
+        DEFAULT: "hsl(var(--accent))",
+        foreground: "hsl(var(--accent-foreground))",
+      },
+      popover: {
+        DEFAULT: "hsl(var(--popover))",
+        foreground: "hsl(var(--popover-foreground))",
+      },
+      card: {
+        DEFAULT: "hsl(var(--card))",
+        foreground: "hsl(var(--card-foreground))",
+      },
+      sidebar: {
+        DEFAULT: "hsl(var(--sidebar))",
+        foreground: "hsl(var(--sidebar-foreground))",
+        primary: "hsl(var(--sidebar-primary))",
+        "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+        accent: "hsl(var(--sidebar-accent))",
+        "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+        border: "hsl(var(--sidebar-border))",
+        ring: "hsl(var(--sidebar-ring))",
+      },
+    },
+    extend: {
+      // ❌ NO mover los colores aquí
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      // ... otras extensiones
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}
+```
+
+### ✅ PostCSS Config (apps/cms/postcss.config.cjs)
+
+```javascript
+module.exports = {
+  plugins: {
+    '@tailwindcss/postcss': {},  // ✅ TailwindCSS v4
+    autoprefixer: {},
+  },
+}
+```
+
+### ✅ globals.css (apps/cms/app/globals.css)
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 97%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    /* ... todas las variables CSS */
+  }
+}
+```
+
+### Verificación Rápida
+
+```bash
+# 1. Verificar que el CSS se compila correctamente
+curl http://localhost:3000/_next/static/css/app/layout.css | grep "\.bg-background"
+
+# Debe retornar clases como:
+# .bg-background { background-color: hsl(var(--background)); }
+
+# 2. Si NO aparece nada, el problema está en tailwind.config.js
+# Verificar que colors esté en theme.colors (NO en extend)
+
+# 3. Reiniciar servidor después de cambios
+pkill -f "next dev"
+pnpm --filter cms run dev
+```
+
+### Síntomas del Problema
+- ✅ HTML renderiza correctamente con clases Tailwind
+- ✅ CSS file se sirve (200 OK)
+- ✅ Variables CSS están definidas en :root
+- ❌ **Clases de utilidad NO existen en el CSS** (`.bg-background`, `.text-foreground` no encontradas)
+- ❌ Dashboard se ve sin estilos (texto blanco sobre blanco)
+
+### Solución Inmediata
+1. Mover `colors` de `theme.extend` a `theme` directamente
+2. Reiniciar servidor (`pkill -f "next dev" && pnpm --filter cms run dev`)
+3. Verificar clases generadas con curl
+4. Hard refresh en navegador (Cmd+Shift+R)
+
+**IMPORTANTE:** Esta configuración es específica de TailwindCSS v4.x. Si vuelve a fallar el CSS después de recuperar archivos, **verificar primero tailwind.config.js**.
+
 ## Architecture Pattern
 
 **Monorepo Structure (Planned):**

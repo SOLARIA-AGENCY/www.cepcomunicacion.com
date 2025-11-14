@@ -10,6 +10,20 @@
 
 ---
 
+## ⚠️ Critical Configuration Notes
+
+### TailwindCSS v4 Configuration
+
+**IMPORTANT:** When using TailwindCSS v4.x, colors MUST be defined in `theme.colors` (NOT `theme.extend.colors`). This is a breaking change from v3.x.
+
+**Incorrect configuration will cause:**
+- Utility classes like `.bg-background`, `.text-foreground` will NOT be generated
+- Dashboard appears completely unstyled despite CSS file loading correctly
+
+See `agents.md` for complete configuration details and verification steps.
+
+---
+
 ## Descripción
 
 CEPComunicacion.com v2 es una plataforma integral de gestión formativa diseñada para modernizar y optimizar la administración de cursos, estudiantes, y procesos formativos de CEP Comunicación. La plataforma está construida sobre la infraestructura serverless de Cloudflare para garantizar escalabilidad, rendimiento y costos optimizados.
