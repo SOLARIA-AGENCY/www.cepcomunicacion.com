@@ -68,22 +68,48 @@ export default function NuevoCursoPage() {
   const [subvencionado, setSubvencionado] = React.useState(false)
   const [subvenciones, setSubvenciones] = React.useState<Subvencion[]>([])
 
-  // Cargar áreas formativas al montar el componente
+  // Cargar áreas formativas al montar el componente con retry
   React.useEffect(() => {
-    const fetchAreas = async () => {
+    const fetchAreasWithRetry = async (retries = 2) => {
       try {
-        const response = await fetch('/api/areas-formativas')
+        // Timeout de 10 segundos
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000)
+
+        const response = await fetch('/api/areas-formativas', {
+          signal: controller.signal,
+        })
+        clearTimeout(timeoutId)
+
         const result = await response.json()
         if (result.success) {
           setAreasFormativas(result.data)
+        } else {
+          console.error('Error from API:', result.error)
+          if (retries > 0) {
+            console.log(`Reintentando cargar áreas... (${retries} intentos restantes)`)
+            setTimeout(() => fetchAreasWithRetry(retries - 1), 1000)
+            return
+          }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error loading areas formativas:', error)
+
+        // Retry en caso de timeout o error de red
+        if (retries > 0) {
+          console.log(`Reintentando cargar áreas... (${retries} intentos restantes)`)
+          setTimeout(() => fetchAreasWithRetry(retries - 1), 1000)
+          return
+        }
+
+        alert(
+          '⚠️ No se pudieron cargar las áreas formativas. Por favor, recarga la página.'
+        )
       } finally {
         setLoadingAreas(false)
       }
     }
-    fetchAreas()
+    fetchAreasWithRetry()
   }, [])
 
   // Image upload preview

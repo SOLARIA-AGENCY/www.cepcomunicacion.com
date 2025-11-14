@@ -38,12 +38,22 @@ export default function CursosPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Cargar cursos desde API
+  // Cargar cursos desde API con retry logic
   useEffect(() => {
-    const fetchCursos = async () => {
+    const fetchCursosWithRetry = async (retries = 2) => {
       try {
         setLoading(true)
-        const response = await fetch('/api/cursos')
+
+        // Timeout de 15 segundos
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 15000)
+
+        const response = await fetch('/api/cursos', {
+          signal: controller.signal,
+          cache: 'no-cache', // Forzar fresh data en primera carga
+        })
+        clearTimeout(timeoutId)
+
         const result = await response.json()
 
         if (result.success) {
@@ -61,15 +71,27 @@ export default function CursosPage() {
         } else {
           setError(result.error || 'Error al cargar cursos')
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching courses:', err)
-        setError('Error de conexión al cargar cursos')
+
+        // Retry en caso de timeout o error de red
+        if (retries > 0 && (err.name === 'AbortError' || err.message.includes('fetch'))) {
+          console.log(`Reintentando... (${retries} intentos restantes)`)
+          setTimeout(() => fetchCursosWithRetry(retries - 1), 1000)
+          return
+        }
+
+        setError(
+          err.name === 'AbortError'
+            ? 'Tiempo de espera agotado. El servidor está tardando demasiado.'
+            : 'Error de conexión al cargar cursos'
+        )
       } finally {
         setLoading(false)
       }
     }
 
-    fetchCursos()
+    fetchCursosWithRetry()
   }, [])
 
   // Calcular estadísticas desde los cursos cargados

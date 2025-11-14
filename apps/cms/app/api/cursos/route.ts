@@ -141,6 +141,7 @@ export async function POST(request: NextRequest) {
  * GET /api/cursos
  *
  * Lista cursos (opcional, para debugging)
+ * OPTIMIZADO: Cache de 10 segundos para reducir hits a Payload
  */
 export async function GET() {
   try {
@@ -152,7 +153,7 @@ export async function GET() {
       sort: '-createdAt',
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: cursos.docs.map((curso) => ({
         id: curso.id,
@@ -162,6 +163,11 @@ export async function GET() {
       })),
       total: cursos.totalDocs,
     });
+
+    // Cache por 10 segundos, revalidar en background
+    response.headers.set('Cache-Control', 's-maxage=10, stale-while-revalidate=30');
+
+    return response;
   } catch (error) {
     console.error('Error fetching courses:', error);
     return NextResponse.json(

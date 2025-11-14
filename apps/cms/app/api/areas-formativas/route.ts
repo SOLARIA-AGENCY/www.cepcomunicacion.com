@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *
  * Retorna todas las áreas formativas activas
  * Usado por frontend para dropdown en formulario de creación de cursos
+ * OPTIMIZADO: Cache de 60 segundos (datos maestros que cambian poco)
  */
 export async function GET() {
   try {
@@ -23,7 +24,7 @@ export async function GET() {
       limit: 100,
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: areas.docs.map((area) => ({
         id: area.id,
@@ -32,6 +33,11 @@ export async function GET() {
         color: area.color,
       })),
     });
+
+    // Cache por 60 segundos (datos maestros estables)
+    response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate=120');
+
+    return response;
   } catch (error) {
     console.error('Error fetching areas formativas:', error);
     return NextResponse.json(
