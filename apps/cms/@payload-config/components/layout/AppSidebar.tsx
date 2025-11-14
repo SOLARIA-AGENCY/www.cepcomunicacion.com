@@ -29,6 +29,13 @@ import {
   GraduationCap,
   MapPin,
   Shield,
+  List,
+  Lock,
+  Briefcase,
+  Monitor,
+  Globe,
+  FileInput,
+  Eye,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -42,26 +49,33 @@ const menuItems: MenuItem[] = [
     url: '/',
   },
   {
-    title: 'Cursos',
-    icon: BookOpen,
-    url: '/cursos',
-  },
-  {
     title: 'Programación',
     icon: Calendar,
-    url: '/cursos/programacion',
+    url: '/programacion',
   },
   {
     title: 'Planner Visual',
     icon: CalendarDays,
-    url: '/cursos/planner',
+    url: '/planner',
+  },
+  {
+    title: 'Cursos',
+    icon: BookOpen,
+    items: [
+      { title: 'Todos los Cursos', icon: List, url: '/cursos' },
+      { title: 'Cursos Privados', icon: Lock, url: '/cursos?tipo=privados' },
+      { title: 'Cursos Ocupados', icon: Briefcase, url: '/cursos?tipo=ocupados' },
+      { title: 'Cursos Desempleados', icon: Building2, url: '/cursos?tipo=desempleados' },
+      { title: 'Cursos Teleformación', icon: Monitor, url: '/cursos?tipo=teleformacion' },
+    ],
   },
   {
     title: 'Ciclos',
     icon: GraduationCap,
     items: [
-      { title: 'Ciclo Medio', icon: GraduationCap, url: '/ciclos/medio' },
-      { title: 'Ciclo Superior', icon: GraduationCap, url: '/ciclos/superior' },
+      { title: 'Todos los Ciclos', icon: List, url: '/ciclos' },
+      { title: 'Ciclo Medio', icon: GraduationCap, url: '/ciclos-medio' },
+      { title: 'Ciclo Superior', icon: GraduationCap, url: '/ciclos-superior' },
     ],
   },
   {
@@ -125,18 +139,42 @@ const menuItems: MenuItem[] = [
   },
   {
     title: 'Contenido Web',
-    icon: FileEdit,
+    icon: Globe,
     items: [
+      {
+        title: 'Cursos Publicados',
+        icon: BookOpen,
+        items: [
+          { title: 'Todos los Cursos Web', icon: Globe, url: '/web/cursos' },
+          { title: 'Privados Web', icon: Lock, url: '/web/cursos?tipo=privados' },
+          { title: 'Ocupados Web', icon: Briefcase, url: '/web/cursos?tipo=ocupados' },
+          {
+            title: 'Desempleados Web',
+            icon: Building2,
+            url: '/web/cursos?tipo=desempleados',
+          },
+          { title: 'Teleformación Web', icon: Monitor, url: '/web/cursos?tipo=teleformacion' },
+        ],
+      },
+      {
+        title: 'Ciclos Publicados',
+        icon: GraduationCap,
+        items: [
+          { title: 'Ciclo Medio Web', icon: GraduationCap, url: '/web/ciclos/medio' },
+          { title: 'Ciclo Superior Web', icon: GraduationCap, url: '/web/ciclos/superior' },
+        ],
+      },
+      { title: 'Noticias/Blog', icon: Newspaper, url: '/contenido/blog' },
       { title: 'Páginas', icon: FileEdit, url: '/contenido/paginas' },
-      { title: 'Blog', icon: Newspaper, url: '/contenido/blog' },
       { title: 'FAQs', icon: HelpCircle, url: '/contenido/faqs' },
       {
         title: 'Testimonios',
         icon: MessageSquareQuote,
         url: '/contenido/testimonios',
       },
-      { title: 'Sponsors', icon: Handshake, url: '/contenido/sponsors' },
+      { title: 'Formularios', icon: FileInput, url: '/contenido/formularios' },
       { title: 'Medios', icon: Image, url: '/contenido/medios' },
+      { title: 'Visitantes', icon: Eye, url: '/contenido/visitantes' },
     ],
   },
   {
@@ -160,6 +198,74 @@ const menuItems: MenuItem[] = [
   },
 ]
 
+interface SubMenuItemProps {
+  subItem: MenuItem
+  pathname: string
+}
+
+function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
+  const [nestedOpen, setNestedOpen] = React.useState(false)
+  const SubIcon = subItem.icon
+  const isSubActive = pathname === subItem.url
+  const hasNestedItems = subItem.items && subItem.items.length > 0
+
+  if (hasNestedItems) {
+    return (
+      <>
+        <button
+          onClick={() => setNestedOpen(!nestedOpen)}
+          className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        >
+          <SubIcon className="h-4 w-4 shrink-0" />
+          <span className="flex-1 text-left">{subItem.title}</span>
+          <ChevronDown
+            className={`h-3 w-3 transition-transform ${
+              nestedOpen ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
+        {nestedOpen && (
+          <ul className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
+            {subItem.items?.map((nestedItem) => {
+              const NestedIcon = nestedItem.icon
+              const isNestedActive = pathname === nestedItem.url
+              return (
+                <li key={nestedItem.title}>
+                  <Link
+                    href={nestedItem.url!}
+                    className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                      isNestedActive
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : ''
+                    }`}
+                  >
+                    <NestedIcon className="h-3 w-3 shrink-0" />
+                    <span>{nestedItem.title}</span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </>
+    )
+  }
+
+  return (
+    <Link
+      href={subItem.url!}
+      className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+        isSubActive
+          ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+          : ''
+      }`}
+    >
+      <SubIcon className="h-4 w-4 shrink-0" />
+      <span>{subItem.title}</span>
+    </Link>
+  )
+}
+
 interface AppSidebarProps {
   isCollapsed?: boolean
   onToggle?: () => void
@@ -181,36 +287,22 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-sidebar text-sidebar-foreground">
-      {/* Header */}
-      <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
+      {/* Header - Logo Only */}
+      <div className="flex h-16 items-center justify-center border-b border-sidebar-border px-4">
         {isCollapsed ? (
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground mx-auto">
-            <BookOpen className="h-5 w-5" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <BookOpen className="h-6 w-6" />
           </div>
         ) : (
-          <div className="flex items-center gap-2 flex-1">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <BookOpen className="h-5 w-5" />
+          <div className="flex items-center gap-3 w-full">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
+              <BookOpen className="h-6 w-6" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold">CEP Admin</span>
-              <span className="text-xs opacity-70">Dashboard v2.0</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-lg font-bold truncate">CEP Admin</span>
+              <span className="text-xs opacity-70 truncate">Dashboard v2.0</span>
             </div>
           </div>
-        )}
-        {/* Toggle Button */}
-        {onToggle && (
-          <button
-            onClick={onToggle}
-            className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors"
-            title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
-          >
-            {isCollapsed ? (
-              <ChevronRight className="h-5 w-5" />
-            ) : (
-              <ChevronLeft className="h-5 w-5" />
-            )}
-          </button>
         )}
       </div>
 
@@ -263,68 +355,11 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                 </button>
                 {!isCollapsed && isOpen && (
                   <ul className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
-                    {item.items?.map((subItem) => {
-                      const SubIcon = subItem.icon
-                      const isSubActive = pathname === subItem.url
-                      const hasNestedItems = subItem.items && subItem.items.length > 0
-                      const [nestedOpen, setNestedOpen] = React.useState(false)
-
-                      return (
-                        <li key={subItem.title}>
-                          {hasNestedItems ? (
-                            <>
-                              <button
-                                onClick={() => setNestedOpen(!nestedOpen)}
-                                className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                              >
-                                <SubIcon className="h-4 w-4 shrink-0" />
-                                <span className="flex-1 text-left">{subItem.title}</span>
-                                <ChevronDown
-                                  className={`h-3 w-3 transition-transform ${
-                                    nestedOpen ? 'rotate-180' : ''
-                                  }`}
-                                />
-                              </button>
-                              {nestedOpen && (
-                                <ul className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
-                                  {subItem.items?.map((nestedItem) => {
-                                    const NestedIcon = nestedItem.icon
-                                    const isNestedActive = pathname === nestedItem.url
-                                    return (
-                                      <li key={nestedItem.title}>
-                                        <Link
-                                          href={nestedItem.url!}
-                                          className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                                            isNestedActive
-                                              ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                                              : ''
-                                          }`}
-                                        >
-                                          <NestedIcon className="h-3 w-3 shrink-0" />
-                                          <span>{nestedItem.title}</span>
-                                        </Link>
-                                      </li>
-                                    )
-                                  })}
-                                </ul>
-                              )}
-                            </>
-                          ) : (
-                            <Link
-                              href={subItem.url!}
-                              className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                                isSubActive
-                                  ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                                  : ''
-                              }`}
-                            >
-                              <SubIcon className="h-4 w-4 shrink-0" />
-                              <span>{subItem.title}</span>
-                            </Link>
-                          )}
-                        </li>
-                      )
-                    })}
+                    {item.items?.map((subItem) => (
+                      <li key={subItem.title}>
+                        <SubMenuItem subItem={subItem} pathname={pathname} />
+                      </li>
+                    ))}
                   </ul>
                 )}
               </li>
@@ -333,12 +368,28 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
         </ul>
       </nav>
 
-      {/* Footer */}
-      {!isCollapsed && (
-        <div className="border-t border-sidebar-border p-4">
+      {/* Footer - Always Visible */}
+      <div className="border-t border-sidebar-border p-4 flex items-center justify-between">
+        {!isCollapsed && (
           <p className="text-xs opacity-70">© 2025 CEP Comunicación</p>
-        </div>
-      )}
+        )}
+        {/* Toggle Button */}
+        {onToggle && (
+          <button
+            onClick={onToggle}
+            className={`flex h-9 w-9 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors ${
+              isCollapsed ? 'mx-auto' : 'ml-auto'
+            }`}
+            title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </button>
+        )}
+      </div>
     </div>
   )
 }

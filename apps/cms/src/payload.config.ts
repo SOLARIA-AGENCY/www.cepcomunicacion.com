@@ -13,6 +13,8 @@ const __dirname = path.dirname(__filename);
 import { Cycles } from './collections/Cycles/Cycles';
 import { Campuses } from './collections/Campuses/Campuses';
 import { Users } from './collections/Users/Users';
+import { AreasFormativas } from './collections/AreasFormativas/AreasFormativas';
+import { EntidadesFinanciadoras } from './collections/EntidadesFinanciadoras/EntidadesFinanciadoras';
 import { Courses } from './collections/Courses/Courses';
 import { CourseRuns } from './collections/CourseRuns/CourseRuns';
 import { Enrollments } from './collections/Enrollments/Enrollments';
@@ -24,7 +26,6 @@ import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
 import { Media } from './collections/Media';
 import { AuditLogs } from './collections/AuditLogs/AuditLogs';
-import { AreasFormativas } from './collections/AreasFormativas/AreasFormativas';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 
 // Export factory function for lazy evaluation (ESM + --env-file compatibility)
@@ -44,6 +45,7 @@ export const getPayloadConfig = () => buildConfig({
     Cycles,
     Campuses,
     AreasFormativas, // ✅ Knowledge areas for course categorization
+    EntidadesFinanciadoras, // ✅ Funding entities (grants, subsidies)
 
     // Courses
     Courses,

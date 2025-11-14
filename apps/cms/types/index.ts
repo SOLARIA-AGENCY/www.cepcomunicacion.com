@@ -166,6 +166,31 @@ export interface Teacher {
   courses_count: number
 }
 
+export interface TeacherCourse {
+  id: string
+  name: string
+  code: string
+  type: string
+  modality: string
+  students: number
+}
+
+export interface TeacherCertification {
+  title: string
+  institution: string
+  year: number
+}
+
+export interface TeacherExpanded extends Teacher {
+  initials: string
+  photo?: string
+  department: string
+  bio: string
+  certifications: TeacherCertification[]
+  courses: TeacherCourse[]
+  campuses: string[]
+}
+
 export interface Student {
   id: string
   first_name: string
@@ -245,6 +270,108 @@ export interface DashboardMetrics {
   total_teachers: number
   total_campuses: number
   classroom_utilization: number
+}
+
+// ============================================================================
+// PLANTILLAS DE CURSOS (Course Templates) - Genéricas
+// ============================================================================
+
+export interface PlantillaCurso {
+  id: string
+  nombre: string
+  descripcion: string
+  imagenPortada: string
+  area: string // Marketing, Desarrollo, Diseño, Audiovisual, Gestión
+  tipo: CourseType
+  duracionReferencia: number // horas de referencia
+  precioReferencia?: number // precio base de referencia
+  objetivos: string[]
+  contenidos: string[]
+  totalConvocatorias: number // número de instancias activas
+  active: boolean
+  // Subvenciones y becas
+  subvencionado?: boolean
+  porcentajeSubvencion?: number
+  subvenciones?: Subvencion[]
+  created_at: string
+  updated_at: string
+}
+
+// ============================================================================
+// INSTANCIAS DE CURSOS (Course Instances/Convocations) - Específicas
+// ============================================================================
+
+export interface EntidadFinanciadora {
+  id: string
+  nombre: string
+  logo: string
+}
+
+// ============================================================================
+// SUBVENCIONES Y BECAS
+// ============================================================================
+
+export type EntidadFinanciadoraKey =
+  | 'fundae'
+  | 'sepe'
+  | 'ministerio_trabajo'
+  | 'ministerio_educacion'
+  | 'junta_andalucia'
+  | 'junta_madrid'
+  | 'junta_catalunya'
+  | 'fse'
+  | 'next_generation'
+  | 'camara_comercio'
+  | 'empresa_privada'
+  | 'otro'
+
+export type TipoSubvencion = 'publica' | 'privada' | 'europea'
+
+export interface EntidadFinanciadoraInfo {
+  nombre: string
+  descripcion: string
+  logo: string
+  tipoSubvencion: TipoSubvencion
+  urlOficial: string
+}
+
+export interface Subvencion {
+  id: string
+  entidad: EntidadFinanciadoraKey
+  porcentaje: number // 0-100
+  requisitos?: string
+  urlInfo?: string
+  activa: boolean
+}
+
+export interface InstanciaVistaCompleta {
+  id: string
+  plantillaId: string
+  nombreCurso: string
+  descripcionCurso: string
+  imagenPortada: string
+  codigoCompleto: string
+  tipo: CourseType
+  modalidad: CourseModality
+  estado: ConvocationStatus | 'en_curso' | 'finalizada'
+  fechaInicio: string
+  fechaFin: string
+  horario: string
+  duracionHoras: number
+  precio: number
+  precioConDescuento?: number
+  plazasTotales: number
+  plazasOcupadas: number
+  porcentajeOcupacion: number
+  profesorId: string
+  profesorNombre: string
+  profesorAvatar?: string
+  sedeId: string
+  sedeNombre: string
+  aulaId: string
+  aulaNombre: string
+  subvencionado: 'no' | 'parcial' | 'total'
+  entidadesFinanciadoras: EntidadFinanciadora[]
 }
 
 // ============================================================================

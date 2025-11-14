@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     name: 'cms',
     globals: true,
-    environment: 'node',
+    environment: 'happy-dom',
     setupFiles: ['./tests/setup.ts'],
     globalSetup: ['./tests/teardown.ts'],
     coverage: {
@@ -22,7 +22,15 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@payload-config/lib': path.resolve(__dirname, './@payload-config/lib'),
+      '@payload-config/hooks': path.resolve(__dirname, './@payload-config/hooks'),
+      '@payload-config/components': path.resolve(__dirname, './@payload-config/components'),
+      '@payload-config': path.resolve(__dirname, './src/payload.config.ts'),
+      '@/lib': path.resolve(__dirname, './@payload-config/lib'),
+      '@/hooks': path.resolve(__dirname, './@payload-config/hooks'),
+      '@/components': path.resolve(__dirname, './@payload-config/components'),
+      '@/types': path.resolve(__dirname, './types'),
+      '@': path.resolve(__dirname, './'),
     },
   },
 });

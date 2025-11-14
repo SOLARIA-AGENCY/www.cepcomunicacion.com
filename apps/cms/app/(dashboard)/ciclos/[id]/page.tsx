@@ -6,7 +6,8 @@ import { Badge } from '@payload-config/components/ui/badge'
 import { Button } from '@payload-config/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@payload-config/components/ui/tabs'
 import { ArrowLeft, GraduationCap, Users, Calendar, TrendingUp, BookOpen } from 'lucide-react'
-import { CICLOS_DETALLE_MOCK } from '@payload-config/data/mockCiclos'
+// TODO: Fetch from Payload API
+// import { CICLOS_DETALLE_MOCK } from '@payload-config/data/mockCiclos'
 import { CursoCicloCard } from '@payload-config/components/ui/CursoCicloCard'
 import type { CursoCiclo, InstanciaGrado } from '@/types'
 
@@ -15,6 +16,8 @@ export default function CicloDetailPage() {
   const router = useRouter()
   const cicloId = params.id as string
 
+  // TODO: Replace with API call - GET /api/ciclos/:id
+  const CICLOS_DETALLE_MOCK: any[] = []
   const ciclo = CICLOS_DETALLE_MOCK.find((c) => c.id === cicloId)
 
   if (!ciclo) {

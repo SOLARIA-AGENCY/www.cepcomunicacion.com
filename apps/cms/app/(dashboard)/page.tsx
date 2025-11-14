@@ -18,7 +18,16 @@ import {
   Building2,
   PieChart,
 } from 'lucide-react'
-import { dashboardMetrics, convocations, campaigns } from '@payload-config/data/mockDashboard'
+// TODO: Fetch from Payload API
+// import { dashboardMetrics, convocations, campaigns } from '@payload-config/data/mockDashboard'
+const dashboardMetrics = {
+  totalCursos: 0,
+  totalConvocatorias: 0,
+  alumnosActivos: 0,
+  ingresosEsteMes: 0,
+}
+const convocations: any[] = []
+const campaigns: any[] = []
 import { Badge } from '@payload-config/components/ui/badge'
 import type { Convocation, Campaign } from '@/types'
 
