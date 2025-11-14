@@ -56,6 +56,14 @@ export async function POST(request: NextRequest) {
       teleformacion: 'TELE',
     };
 
+    // Mapeo de tipos del frontend a valores de Payload
+    const TIPO_TO_COURSE_TYPE: Record<string, string> = {
+      privados: 'privado',
+      ocupados: 'ocupados',
+      desempleados: 'desempleados',
+      teleformacion: 'teleformacion',
+    };
+
     const tipoCode = TIPO_CODES[tipo];
     if (!tipoCode) {
       return NextResponse.json(
@@ -63,6 +71,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const courseType = TIPO_TO_COURSE_TYPE[tipo];
 
     const prefix = `${area.codigo}-${tipoCode}-`;
 
@@ -94,8 +104,8 @@ export async function POST(request: NextRequest) {
       data: {
         codigo,
         name: nombre,
-        area_formativa: area_formativa_id,
-        course_type: tipo,
+        area_formativa: parseInt(area_formativa_id),
+        course_type: courseType,
         short_description: descripcion || '',
         duration_hours: duracion_referencia ? parseInt(duracion_referencia) : undefined,
         base_price: precio_referencia ? parseFloat(precio_referencia) : undefined,
