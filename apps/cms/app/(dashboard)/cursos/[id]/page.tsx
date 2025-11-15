@@ -42,7 +42,9 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
 
   // Data state
   const [courseTemplate, setCourseTemplate] = React.useState<any>(null)
+  const [courseConvocations, setCourseConvocations] = React.useState<any[]>([])
   const [loading, setLoading] = React.useState(true)
+  const [loadingConvocations, setLoadingConvocations] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
   // Fetch course data
@@ -83,6 +85,38 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
     fetchCourse()
   }, [id])
 
+  // Fetch convocations for this course
+  const fetchConvocations = React.useCallback(async () => {
+    try {
+      setLoadingConvocations(true)
+      console.log(`[CONVOCATORIAS] Cargando convocatorias para curso ${id}`)
+
+      const response = await fetch(`/api/convocatorias?courseId=${id}`, {
+        cache: 'no-cache',
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setCourseConvocations(result.data || [])
+        console.log(`[CONVOCATORIAS] ✅ ${result.data?.length || 0} convocatorias cargadas`)
+      } else {
+        console.error('[CONVOCATORIAS] ❌ Error:', result.error)
+      }
+    } catch (err) {
+      console.error('[CONVOCATORIAS] ❌ Error fetching convocations:', err)
+    } finally {
+      setLoadingConvocations(false)
+    }
+  }, [id])
+
+  // Load convocations on mount
+  React.useEffect(() => {
+    if (id) {
+      fetchConvocations()
+    }
+  }, [id, fetchConvocations])
+
   // Loading state
   if (loading) {
     return (
@@ -120,9 +154,6 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
 
   const typeConfig = COURSE_TYPE_CONFIG[courseTemplate.tipo] || COURSE_TYPE_CONFIG.privados
 
-  // TODO: Load convocations from API
-  const courseConvocations: any[] = []
-
   const handleViewConvocation = (convocationId: string) => {
     router.push(`/cursos/${id}/convocatoria/${convocationId}`)
   }
@@ -147,15 +178,19 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
       if (result.success) {
         console.log('[CONVOCATORIA] ✅ Convocatoria creada:', result.data)
         setIsModalOpen(false)
-        // TODO: Refrescar lista de convocatorias
+
+        // Refresh convocations list
+        await fetchConvocations()
+
         // TODO: Mostrar toast de éxito
+        alert('✅ Convocatoria creada exitosamente')
       } else {
         console.error('[CONVOCATORIA] ❌ Error:', result.error)
-        // TODO: Mostrar toast de error
+        alert(`❌ Error al crear convocatoria: ${result.error}`)
       }
     } catch (error) {
       console.error('[CONVOCATORIA] ❌ Error de red:', error)
-      // TODO: Mostrar toast de error
+      alert('❌ Error de conexión al crear convocatoria')
     }
   }
 
@@ -362,7 +397,11 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {courseConvocations.length === 0 ? (
+              {loadingConvocations ? (
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">Cargando convocatorias...</p>
+                </div>
+              ) : courseConvocations.length === 0 ? (
                 <div className="text-center py-8">
                   <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground mb-4">
@@ -378,52 +417,70 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {courseConvocations.map((convocation) => (
-                    <Card
-                      key={convocation.id}
-                      className="cursor-pointer hover:shadow-md transition-shadow"
-                      onClick={() => handleViewConvocation(convocation.id)}
-                    >
-                      <CardContent className="p-4 space-y-2">
-                        <div className="flex items-start justify-between">
-                          <Badge
-                            variant={
-                              convocation.estado === 'abierta'
-                                ? 'default'
-                                : convocation.estado === 'planificada'
-                                  ? 'secondary'
-                                  : 'outline'
-                            }
-                            className="text-xs"
-                          >
-                            {convocation.estado}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {convocation.porcentajeOcupacion}% ocupado
-                          </span>
-                        </div>
+                  {courseConvocations.map((convocation) => {
+                    // Calculate occupation percentage
+                    const ocupacion = convocation.plazasTotales > 0
+                      ? Math.round((convocation.plazasOcupadas / convocation.plazasTotales) * 100)
+                      : 0
 
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-xs">
-                            <Calendar className="h-3 w-3 text-muted-foreground" />
-                            <span>
-                              {new Date(convocation.fechaInicio).toLocaleDateString('es-ES')}
+                    // Map status to Spanish
+                    const statusLabels: Record<string, string> = {
+                      'enrollment_open': 'Inscripción Abierta',
+                      'draft': 'Borrador',
+                      'published': 'Publicada',
+                      'enrollment_closed': 'Inscripción Cerrada',
+                      'in_progress': 'En Progreso',
+                      'completed': 'Completada',
+                      'cancelled': 'Cancelada',
+                    }
+
+                    return (
+                      <Card
+                        key={convocation.id}
+                        className="cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => handleViewConvocation(convocation.id)}
+                      >
+                        <CardContent className="p-4 space-y-2">
+                          <div className="flex items-start justify-between">
+                            <Badge
+                              variant={
+                                convocation.estado === 'enrollment_open'
+                                  ? 'default'
+                                  : convocation.estado === 'draft'
+                                    ? 'secondary'
+                                    : 'outline'
+                              }
+                              className="text-xs"
+                            >
+                              {statusLabels[convocation.estado] || convocation.estado}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {ocupacion}% ocupado
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs">
-                            <MapPin className="h-3 w-3 text-muted-foreground" />
-                            <span>{convocation.sedeNombre}</span>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-xs">
+                              <Calendar className="h-3 w-3 text-muted-foreground" />
+                              <span>
+                                {new Date(convocation.fechaInicio).toLocaleDateString('es-ES')} - {new Date(convocation.fechaFin).toLocaleDateString('es-ES')}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs">
+                              <Clock className="h-3 w-3 text-muted-foreground" />
+                              <span>{convocation.horario || 'Sin horario definido'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs">
+                              <Users className="h-3 w-3 text-muted-foreground" />
+                              <span>
+                                {convocation.plazasOcupadas}/{convocation.plazasTotales} plazas
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2 text-xs">
-                            <Users className="h-3 w-3 text-muted-foreground" />
-                            <span>
-                              {convocation.plazasOcupadas}/{convocation.plazasTotales} plazas
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
                 </div>
               )}
             </CardContent>
