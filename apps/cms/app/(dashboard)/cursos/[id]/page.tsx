@@ -262,14 +262,18 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                       Objetivos del Curso
                     </h3>
                     <ul className="space-y-2">
-                      {courseTemplate.objetivos.map((objetivo, index) => (
-                        <li key={index} className="flex gap-3">
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
-                            {index + 1}
-                          </span>
-                          <span className="text-muted-foreground">{objetivo}</span>
-                        </li>
-                      ))}
+                      {courseTemplate.objetivos?.length > 0 ? (
+                        courseTemplate.objetivos.map((objetivo, index) => (
+                          <li key={index} className="flex gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+                              {index + 1}
+                            </span>
+                            <span className="text-muted-foreground">{objetivo}</span>
+                          </li>
+                        ))
+                      ) : (
+                        <p className="text-sm text-muted-foreground italic">No hay objetivos definidos</p>
+                      )}
                     </ul>
                   </div>
                 </TabsContent>
@@ -282,14 +286,18 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                       Contenidos del Programa
                     </h3>
                     <ul className="space-y-2">
-                      {courseTemplate.contenidos.map((contenido, index) => (
-                        <li key={index} className="flex gap-3 p-3 border rounded-lg hover:bg-accent transition-colors">
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center text-xs font-bold">
-                            {index + 1}
-                          </span>
+                      {courseTemplate.contenidos?.length > 0 ? (
+                        courseTemplate.contenidos.map((contenido, index) => (
+                          <li key={index} className="flex gap-3 p-3 border rounded-lg hover:bg-accent transition-colors">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center text-xs font-bold">
+                              {index + 1}
+                            </span>
                           <span>{contenido}</span>
                         </li>
-                      ))}
+                      ))
+                      ) : (
+                        <p className="text-sm text-muted-foreground italic">No hay contenidos definidos</p>
+                      )}
                     </ul>
                   </div>
                 </TabsContent>

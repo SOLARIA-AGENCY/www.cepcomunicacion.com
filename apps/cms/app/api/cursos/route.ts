@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
       pdf_files,
       subvencionado,
       subvenciones,
+      porcentaje_subvencion,
     } = body;
 
     // Validaciones básicas
@@ -109,6 +110,7 @@ export async function POST(request: NextRequest) {
         short_description: descripcion || '',
         duration_hours: duracion_referencia ? parseInt(duracion_referencia) : undefined,
         base_price: precio_referencia ? parseFloat(precio_referencia) : undefined,
+        subsidy_percentage: porcentaje_subvencion ? parseInt(porcentaje_subvencion) : 100,
         modality: 'presencial', // Default
         active: true,
         featured: false,
@@ -168,6 +170,7 @@ export async function GET() {
           : 'Sin área',
         duracionReferencia: curso.duration_hours || 0,
         precioReferencia: curso.base_price || 0,
+        porcentajeSubvencion: curso.subsidy_percentage || 100, // Porcentaje de subvención (default 100%)
         // Placeholder de imagen (URL relativa o absoluta)
         imagenPortada: '/placeholder-course.svg', // TODO: Agregar campo imagen en Payload
         totalConvocatorias: 0, // TODO: Contar convocatorias activas

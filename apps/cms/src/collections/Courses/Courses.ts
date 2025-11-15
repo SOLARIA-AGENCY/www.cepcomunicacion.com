@@ -336,6 +336,30 @@ export const Courses: CollectionConfig = {
     },
 
     /**
+     * Subsidy Percentage - Percentage of subsidy for this course
+     */
+    {
+      name: 'subsidy_percentage',
+      type: 'number',
+      min: 0,
+      max: 100,
+      defaultValue: 100,
+      admin: {
+        description: 'Subsidy percentage (0-100%). Use 100 for fully subsidized courses.',
+        step: 1,
+        condition: (data: any) => !data.base_price || data.base_price === 0,
+      },
+      validate: (val: number | undefined, { data }: any) => {
+        // Only validate if no price is set (subsidized course)
+        if (data.base_price && data.base_price > 0) return true;
+
+        if (val === undefined || val === null) return true;
+        if (val < 0 || val > 100) return 'Subsidy percentage must be between 0 and 100';
+        return true;
+      },
+    },
+
+    /**
      * Financial Aid Available - Flag for aid eligibility
      */
     {

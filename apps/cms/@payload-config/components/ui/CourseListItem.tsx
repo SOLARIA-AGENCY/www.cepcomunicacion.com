@@ -73,9 +73,9 @@ export function CourseListItem({ course, onClick, className }: CourseListItemPro
                 {course.precioReferencia}€
               </span>
             ) : (
-              <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold text-xs">
-                SUBVENCIONADO
-              </Badge>
+              <span className="font-bold text-lg text-green-600">
+                {course.porcentajeSubvencion || 100}% SUBV.
+              </span>
             )}
           </div>
           <div className="flex items-center gap-2">
