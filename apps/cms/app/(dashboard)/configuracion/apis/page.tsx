@@ -5,14 +5,14 @@ import { Button } from '@payload-config/components/ui/button'
 import { Input } from '@payload-config/components/ui/input'
 import { Label } from '@payload-config/components/ui/label'
 import { Textarea } from '@payload-config/components/ui/textarea'
-import { 
-  Plus, 
-  Key, 
-  Globe, 
-  Copy, 
-  Eye, 
-  EyeOff, 
-  Trash2, 
+import {
+  Plus,
+  Key,
+  Globe,
+  Copy,
+  Eye,
+  EyeOff,
+  Trash2,
   CheckCircle,
   Facebook,
   Chrome,
@@ -20,7 +20,8 @@ import {
   Code,
   Webhook,
   RefreshCw,
-  Check
+  Check,
+  Save
 } from 'lucide-react'
 
 interface APIKey {
