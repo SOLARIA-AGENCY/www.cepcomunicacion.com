@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
@@ -13,13 +13,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@payload-config/components/ui/select'
-import { Plus, Search, User, Mail, Phone, BookOpen, MapPin, Award, Eye, Edit } from 'lucide-react'
-// TODO: Import from Payload API
-// import { teachersExpanded } from '@payload-config/data/mockTeachersData'
-const teachersExpanded: any[] = []
+import { Plus, Search, User, Mail, Phone, BookOpen, MapPin, Award, Eye, Edit, Loader2 } from 'lucide-react'
 import { PersonalListItem } from '@payload-config/components/ui/PersonalListItem'
 import { ViewToggle } from '@payload-config/components/ui/ViewToggle'
 import { useViewPreference } from '@payload-config/hooks/useViewPreference'
+
+interface StaffMember {
+  id: number
+  staffType: string
+  firstName: string
+  lastName: string
+  fullName: string
+  email: string
+  phone?: string
+  position: string
+  contractType: string
+  employmentStatus: string
+  photo: string
+  bio?: string
+  assignedCampuses: Array<{
+    id: number
+    name: string
+    city: string
+  }>
+  isActive: boolean
+}
+
+interface TeacherExpanded extends StaffMember {
+  initials: string
+  active: boolean
+  department: string
+  specialties: string[]
+  certifications: any[]
+  courses_count: number
+}
 
 export default function ProfesoresPage() {
   const router = useRouter()
@@ -27,10 +54,69 @@ export default function ProfesoresPage() {
   // View preference
   const [view, setView] = useViewPreference('profesores')
 
+  // Data state
+  const [teachersExpanded, setTeachersExpanded] = useState<TeacherExpanded[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('')
   const [filterDepartment, setFilterDepartment] = useState('all')
   const [filterStatus, setFilterStatus] = useState('all')
+
+  // Load staff data from API
+  useEffect(() => {
+    async function loadProfessors() {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/staff?type=profesor&limit=100')
+
+        if (!response.ok) {
+          throw new Error('Failed to load professors')
+        }
+
+        const result = await response.json()
+
+        if (!result.success) {
+          throw new Error('API returned error')
+        }
+
+        // Transform API data to UI format
+        const transformed: TeacherExpanded[] = result.data.map((staff: StaffMember) => ({
+          ...staff,
+          id: staff.id.toString(),
+          initials: getInitials(staff.fullName),
+          active: staff.employmentStatus === 'active',
+          department: staff.position, // Using position as department for now
+          specialties: [], // No specialties in current schema
+          certifications: [],
+          courses_count: 0, // TODO: Load from courses relationship
+          first_name: staff.firstName,
+          last_name: staff.lastName,
+          photo: staff.photo,
+        }))
+
+        setTeachersExpanded(transformed)
+        setError(null)
+      } catch (err) {
+        console.error('Error loading professors:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProfessors()
+  }, [])
+
+  function getInitials(fullName: string): string {
+    return fullName
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   const handleAdd = () => {
     console.log('Crear nuevo profesor')
@@ -70,6 +156,33 @@ export default function ProfesoresPage() {
     avgCoursesPerTeacher: (
       teachersExpanded.reduce((sum, t) => sum + t.courses_count, 0) / teachersExpanded.length
     ).toFixed(1),
+  }
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">Cargando profesores...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Card className="max-w-md">
+          <CardContent className="pt-6 text-center space-y-4">
+            <p className="text-destructive font-semibold">Error al cargar profesores</p>
+            <p className="text-sm text-muted-foreground">{error}</p>
+            <Button onClick={() => window.location.reload()}>Reintentar</Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
@@ -13,55 +13,70 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@payload-config/components/ui/select'
-import { Plus, Search, User, Mail, Phone, Briefcase, Eye, Edit } from 'lucide-react'
+import { Plus, Search, User, Mail, Phone, Briefcase, Eye, Edit, Loader2 } from 'lucide-react'
 
-const administrativosData = [
-  {
-    id: '1',
-    first_name: 'Carmen',
-    last_name: 'Ruiz Fernández',
-    email: 'carmen.ruiz@cepcomunicacion.com',
-    phone: '+34 612 300 001',
-    department: 'Administración General',
-    role: 'Jefa de Administración',
-    active: true,
-  },
-  {
-    id: '2',
-    first_name: 'José',
-    last_name: 'Morales García',
-    email: 'jose.morales@cepcomunicacion.com',
-    phone: '+34 612 300 002',
-    department: 'Secretaría Académica',
-    role: 'Secretario Académico',
-    active: true,
-  },
-  {
-    id: '3',
-    first_name: 'Isabel',
-    last_name: 'Torres Martín',
-    email: 'isabel.torres@cepcomunicacion.com',
-    phone: '+34 612 300 003',
-    department: 'Recursos Humanos',
-    role: 'Responsable de RRHH',
-    active: true,
-  },
-  {
-    id: '4',
-    first_name: 'Antonio',
-    last_name: 'Sánchez López',
-    email: 'antonio.sanchez@cepcomunicacion.com',
-    phone: '+34 612 300 004',
-    department: 'Contabilidad',
-    role: 'Contable',
-    active: true,
-  },
-]
+interface AdminStaff {
+  id: string
+  first_name: string
+  last_name: string
+  email: string
+  phone: string
+  department: string
+  role: string
+  active: boolean
+  photo?: string
+}
 
 export default function AdministrativosPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterDepartment, setFilterDepartment] = useState('all')
+  const [administrativosData, setAdministrativosData] = useState<AdminStaff[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Load administrative staff from API
+  useEffect(() => {
+    async function loadAdministrative() {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/staff?type=administrativo&limit=100')
+
+        if (!response.ok) {
+          throw new Error('Failed to load administrative staff')
+        }
+
+        const result = await response.json()
+
+        if (!result.success) {
+          throw new Error('API returned error')
+        }
+
+        // Transform API data to UI format
+        const transformed: AdminStaff[] = result.data.map((staff: any) => ({
+          id: staff.id.toString(),
+          first_name: staff.firstName,
+          last_name: staff.lastName,
+          email: staff.email,
+          phone: staff.phone || 'No disponible',
+          department: staff.position,
+          role: staff.position,
+          active: staff.employmentStatus === 'active',
+          photo: staff.photo,
+        }))
+
+        setAdministrativosData(transformed)
+        setError(null)
+      } catch (err) {
+        console.error('Error loading administrative staff:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadAdministrative()
+  }, [])
 
   const handleAdd = () => {
     console.log('Crear nuevo administrativo')
@@ -85,6 +100,33 @@ export default function AdministrativosPage() {
     total: administrativosData.length,
     active: administrativosData.filter((a) => a.active).length,
     departments: departments.length,
+  }
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">Cargando personal administrativo...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Card className="max-w-md">
+          <CardContent className="pt-6 text-center space-y-4">
+            <p className="text-destructive font-semibold">Error al cargar personal administrativo</p>
+            <p className="text-sm text-muted-foreground">{error}</p>
+            <Button onClick={() => window.location.reload()}>Reintentar</Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
