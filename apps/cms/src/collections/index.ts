@@ -39,6 +39,7 @@ export { FAQs } from './FAQs/FAQs';
 export { Media } from './Media/Media';
 export { AuditLogs } from './AuditLogs/AuditLogs';
 export { AreasFormativas } from './AreasFormativas';
+export { Staff } from './Staff/Staff';
 // ... more collections to come
 
 export const collections = [

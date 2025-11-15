@@ -422,19 +422,19 @@ export const CourseRuns: CollectionConfig = {
     // ============================================================================
 
     {
-      name: 'instructor_name',
-      type: 'text',
-      maxLength: 255,
+      name: 'instructor',
+      type: 'relationship',
+      relationTo: 'staff',
+      index: true,
       admin: {
-        description: 'Name of the instructor teaching this course run',
+        description: 'Professor assigned to teach this course run',
       },
-    },
-
-    {
-      name: 'instructor_bio',
-      type: 'textarea',
-      admin: {
-        description: 'Brief biography of the instructor',
+      // Filter to show only professors (not administrativos)
+      filterOptions: ({ data }) => {
+        return {
+          staff_type: { equals: 'profesor' },
+          is_active: { equals: true },
+        };
       },
     },
 

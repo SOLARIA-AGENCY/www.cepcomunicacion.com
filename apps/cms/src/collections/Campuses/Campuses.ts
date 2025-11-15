@@ -190,6 +190,25 @@ export const Campuses: CollectionConfig = {
         }
       },
     },
+
+    // ============================================================================
+    // STAFF ASSIGNMENT
+    // ============================================================================
+
+    {
+      name: 'staff_members',
+      type: 'relationship',
+      relationTo: 'staff',
+      hasMany: true,
+      admin: {
+        description: 'Staff members (professors and administrativos) assigned to this campus',
+      },
+      filterOptions: () => {
+        return {
+          is_active: { equals: true },
+        };
+      },
+    },
   ],
   hooks: {
     beforeValidate: [

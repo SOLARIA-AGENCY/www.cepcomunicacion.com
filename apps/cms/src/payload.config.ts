@@ -26,6 +26,7 @@ import { BlogPosts } from './collections/BlogPosts/BlogPosts';
 import { FAQs } from './collections/FAQs/FAQs';
 import { Media } from './collections/Media';
 import { AuditLogs } from './collections/AuditLogs/AuditLogs';
+import { Staff } from './collections/Staff/Staff';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 
 // Export factory function for lazy evaluation (ESM + --env-file compatibility)
@@ -52,6 +53,9 @@ export const getPayloadConfig = () => buildConfig({
     CourseRuns, // ✅ Scheduled course instances
     Students, // ✅ Learner profiles with PII protection
     Enrollments, // ✅ Student registrations in course runs
+
+    // Personal
+    Staff, // ✅ Professors and administrative staff
 
     // Marketing
     Campaigns, // ✅ Marketing campaign tracking with UTM & analytics
