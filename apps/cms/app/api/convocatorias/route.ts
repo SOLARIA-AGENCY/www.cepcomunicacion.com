@@ -91,6 +91,7 @@ export async function POST(request: NextRequest) {
       collection: 'course-runs' as any,
       data: {
         course: parseInt(courseId),
+        campus: sedeId ? parseInt(sedeId) : undefined, // Campus assignment
         start_date: fechaInicio,
         end_date: fechaFin,
         schedule_days: horario.map((e: ScheduleEntry) => e.day), // Array de días (english weekdays)
@@ -100,8 +101,9 @@ export async function POST(request: NextRequest) {
         min_students: 5, // Valor por defecto
         max_students: plazasTotales,
         current_enrollments: 0,
-        price_override: precio > 0 ? precio : undefined, // Use price_override instead of base_price
-        // TODO: Agregar campos de profesor, sede, aula cuando estén disponibles
+        price_override: precio > 0 ? precio : undefined,
+        instructor_name: profesorId || undefined, // Stored as string for now
+        notes: `Aula: ${aulaId || 'Sin asignar'}`, // Store aula in notes for now
       },
     });
 
@@ -127,39 +129,53 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * GET /api/convocatorias?courseId=X
+ * GET /api/convocatorias?courseId=X&campusId=Y
  *
- * Lista convocatorias de un curso
+ * Lista convocatorias de un curso o de un campus (o ambos)
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const courseId = searchParams.get('courseId');
+    const campusId = searchParams.get('campusId');
 
-    if (!courseId) {
+    if (!courseId && !campusId) {
       return NextResponse.json(
-        { success: false, error: 'courseId requerido' },
+        { success: false, error: 'courseId o campusId requerido' },
         { status: 400 }
       );
     }
 
     const payload = await getPayloadHMR({ config: configPromise });
 
+    // Build dynamic where clause
+    const whereClause: any = {};
+
+    if (courseId) {
+      whereClause.course = { equals: parseInt(courseId) };
+    }
+
+    if (campusId) {
+      whereClause.campus = { equals: parseInt(campusId) };
+    }
+
     const convocations = await payload.find({
       collection: 'course-runs' as any,
-      where: {
-        course: {
-          equals: parseInt(courseId),
-        },
-      },
+      where: whereClause,
       limit: 100,
       sort: '-start_date',
+      depth: 2, // Populate course and campus relationships
     });
 
     return NextResponse.json({
       success: true,
       data: convocations.docs.map((conv: any) => ({
         id: conv.id,
+        cursoId: typeof conv.course === 'object' ? conv.course.id : conv.course,
+        cursoNombre: typeof conv.course === 'object' ? conv.course.name : 'Curso',
+        cursoTipo: typeof conv.course === 'object' ? conv.course.course_type : undefined,
+        campusId: typeof conv.campus === 'object' ? conv.campus.id : conv.campus,
+        campusNombre: typeof conv.campus === 'object' ? conv.campus.name : 'Sin sede',
         fechaInicio: conv.start_date,
         fechaFin: conv.end_date,
         horario: `${conv.schedule_days?.join(', ')} ${conv.schedule_time_start}-${conv.schedule_time_end}`,
@@ -167,6 +183,8 @@ export async function GET(request: NextRequest) {
         plazasTotales: conv.max_students,
         plazasOcupadas: conv.current_enrollments,
         precio: conv.price_override || 0,
+        profesor: conv.instructor_name,
+        modalidad: conv.modality || 'presencial',
       })),
       total: convocations.totalDocs,
     });
