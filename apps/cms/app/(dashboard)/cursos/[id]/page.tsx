@@ -127,10 +127,36 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
     router.push(`/cursos/${id}/convocatoria/${convocationId}`)
   }
 
-  const handleCreateConvocation = (formData: ConvocationFormData) => {
-    // In real implementation, this would call API to create convocation
-    console.log('Creating convocation:', formData)
-    // After successful creation, could show toast notification or refresh convocations list
+  const handleCreateConvocation = async (formData: ConvocationFormData) => {
+    try {
+      console.log('[CONVOCATORIA] Creando convocatoria:', formData)
+
+      const response = await fetch('/api/convocatorias', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseId: id,
+          ...formData,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        console.log('[CONVOCATORIA] ✅ Convocatoria creada:', result.data)
+        setIsModalOpen(false)
+        // TODO: Refrescar lista de convocatorias
+        // TODO: Mostrar toast de éxito
+      } else {
+        console.error('[CONVOCATORIA] ❌ Error:', result.error)
+        // TODO: Mostrar toast de error
+      }
+    } catch (error) {
+      console.error('[CONVOCATORIA] ❌ Error de red:', error)
+      // TODO: Mostrar toast de error
+    }
   }
 
   return (

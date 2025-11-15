@@ -21,6 +21,7 @@ import {
 } from '@payload-config/components/ui/select'
 import { Calendar, Clock, MapPin, Users, DoorOpen, User, Euro } from 'lucide-react'
 import type { PlantillaCurso, CourseModality, ConvocationStatus } from '@/types'
+import { ScheduleBuilder, type ScheduleEntry } from '@payload-config/components/ui/ScheduleBuilder'
 
 interface ConvocationGeneratorModalProps {
   open: boolean
@@ -32,7 +33,7 @@ interface ConvocationGeneratorModalProps {
 export interface ConvocationFormData {
   fechaInicio: string
   fechaFin: string
-  horario: string
+  horario: ScheduleEntry[]
   modalidad: CourseModality
   estado: ConvocationStatus
   plazasTotales: number
@@ -82,7 +83,7 @@ export function ConvocationGeneratorModal({
   // Form state
   const [fechaInicio, setFechaInicio] = React.useState('')
   const [fechaFin, setFechaFin] = React.useState('')
-  const [horario, setHorario] = React.useState('')
+  const [horario, setHorario] = React.useState<ScheduleEntry[]>([])
   const [modalidad, setModalidad] = React.useState<CourseModality>('presencial')
   const [estado, setEstado] = React.useState<ConvocationStatus>('planificada')
   const [plazasTotales, setPlazasTotales] = React.useState('20')
@@ -120,7 +121,7 @@ export function ConvocationGeneratorModal({
     // Reset form
     setFechaInicio('')
     setFechaFin('')
-    setHorario('')
+    setHorario([])
     setModalidad('presencial')
     setEstado('planificada')
     setPlazasTotales('20')
@@ -133,7 +134,7 @@ export function ConvocationGeneratorModal({
   const isFormValid =
     fechaInicio &&
     fechaFin &&
-    horario &&
+    horario.length > 0 &&
     profesorId &&
     sedeId &&
     aulaId &&
@@ -181,16 +182,11 @@ export function ConvocationGeneratorModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="horario">Horario</Label>
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="horario"
-                  value={horario}
-                  onChange={(e) => setHorario(e.target.value)}
-                  placeholder="Ej: Lunes a Viernes 09:00 - 14:00"
-                />
-              </div>
+              <Label className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Horario del Curso
+              </Label>
+              <ScheduleBuilder value={horario} onChange={setHorario} />
             </div>
           </div>
 
