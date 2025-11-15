@@ -10,6 +10,8 @@ import {
   validateCourseRunRelationships,
   trackCourseRunCreator,
   validateEnrollmentCapacity,
+  generateCourseRunCode,
+  captureCompletionSnapshot,
 } from './hooks';
 import { VALID_WEEKDAYS, VALID_STATUSES } from './CourseRuns.validation';
 
@@ -182,6 +184,35 @@ export const CourseRuns: CollectionConfig = {
       index: true,
       admin: {
         description: 'Campus where this course run takes place (optional for online courses)',
+      },
+    },
+
+    // ============================================================================
+    // UNIQUE CODE - Auto-generated
+    // ============================================================================
+
+    /**
+     * Codigo - Unique auto-generated convocation code
+     * Format: {CAMPUS_CODE}-{YEAR}-{SEQUENTIAL}
+     * Examples: NOR-2025-001, SC-2025-012, SUR-2026-003
+     */
+    {
+      name: 'codigo',
+      type: 'text',
+      required: true,
+      unique: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'Código único auto-generado (ej: NOR-2025-001)',
+      },
+      validate: (val: string | undefined) => {
+        if (!val) return 'El código es obligatorio';
+        if (!/^[A-Z]{2,3}-\d{4}-\d{3}$/.test(val)) {
+          return 'Formato inválido. Debe ser: CAMPUS-YEAR-001';
+        }
+        return true;
       },
     },
 
@@ -420,6 +451,68 @@ export const CourseRuns: CollectionConfig = {
     },
 
     // ============================================================================
+    // COMPLETION SNAPSHOT - Data captured when course run completes
+    // ============================================================================
+
+    {
+      name: 'completion_snapshot',
+      type: 'group',
+      admin: {
+        description: 'Historical data captured when the course run was completed',
+        condition: (data) => data.status === 'completed',
+      },
+      fields: [
+        {
+          name: 'final_student_count',
+          type: 'number',
+          admin: {
+            description: 'Number of students who completed the course',
+            readOnly: true,
+          },
+          access: {
+            update: () => false, // Only set by system hook
+          },
+        },
+        {
+          name: 'final_occupation_percentage',
+          type: 'number',
+          admin: {
+            description: 'Actual occupation percentage (final_student_count / max_students * 100)',
+            readOnly: true,
+          },
+          access: {
+            update: () => false,
+          },
+        },
+        {
+          name: 'final_price',
+          type: 'number',
+          admin: {
+            description: 'Final price per student (for historical reference)',
+            readOnly: true,
+          },
+          access: {
+            update: () => false,
+          },
+        },
+        {
+          name: 'completed_at',
+          type: 'date',
+          admin: {
+            description: 'Date when the course run was marked as completed',
+            readOnly: true,
+            date: {
+              displayFormat: 'yyyy-MM-dd HH:mm:ss',
+            },
+          },
+          access: {
+            update: () => false,
+          },
+        },
+      ],
+    },
+
+    // ============================================================================
     // AUDIT TRAIL
     // ============================================================================
 
@@ -459,17 +552,15 @@ export const CourseRuns: CollectionConfig = {
      * Before Change: Run after validation, before database write
      */
     beforeChange: [
-      trackCourseRunCreator, // 4. Auto-populate and protect created_by field
+      generateCourseRunCode, // 4. Auto-generate unique convocation code
+      trackCourseRunCreator, // 5. Auto-populate and protect created_by field
     ],
 
     /**
      * After Change: Triggered after successful create/update
-     * Future enhancements:
-     * - Trigger notifications when status changes
-     * - Update search indexes
-     * - Sync with external systems
      */
     afterChange: [
+      captureCompletionSnapshot, // Capture final metrics when status changes to "completed"
       // Future: triggerCourseRunNotifications
       // Future: updateSearchIndex
     ],
