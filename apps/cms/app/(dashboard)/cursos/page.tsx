@@ -175,7 +175,7 @@ export default function CursosPage() {
   const Icon = config?.icon || List
 
   return (
-    <div className="space-y-6 bg-gray-50 dark:bg-gray-950 p-6 rounded-lg">
+    <div className="space-y-6 !bg-gray-100/40 p-6 rounded-lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -201,7 +201,7 @@ export default function CursosPage() {
       </div>
 
       {/* Filtros */}
-      <Card>
+      <Card className="!bg-white">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             {/* Filtros principales */}
@@ -291,26 +291,25 @@ export default function CursosPage() {
 
       {/* Stats - Resumen de Cursos */}
       {!loading && !error && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Resumen de Cursos</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex flex-col items-center justify-center p-4 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-200 dark:border-red-900">
-              <p className="text-3xl font-bold text-red-600">{cursosStats.privados}</p>
-              <p className="text-xs font-semibold text-red-700 dark:text-red-400 uppercase tracking-wide">Cursos Privados</p>
-            </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900">
-              <p className="text-3xl font-bold text-green-600">{cursosStats.ocupados}</p>
-              <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Cursos Ocupados</p>
-            </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
-              <p className="text-3xl font-bold text-blue-600">{cursosStats.desempleados}</p>
-              <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wide">Cursos Desempleados</p>
-            </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-orange-50 dark:bg-orange-950/30 rounded-lg border border-orange-200 dark:border-orange-900">
-              <p className="text-3xl font-bold text-orange-600">{cursosStats.teleformacion}</p>
-              <p className="text-xs font-semibold text-orange-700 dark:text-orange-400 uppercase tracking-wide">Teleformación</p>
+        <Card className="!bg-white">
+          <CardContent className="py-3">
+            <div className="flex items-center justify-between gap-6">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Privados:</span>
+                <span className="text-lg font-bold text-red-600">{cursosStats.privados}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Ocupados:</span>
+                <span className="text-lg font-bold text-green-600">{cursosStats.ocupados}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Desempleados:</span>
+                <span className="text-lg font-bold text-blue-600">{cursosStats.desempleados}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Teleformación:</span>
+                <span className="text-lg font-bold text-orange-600">{cursosStats.teleformacion}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -318,7 +317,7 @@ export default function CursosPage() {
 
       {/* Loading State */}
       {loading && (
-        <Card>
+        <Card className="!bg-white">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">Cargando cursos...</p>
           </CardContent>
@@ -327,7 +326,7 @@ export default function CursosPage() {
 
       {/* Error State */}
       {error && !loading && (
-        <Card>
+        <Card className="!bg-white">
           <CardContent className="py-12 text-center">
             <p className="text-destructive">❌ {error}</p>
           </CardContent>
@@ -348,7 +347,7 @@ export default function CursosPage() {
       )}
 
       {!loading && !error && view === 'list' && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           {filteredCourses.map((course) => (
             <CourseListItem
               key={course.id}
@@ -361,7 +360,7 @@ export default function CursosPage() {
 
       {/* Si no hay resultados */}
       {!loading && !error && filteredCourses.length === 0 && (
-        <Card>
+        <Card className="!bg-white">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">
               No se encontraron cursos que coincidan con los filtros seleccionados.

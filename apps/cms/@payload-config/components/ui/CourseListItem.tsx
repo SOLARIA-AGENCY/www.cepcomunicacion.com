@@ -2,7 +2,7 @@
 
 import { Badge } from '@payload-config/components/ui/badge'
 import { Button } from '@payload-config/components/ui/button'
-import { BookOpen, Calendar } from 'lucide-react'
+import { BookOpen, MapPin } from 'lucide-react'
 import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
 import type { PlantillaCurso } from '@/types'
 
@@ -17,77 +17,83 @@ export function CourseListItem({ course, onClick, className }: CourseListItemPro
 
   return (
     <div
-      className={`flex items-center h-20 pr-4 bg-card border-y border-r rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-150 cursor-pointer ${className || ''}`}
+      className={`flex items-center h-24 px-6 !bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-150 cursor-pointer ${className || ''}`}
       onClick={onClick}
     >
-      {/* Borde de color como div separado - PEGADO a la imagen */}
-      <div className={`h-full w-1 flex-shrink-0 ${typeConfig.bgColor}`} />
-
-      {/* Thumbnail - Pegada al borde sin gap */}
-      <div className="flex-shrink-0 h-full">
+      {/* Thumbnail */}
+      <div className="flex-shrink-0 h-16 w-24 rounded overflow-hidden" style={{ backgroundColor: '#f5f5f5' }}>
         <img
           src={course.imagenPortada}
           alt={course.nombre}
-          className="h-full w-20 object-cover"
+          className="h-full w-full object-cover"
         />
       </div>
 
       {/* Contenido con padding interno */}
-      <div className="flex items-center flex-1 gap-3 pl-4">
+      <div className="flex items-center flex-1 gap-8 pl-6">
         {/* Title + Area */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-sm truncate leading-tight mb-0.5" title={course.nombre}>
+          <h3 className="font-bold text-sm truncate leading-tight mb-1 uppercase" title={course.nombre}>
             {course.nombre}
           </h3>
-          <p className="text-xs text-muted-foreground truncate">{course.area}</p>
+          <Badge variant="outline" className="text-xs uppercase">
+            {course.area}
+          </Badge>
         </div>
 
-        {/* Duration + Convocations - Compacto */}
-        <div className="hidden sm:flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-1">
-            <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="font-medium">{course.duracionReferencia}H</span>
+        {/* Info Fields - Con más separación */}
+        <div className="hidden sm:flex items-center gap-6 text-sm">
+          <div className="flex flex-col items-center gap-1">
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
+            <span className="font-semibold">{course.duracionReferencia}H</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground">
-              {course.totalConvocatorias} conv.
+          <div className="flex flex-col items-center gap-1">
+            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <span className="font-semibold">
+              {course.totalConvocatorias} {course.totalConvocatorias === 1 ? 'sede' : 'sedes'}
             </span>
           </div>
         </div>
 
-        {/* Type Badge - Más pequeño */}
-        <div className="hidden lg:block w-[160px] flex justify-center">
+        {/* Type Badge */}
+        <div className="hidden lg:flex items-center justify-center min-w-[140px]">
           <Badge
-            className={`${typeConfig.bgColor} ${typeConfig.hoverColor} text-white text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap px-2.5 py-1 leading-tight`}
+            className={`${typeConfig.bgColor} ${typeConfig.hoverColor} text-white text-xs font-bold uppercase tracking-wide px-3 py-1`}
           >
             {typeConfig.label}
           </Badge>
         </div>
 
-        {/* Price - Compacto */}
-        <div className="hidden md:block w-[140px] text-right">
-          {course.precioReferencia !== undefined && course.precioReferencia > 0 ? (
-            <span className={`font-bold text-base ${typeConfig.textColor}`}>
-              {course.precioReferencia}€
-            </span>
-          ) : (
-            <span className="text-green-600 font-semibold text-xs whitespace-nowrap leading-tight">
-              100% SUBVENCIONADO
-            </span>
-          )}
+        {/* Price + Convocations */}
+        <div className="hidden md:flex flex-col gap-1 min-w-[140px] items-end">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Precio:</span>
+            {course.precioReferencia !== undefined && course.precioReferencia > 0 ? (
+              <span className={`font-bold text-lg ${typeConfig.textColor}`}>
+                {course.precioReferencia}€
+              </span>
+            ) : (
+              <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold text-xs">
+                SUBVENCIONADO
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Convocatorias:</span>
+            <span className="font-bold text-sm">{course.totalConvocatorias}</span>
+          </div>
         </div>
 
-        {/* Action Button - Compacto */}
+        {/* Action Button */}
         <Button
           size="sm"
-          className={`${typeConfig.bgColor} ${typeConfig.hoverColor} text-white text-xs font-semibold uppercase tracking-wide shrink-0 h-7 px-3`}
+          className={`${typeConfig.bgColor} ${typeConfig.hoverColor} text-white text-xs font-bold uppercase tracking-wide shrink-0 h-8 px-4`}
           onClick={(e) => {
             e.stopPropagation()
             onClick?.()
           }}
         >
-          VER
+          VER CURSO
         </Button>
       </div>
     </div>

@@ -24,11 +24,11 @@ export function CourseTemplateCard({
 
   return (
     <Card
-      className={`course-template-card cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden border-2 bg-white dark:bg-gray-900/30 ${typeConfig.borderColor} ${className || ''}`}
+      className={`course-template-card cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden !bg-white ${className || ''}`}
       onClick={onClick}
     >
       {/* Course Image */}
-      <div className="relative h-48 overflow-hidden bg-gray-100">
+      <div className="relative h-48 overflow-hidden" style={{ backgroundColor: '#f5f5f5' }}>
         <img
           src={template.imagenPortada}
           alt={template.nombre}
@@ -43,7 +43,7 @@ export function CourseTemplateCard({
         </div>
       </div>
 
-      <CardContent className="p-6 space-y-3 flex flex-col">
+      <CardContent className="p-6 space-y-3 flex flex-col !bg-white">
         {/* Area Badge */}
         <Badge variant="outline" className="w-fit text-xs uppercase">
           {template.area}
