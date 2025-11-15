@@ -66,13 +66,13 @@ export async function POST(request: NextRequest) {
     const horarioFormatted = horario
       .map((entry: ScheduleEntry) => {
         const dayLabels: Record<string, string> = {
-          lunes: 'Lunes',
-          martes: 'Martes',
-          miercoles: 'Miércoles',
-          jueves: 'Jueves',
-          viernes: 'Viernes',
-          sabado: 'Sábado',
-          domingo: 'Domingo',
+          monday: 'Lunes',
+          tuesday: 'Martes',
+          wednesday: 'Miércoles',
+          thursday: 'Jueves',
+          friday: 'Viernes',
+          saturday: 'Sábado',
+          sunday: 'Domingo',
         };
         const dayLabel = dayLabels[entry.day] || entry.day;
         return `${dayLabel} ${entry.startTime}-${entry.endTime}`;
@@ -80,22 +80,20 @@ export async function POST(request: NextRequest) {
       .join(', ');
 
     // Crear convocatoria en Payload
-    // NOTA: Este es un placeholder. Necesitarás crear la colección "convocations" en Payload
     const convocation = await payload.create({
-      collection: 'course-runs' as any, // TODO: Cambiar a 'convocations' cuando esté implementado
+      collection: 'course-runs' as any,
       data: {
         course: parseInt(courseId),
         start_date: fechaInicio,
         end_date: fechaFin,
-        schedule_days: horario.map((e: ScheduleEntry) => e.day), // Array de días
-        schedule_time_start: horario[0]?.startTime || '09:00', // Primera hora de inicio
-        schedule_time_end: horario[horario.length - 1]?.endTime || '14:00', // Última hora de fin
-        modality: modalidad as any,
-        status: estado === 'abierta' ? 'enrollment_open' : 'planned' as any,
+        schedule_days: horario.map((e: ScheduleEntry) => e.day), // Array de días (english weekdays)
+        schedule_time_start: horario[0]?.startTime || '09:00:00', // Primera hora de inicio (HH:MM:SS)
+        schedule_time_end: horario[horario.length - 1]?.endTime || '14:00:00', // Última hora de fin (HH:MM:SS)
+        status: estado === 'abierta' ? 'enrollment_open' : 'draft' as any,
         min_students: 5, // Valor por defecto
         max_students: plazasTotales,
         current_enrollments: 0,
-        base_price: precio,
+        price_override: precio > 0 ? precio : undefined, // Use price_override instead of base_price
         // TODO: Agregar campos de profesor, sede, aula cuando estén disponibles
       },
     });
@@ -161,7 +159,7 @@ export async function GET(request: NextRequest) {
         estado: conv.status,
         plazasTotales: conv.max_students,
         plazasOcupadas: conv.current_enrollments,
-        precio: conv.base_price,
+        precio: conv.price_override || 0,
       })),
       total: convocations.totalDocs,
     });

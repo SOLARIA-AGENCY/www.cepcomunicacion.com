@@ -25,13 +25,13 @@ interface ScheduleBuilderProps {
 }
 
 const DAYS = [
-  { value: 'lunes', label: 'Lunes' },
-  { value: 'martes', label: 'Martes' },
-  { value: 'miercoles', label: 'Miércoles' },
-  { value: 'jueves', label: 'Jueves' },
-  { value: 'viernes', label: 'Viernes' },
-  { value: 'sabado', label: 'Sábado' },
-  { value: 'domingo', label: 'Domingo' },
+  { value: 'monday', label: 'Lunes' },
+  { value: 'tuesday', label: 'Martes' },
+  { value: 'wednesday', label: 'Miércoles' },
+  { value: 'thursday', label: 'Jueves' },
+  { value: 'friday', label: 'Viernes' },
+  { value: 'saturday', label: 'Sábado' },
+  { value: 'sunday', label: 'Domingo' },
 ]
 
 // Generate time slots in 15-minute intervals from 08:00 to 22:00
@@ -39,7 +39,7 @@ const generateTimeSlots = () => {
   const slots: string[] = []
   for (let hour = 8; hour <= 22; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
-      const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+      const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`
       slots.push(timeStr)
     }
   }
