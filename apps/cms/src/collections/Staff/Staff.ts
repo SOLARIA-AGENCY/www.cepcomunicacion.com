@@ -154,18 +154,56 @@ export const Staff: CollectionConfig = {
     },
 
     {
-      name: 'full_name',
+      name: 'first_name',
       type: 'text',
       required: true,
+      maxLength: 100,
+      admin: {
+        description: 'First name',
+      },
+      validate: (val: any) => {
+        if (!val) return 'First name is required';
+        if (val.trim().length < 2) return 'First name must be at least 2 characters';
+        return true;
+      },
+    },
+
+    {
+      name: 'last_name',
+      type: 'text',
+      required: true,
+      maxLength: 100,
+      admin: {
+        description: 'Last name',
+      },
+      validate: (val: any) => {
+        if (!val) return 'Last name is required';
+        if (val.trim().length < 2) return 'Last name must be at least 2 characters';
+        return true;
+      },
+    },
+
+    {
+      name: 'full_name',
+      type: 'text',
+      required: false,
       maxLength: 255,
       index: true,
       admin: {
-        description: 'Full name of the staff member',
+        description: 'Full name (auto-generated from first_name + last_name)',
+        readOnly: true,
+        position: 'sidebar',
       },
-      validate: (val: any) => {
-        if (!val) return 'Full name is required';
-        if (val.trim().length < 3) return 'Full name must be at least 3 characters';
-        return true;
+      hooks: {
+        beforeChange: [
+          ({ data, value }) => {
+            // Auto-generate full_name from first_name and last_name
+            if (data?.first_name && data?.last_name) {
+              return `${data.first_name} ${data.last_name}`.trim();
+            }
+            return value;
+          },
+        ],
       },
     },
 
@@ -227,6 +265,81 @@ export const Staff: CollectionConfig = {
     },
 
     // ============================================================================
+    // EMPLOYMENT INFORMATION (DATOS LABORALES)
+    // ============================================================================
+
+    {
+      name: 'position',
+      type: 'text',
+      required: true,
+      maxLength: 255,
+      admin: {
+        description: 'Job position/title (e.g., "Profesor de Marketing Digital", "Coordinador Académico")',
+        placeholder: 'e.g., Profesor de Marketing Digital',
+      },
+      validate: (val: any) => {
+        if (!val) return 'Position is required';
+        if (val.trim().length < 3) return 'Position must be at least 3 characters';
+        return true;
+      },
+    },
+
+    {
+      name: 'contract_type',
+      type: 'select',
+      required: true,
+      index: true,
+      options: [
+        { label: 'Tiempo Completo', value: 'full_time' },
+        { label: 'Medio Tiempo', value: 'part_time' },
+        { label: 'Freelance / Por Horas', value: 'freelance' },
+      ],
+      defaultValue: 'full_time',
+      admin: {
+        description: 'Type of employment contract',
+      },
+    },
+
+    {
+      name: 'employment_status',
+      type: 'select',
+      required: true,
+      index: true,
+      options: [
+        { label: 'Activo', value: 'active' },
+        { label: 'Baja Temporal', value: 'temporary_leave' },
+        { label: 'Inactivo', value: 'inactive' },
+      ],
+      defaultValue: 'active',
+      admin: {
+        position: 'sidebar',
+        description: 'Current employment status',
+      },
+    },
+
+    {
+      name: 'hire_date',
+      type: 'date',
+      required: true,
+      index: true,
+      admin: {
+        description: 'Date of hire / Start date',
+        date: {
+          pickerAppearance: 'dayOnly',
+        },
+      },
+      validate: (val: any) => {
+        if (!val) return 'Hire date is required';
+        const hireDate = new Date(val);
+        const today = new Date();
+        if (hireDate > today) {
+          return 'Hire date cannot be in the future';
+        }
+        return true;
+      },
+    },
+
+    // ============================================================================
     // PROFESSOR-SPECIFIC FIELDS
     // ============================================================================
 
@@ -252,21 +365,80 @@ export const Staff: CollectionConfig = {
       },
     },
 
+    {
+      name: 'certifications',
+      type: 'array',
+      admin: {
+        description: 'Certifications and academic titles (for professors only)',
+        condition: (data) => data.staff_type === 'profesor',
+      },
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+          maxLength: 255,
+          admin: {
+            description: 'Certification or degree title',
+            placeholder: 'e.g., Máster en Marketing Digital',
+          },
+        },
+        {
+          name: 'institution',
+          type: 'text',
+          required: true,
+          maxLength: 255,
+          admin: {
+            description: 'Issuing institution',
+            placeholder: 'e.g., Universidad Complutense de Madrid',
+          },
+        },
+        {
+          name: 'year',
+          type: 'number',
+          required: true,
+          admin: {
+            description: 'Year obtained',
+            placeholder: '2020',
+          },
+          validate: (val: any) => {
+            if (!val) return 'Year is required';
+            const currentYear = new Date().getFullYear();
+            if (val < 1950 || val > currentYear) {
+              return `Year must be between 1950 and ${currentYear}`;
+            }
+            return true;
+          },
+        },
+        {
+          name: 'document',
+          type: 'upload',
+          relationTo: 'media',
+          admin: {
+            description: 'Certificate PDF or image (optional)',
+          },
+        },
+      ],
+    },
+
     // ============================================================================
     // CAMPUS ASSIGNMENT
     // ============================================================================
 
     {
-      name: 'campus',
+      name: 'assigned_campuses',
       type: 'relationship',
       relationTo: 'campuses',
+      hasMany: true,
       required: true,
       index: true,
       admin: {
-        description: 'Primary campus where this staff member works',
+        description: 'Campuses where this staff member can work (select at least one)',
       },
       validate: (val: any) => {
-        if (!val) return 'Campus assignment is required';
+        if (!val || (Array.isArray(val) && val.length === 0)) {
+          return 'At least one campus must be assigned';
+        }
         return true;
       },
     },
