@@ -65,34 +65,40 @@ export function CourseTemplateCard({
         </p>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-2 gap-3 py-3 border-t">
+        <div className="grid grid-cols-2 gap-2 py-3 border-t">
           <div className="flex items-center gap-2 text-sm">
             <BookOpen className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="font-medium text-xs">{template.duracionReferencia}H</span>
+            <span className="font-medium text-sm">{template.duracionReferencia}H</span>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="font-medium text-xs whitespace-nowrap">
+            <span className="font-medium text-sm whitespace-nowrap">
               {template.totalConvocatorias}{' '}
               {template.totalConvocatorias === 1 ? 'sede' : 'sedes'}
             </span>
           </div>
         </div>
 
-        {/* Price - Always visible with consistent structure */}
+        {/* Price and Convocations */}
         <div className="py-3 border-t">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Precio:</span>
-            {template.precioReferencia !== undefined && template.precioReferencia > 0 ? (
-              <span className={`font-bold text-lg ${typeConfig.textColor}`}>
-                {template.precioReferencia}€
-              </span>
-            ) : (
-              <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold text-sm">
-                100% SUBVENCIONADO
-              </Badge>
-            )}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Precio:</span>
+              {template.precioReferencia !== undefined && template.precioReferencia > 0 ? (
+                <span className={`font-bold text-lg ${typeConfig.textColor}`}>
+                  {template.precioReferencia}€
+                </span>
+              ) : (
+                <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold text-xs">
+                  SUBVENCIONADO
+                </Badge>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Convocatorias:</span>
+              <span className="font-bold text-sm">{template.totalConvocatorias}</span>
+            </div>
           </div>
         </div>
 

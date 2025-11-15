@@ -175,7 +175,7 @@ export default function CursosPage() {
   const Icon = config?.icon || List
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-gray-50 dark:bg-gray-950 p-6 rounded-lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
