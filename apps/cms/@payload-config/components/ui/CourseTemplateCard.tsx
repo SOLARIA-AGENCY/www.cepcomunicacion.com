@@ -3,7 +3,7 @@
 import { Card, CardContent } from '@payload-config/components/ui/card'
 import { Badge } from '@payload-config/components/ui/badge'
 import { Button } from '@payload-config/components/ui/button'
-import { Calendar, BookOpen } from 'lucide-react'
+import { MapPin, BookOpen } from 'lucide-react'
 import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
 import type { PlantillaCurso } from '@/types'
 
@@ -24,7 +24,7 @@ export function CourseTemplateCard({
 
   return (
     <Card
-      className={`course-template-card cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden border-2 bg-gray-50/50 dark:bg-gray-900/30 ${typeConfig.borderColor} ${className || ''}`}
+      className={`course-template-card cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden border-2 bg-white dark:bg-gray-900/30 ${typeConfig.borderColor} ${className || ''}`}
       onClick={onClick}
     >
       {/* Course Image */}
@@ -45,7 +45,7 @@ export function CourseTemplateCard({
 
       <CardContent className="p-6 space-y-3 flex flex-col">
         {/* Area Badge */}
-        <Badge variant="outline" className="w-fit text-xs">
+        <Badge variant="outline" className="w-fit text-xs uppercase">
           {template.area}
         </Badge>
 
@@ -71,18 +71,18 @@ export function CourseTemplateCard({
             <span className="font-medium text-xs">{template.duracionReferencia}H</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm flex-shrink-0">
-            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+          <div className="flex items-center gap-2 text-sm">
+            <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             <span className="font-medium text-xs whitespace-nowrap">
               {template.totalConvocatorias}{' '}
-              {template.totalConvocatorias === 1 ? 'convocatoria' : 'convocatorias'}
+              {template.totalConvocatorias === 1 ? 'sede' : 'sedes'}
             </span>
           </div>
         </div>
 
         {/* Price - Always visible with consistent structure */}
         <div className="py-3 border-t">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Precio:</span>
             {template.precioReferencia !== undefined && template.precioReferencia > 0 ? (
               <span className={`font-bold text-lg ${typeConfig.textColor}`}>

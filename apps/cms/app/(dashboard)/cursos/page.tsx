@@ -205,19 +205,19 @@ export default function CursosPage() {
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             {/* Filtros principales */}
-            <div className="flex-1 grid gap-4 md:grid-cols-3">
-              <div className="relative">
+            <div className="flex-1 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              <div className="relative md:col-span-2 lg:col-span-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Buscar por nombre, descripción o área..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 w-full"
                 />
               </div>
 
               <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Todos los cursos" />
                 </SelectTrigger>
                 <SelectContent>
@@ -251,7 +251,7 @@ export default function CursosPage() {
 
               {/* Filtro por Área */}
               <Select value={filterArea} onValueChange={setFilterArea}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Áreas de cursos" />
                 </SelectTrigger>
                 <SelectContent>
@@ -288,6 +288,33 @@ export default function CursosPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Stats - Resumen de Cursos */}
+      {!loading && !error && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Resumen de Cursos</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex flex-col items-center justify-center p-4 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-200 dark:border-red-900">
+              <p className="text-3xl font-bold text-red-600">{cursosStats.privados}</p>
+              <p className="text-xs font-semibold text-red-700 dark:text-red-400 uppercase tracking-wide">Cursos Privados</p>
+            </div>
+            <div className="flex flex-col items-center justify-center p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900">
+              <p className="text-3xl font-bold text-green-600">{cursosStats.ocupados}</p>
+              <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Cursos Ocupados</p>
+            </div>
+            <div className="flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
+              <p className="text-3xl font-bold text-blue-600">{cursosStats.desempleados}</p>
+              <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wide">Cursos Desempleados</p>
+            </div>
+            <div className="flex flex-col items-center justify-center p-4 bg-orange-50 dark:bg-orange-950/30 rounded-lg border border-orange-200 dark:border-orange-900">
+              <p className="text-3xl font-bold text-orange-600">{cursosStats.teleformacion}</p>
+              <p className="text-xs font-semibold text-orange-700 dark:text-orange-400 uppercase tracking-wide">Teleformación</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Loading State */}
       {loading && (
@@ -342,39 +369,6 @@ export default function CursosPage() {
           </CardContent>
         </Card>
       )}
-
-      {/* Stats - Estadísticas de cursos */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Resumen de Cursos</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-6">
-          <div>
-            <p className="text-2xl font-bold">{cursosStats.total}</p>
-            <p className="text-xs text-muted-foreground">Cursos totales</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold">{cursosStats.activos}</p>
-            <p className="text-xs text-muted-foreground">Activos</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold">{cursosStats.totalConvocatorias}</p>
-            <p className="text-xs text-muted-foreground">Convocatorias totales</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold">{cursosStats.porArea.marketing}</p>
-            <p className="text-xs text-muted-foreground">Marketing Digital</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold">{cursosStats.porArea.desarrollo}</p>
-            <p className="text-xs text-muted-foreground">Desarrollo Web</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold">{cursosStats.porArea.diseno}</p>
-            <p className="text-xs text-muted-foreground">Diseño Gráfico</p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }
