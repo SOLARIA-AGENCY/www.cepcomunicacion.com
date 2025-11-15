@@ -236,11 +236,19 @@ export default function AdministrativosPage() {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-start gap-4">
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xl font-bold">
-                      {admin.first_name[0]}{admin.last_name[0]}
-                    </span>
-                  </div>
+                  {admin.photo ? (
+                    <img
+                      src={admin.photo}
+                      alt={`${admin.first_name} ${admin.last_name}`}
+                      className="h-16 w-16 rounded-full object-cover border-2 border-background shadow-md"
+                    />
+                  ) : (
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <span className="text-xl font-bold">
+                        {admin.first_name[0]}{admin.last_name[0]}
+                      </span>
+                    </div>
+                  )}
                   {admin.active && (
                     <div className="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-green-500 border-2 border-white" />
                   )}
