@@ -102,16 +102,28 @@ export function CourseTemplateCard({
           </div>
         </div>
 
-        {/* CTA Button */}
-        <Button
-          className={`w-full ${typeConfig.bgColor} ${typeConfig.hoverColor} text-white font-bold uppercase tracking-wide shadow-md transition-all duration-300 mt-auto`}
-          onClick={(e) => {
-            e.stopPropagation()
-            onClick?.()
+        {/* CTA Buttons */}
+        <div className="flex gap-2 mt-auto">
+          <Button
+            className={`flex-1 ${typeConfig.bgColor} ${typeConfig.hoverColor} text-white font-bold uppercase tracking-wide shadow-md transition-all duration-300`}
+            onClick={(e) => {
+              e.stopPropagation()
+              onClick?.()
           }}
-        >
-          Ver Curso
-        </Button>
+          >
+            Ver Curso
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1 border-2 font-bold uppercase tracking-wide shadow-md transition-all duration-300"
+            onClick={(e) => {
+              e.stopPropagation()
+              onGenerateConvocation?.()
+            }}
+          >
+            Crear Conv.
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

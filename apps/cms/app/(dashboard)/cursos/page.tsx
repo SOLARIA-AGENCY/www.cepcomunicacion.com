@@ -17,6 +17,10 @@ import { CourseTemplateCard } from '@payload-config/components/ui/CourseTemplate
 import { CourseListItem } from '@payload-config/components/ui/CourseListItem'
 import { ViewToggle } from '@payload-config/components/ui/ViewToggle'
 import { useViewPreference } from '@payload-config/hooks/useViewPreference'
+import {
+  ConvocationGeneratorModal,
+  type ConvocationFormData,
+} from '@payload-config/components/ui/ConvocationGeneratorModal'
 // TODO: Import from Payload API
 // import { plantillasCursosData, plantillasStats } from '@payload-config/data/mockCourseTemplatesData'
 
@@ -37,6 +41,10 @@ export default function CursosPage() {
   const [cursos, setCursos] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Modal state for convocation
+  const [isConvocationModalOpen, setIsConvocationModalOpen] = useState(false)
+  const [selectedCourse, setSelectedCourse] = useState<any>(null)
 
   // Cargar cursos desde API con retry logic
   useEffect(() => {
@@ -124,6 +132,18 @@ export default function CursosPage() {
 
   const handleViewCourse = (course: any) => {
     router.push(`/cursos/${course.id}`)
+  }
+
+  const handleCreateConvocation = (course: any) => {
+    setSelectedCourse(course)
+    setIsConvocationModalOpen(true)
+  }
+
+  const handleConvocationSubmit = async (data: ConvocationFormData) => {
+    console.log('Creating convocation:', data, 'for course:', selectedCourse)
+    // TODO: Implement convocation creation API call
+    setIsConvocationModalOpen(false)
+    setSelectedCourse(null)
   }
 
   // Filtrado de cursos
@@ -341,6 +361,7 @@ export default function CursosPage() {
               key={course.id}
               template={course}
               onClick={() => handleViewCourse(course)}
+              onGenerateConvocation={() => handleCreateConvocation(course)}
             />
           ))}
         </div>
@@ -367,6 +388,19 @@ export default function CursosPage() {
             </p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Convocation Generator Modal */}
+      {selectedCourse && (
+        <ConvocationGeneratorModal
+          isOpen={isConvocationModalOpen}
+          onClose={() => {
+            setIsConvocationModalOpen(false)
+            setSelectedCourse(null)
+          }}
+          courseTemplate={selectedCourse}
+          onSubmit={handleConvocationSubmit}
+        />
       )}
     </div>
   )
