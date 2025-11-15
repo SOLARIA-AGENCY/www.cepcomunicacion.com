@@ -79,6 +79,13 @@ export async function POST(request: NextRequest) {
       })
       .join(', ');
 
+    // Find earliest start time and latest end time across all schedule entries
+    const startTimes = horario.map((e: ScheduleEntry) => e.startTime);
+    const endTimes = horario.map((e: ScheduleEntry) => e.endTime);
+
+    const earliestStart = startTimes.sort()[0] || '09:00:00';
+    const latestEnd = endTimes.sort().reverse()[0] || '14:00:00';
+
     // Crear convocatoria en Payload
     const convocation = await payload.create({
       collection: 'course-runs' as any,
@@ -87,8 +94,8 @@ export async function POST(request: NextRequest) {
         start_date: fechaInicio,
         end_date: fechaFin,
         schedule_days: horario.map((e: ScheduleEntry) => e.day), // Array de días (english weekdays)
-        schedule_time_start: horario[0]?.startTime || '09:00:00', // Primera hora de inicio (HH:MM:SS)
-        schedule_time_end: horario[horario.length - 1]?.endTime || '14:00:00', // Última hora de fin (HH:MM:SS)
+        schedule_time_start: earliestStart, // Earliest start time across all days
+        schedule_time_end: latestEnd, // Latest end time across all days
         status: estado === 'abierta' ? 'enrollment_open' : 'draft' as any,
         min_students: 5, // Valor por defecto
         max_students: plazasTotales,
