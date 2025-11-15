@@ -33,8 +33,6 @@ export default function CursosPage() {
   const [filterType, setFilterType] = useState(tipo || 'all')
   const [filterArea, setFilterArea] = useState('all')
   const [filterSede, setFilterSede] = useState('all')
-  const [filterFinancing, setFilterFinancing] = useState('all') // Para cursos ocupados
-  const [filterStatus, setFilterStatus] = useState('all') // Para cursos desempleados
 
   // State para cursos y carga
   const [cursos, setCursos] = useState<any[]>([])
@@ -122,45 +120,17 @@ export default function CursosPage() {
         desempleados: cursos.filter((c) => c.tipo === 'desempleados').length,
         teleformacion: cursos.filter((c) => c.tipo === 'teleformacion').length,
       }
-    } else if (tipo === 'privados') {
-      // Cursos Privados: total, convocatorias, ingresos, clientes
-      const cursosPrivados = cursos.filter((c) => c.tipo === 'privado')
+    } else {
+      // Vistas específicas: TODAS muestran los mismos 4 campos
+      // Total Cursos | Convocatorias | Alumnos | Plazas Disponibles
+      const cursosFiltrados = cursos.filter((c) => c.tipo === tipoNormalizado)
       return {
-        total: cursosPrivados.length,
-        convocatorias: 0, // TODO: Fetch from API
-        ingresos: 0, // TODO: Calculate from convocations
-        clientes: 0, // TODO: Count unique students
-      }
-    } else if (tipo === 'ocupados') {
-      // Cursos Ocupados (FUNDAE): total, convocatorias activas, alumnos, horas
-      const cursosOcupados = cursos.filter((c) => c.tipo === 'ocupados')
-      return {
-        total: cursosOcupados.length,
-        convocatoriasActivas: 0, // TODO: Fetch active convocations
-        alumnos: 0, // TODO: Count enrolled students
-        horasTotales: cursosOcupados.reduce((sum, c) => sum + (c.duracionHoras || 0), 0),
-      }
-    } else if (tipo === 'desempleados') {
-      // Cursos Desempleados: total, convocatorias abiertas, plazas disponibles, alumnos
-      const cursosDesempleados = cursos.filter((c) => c.tipo === 'desempleados')
-      return {
-        total: cursosDesempleados.length,
-        convocatoriasAbiertas: 0, // TODO: Fetch open convocations
-        plazasDisponibles: 0, // TODO: Calculate from max_students - current_enrollments
-        alumnos: 0, // TODO: Count enrolled students
-      }
-    } else if (tipo === 'teleformacion') {
-      // Cursos Teleformación: total, alumnos activos, certificaciones pendientes, tasa de finalización
-      const cursosTeleformacion = cursos.filter((c) => c.tipo === 'teleformacion')
-      return {
-        total: cursosTeleformacion.length,
-        alumnosActivos: 0, // TODO: Count active students
-        certificacionesPendientes: 0, // TODO: Count pending certifications
-        tasaFinalizacion: 0, // TODO: Calculate completion rate
+        total: cursosFiltrados.length,
+        convocatorias: 0, // TODO: Fetch from /api/convocatorias
+        alumnos: 0, // TODO: Count from enrollments
+        plazasDisponibles: 0, // TODO: Calculate from convocations (max_students - current_enrollments)
       }
     }
-
-    return { total: 0 }
   })()
 
   const handleAdd = () => {
@@ -248,7 +218,7 @@ export default function CursosPage() {
         </Button>
       </div>
 
-      {/* Filtros - Renderizado condicional según tipo de curso */}
+      {/* Filtros - Estandarizados para todas las vistas */}
       <Card className="!bg-white">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
@@ -265,7 +235,7 @@ export default function CursosPage() {
                 />
               </div>
 
-              {/* SELECTOR DE TIPO: Solo en vista global (sin tipo específico) */}
+              {/* SELECTOR DE TIPO: Solo en vista global */}
               {(!tipo || tipo === 'all') && (
                 <Select value={filterType} onValueChange={setFilterType}>
                   <SelectTrigger className="w-full">
@@ -304,7 +274,7 @@ export default function CursosPage() {
               {/* FILTRO POR ÁREA: Siempre visible */}
               <Select value={filterArea} onValueChange={setFilterArea}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Áreas de cursos" />
+                  <SelectValue placeholder="Todas las áreas" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas las áreas</SelectItem>
@@ -316,7 +286,7 @@ export default function CursosPage() {
                 </SelectContent>
               </Select>
 
-              {/* FILTRO POR SEDE: Visible excepto en Teleformación */}
+              {/* FILTRO POR SEDE: Siempre visible EXCEPTO en Teleformación */}
               {tipo !== 'teleformacion' && (
                 <Select value={filterSede} onValueChange={setFilterSede}>
                   <SelectTrigger className="w-full">
@@ -330,36 +300,6 @@ export default function CursosPage() {
                   </SelectContent>
                 </Select>
               )}
-
-              {/* FILTRO POR FINANCIACIÓN: Solo para Cursos Ocupados */}
-              {tipo === 'ocupados' && (
-                <Select value={filterFinancing} onValueChange={setFilterFinancing}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Tipo de financiación" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas las financiaciones</SelectItem>
-                    <SelectItem value="fundae">FUNDAE</SelectItem>
-                    <SelectItem value="subvencionado">Subvencionado</SelectItem>
-                    <SelectItem value="mixto">Mixto</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-
-              {/* FILTRO POR ESTADO: Solo para Cursos Desempleados */}
-              {tipo === 'desempleados' && (
-                <Select value={filterStatus} onValueChange={setFilterStatus}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Estado de convocatorias" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos los estados</SelectItem>
-                    <SelectItem value="enrollment_open">Inscripción Abierta</SelectItem>
-                    <SelectItem value="in_progress">En Progreso</SelectItem>
-                    <SelectItem value="completed">Finalizados</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
             </div>
 
             {/* View Toggle */}
@@ -368,7 +308,7 @@ export default function CursosPage() {
             </div>
           </div>
 
-          {(searchTerm || filterType !== 'all' || filterArea !== 'all' || filterSede !== 'all' || filterFinancing !== 'all' || filterStatus !== 'all') && (
+          {(searchTerm || filterType !== 'all' || filterArea !== 'all' || filterSede !== 'all') && (
             <div className="flex items-center gap-4 mt-4">
               <Button
                 variant="ghost"
@@ -378,8 +318,6 @@ export default function CursosPage() {
                   setFilterType('all')
                   setFilterArea('all')
                   setFilterSede('all')
-                  setFilterFinancing('all')
-                  setFilterStatus('all')
                 }}
               >
                 Limpiar filtros
@@ -389,11 +327,11 @@ export default function CursosPage() {
         </CardContent>
       </Card>
 
-      {/* Stats - Estadísticas contextuales según tipo de curso */}
+      {/* Stats - Estadísticas estandarizadas */}
       {!loading && !error && (
         <Card className="!bg-white">
           <CardContent className="py-3">
-            {/* VISTA GLOBAL: Todos los cursos */}
+            {/* VISTA GLOBAL: Todos los cursos - Breakdown por tipo */}
             {(!tipo || tipo === 'all') && (
               <div className="flex items-center justify-between gap-6">
                 <div className="flex items-center gap-2">
@@ -415,90 +353,24 @@ export default function CursosPage() {
               </div>
             )}
 
-            {/* CURSOS PRIVADOS: Total, Convocatorias, Ingresos, Clientes */}
-            {tipo === 'privados' && (
+            {/* VISTAS ESPECÍFICAS: 4 campos uniformes para todos los tipos */}
+            {tipo && tipo !== 'all' && (
               <div className="flex items-center justify-between gap-6">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Total Cursos:</span>
-                  <span className="text-lg font-bold text-red-600">{cursosStats.total}</span>
+                  <span className="text-sm font-medium text-muted-foreground">TOTAL CURSOS:</span>
+                  <span className="text-lg font-bold text-gray-900">{cursosStats.total}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Convocatorias:</span>
-                  <span className="text-lg font-bold text-gray-700">{cursosStats.convocatorias}</span>
+                  <span className="text-sm font-medium text-muted-foreground">CONVOCATORIAS:</span>
+                  <span className="text-lg font-bold text-blue-600">{cursosStats.convocatorias}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Ingresos:</span>
-                  <span className="text-lg font-bold text-green-600">€{cursosStats.ingresos}</span>
+                  <span className="text-sm font-medium text-muted-foreground">ALUMNOS:</span>
+                  <span className="text-lg font-bold text-green-600">{cursosStats.alumnos}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Clientes:</span>
-                  <span className="text-lg font-bold text-blue-600">{cursosStats.clientes}</span>
-                </div>
-              </div>
-            )}
-
-            {/* CURSOS OCUPADOS: Total, Convocatorias Activas, Alumnos, Horas FUNDAE */}
-            {tipo === 'ocupados' && (
-              <div className="flex items-center justify-between gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Total Cursos:</span>
-                  <span className="text-lg font-bold text-green-600">{cursosStats.total}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Convocatorias Activas:</span>
-                  <span className="text-lg font-bold text-gray-700">{cursosStats.convocatoriasActivas}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Alumnos:</span>
-                  <span className="text-lg font-bold text-blue-600">{cursosStats.alumnos}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Horas Totales:</span>
-                  <span className="text-lg font-bold text-orange-600">{cursosStats.horasTotales}h</span>
-                </div>
-              </div>
-            )}
-
-            {/* CURSOS DESEMPLEADOS: Total, Convocatorias Abiertas, Plazas Disponibles, Alumnos */}
-            {tipo === 'desempleados' && (
-              <div className="flex items-center justify-between gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Total Cursos:</span>
-                  <span className="text-lg font-bold text-blue-600">{cursosStats.total}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Convocatorias Abiertas:</span>
-                  <span className="text-lg font-bold text-green-600">{cursosStats.convocatoriasAbiertas}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Plazas Disponibles:</span>
+                  <span className="text-sm font-medium text-muted-foreground">PLAZAS DISPONIBLES:</span>
                   <span className="text-lg font-bold text-orange-600">{cursosStats.plazasDisponibles}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Alumnos:</span>
-                  <span className="text-lg font-bold text-gray-700">{cursosStats.alumnos}</span>
-                </div>
-              </div>
-            )}
-
-            {/* CURSOS TELEFORMACIÓN: Total, Alumnos Activos, Certificaciones Pendientes, Tasa de Finalización */}
-            {tipo === 'teleformacion' && (
-              <div className="flex items-center justify-between gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Total Cursos:</span>
-                  <span className="text-lg font-bold text-orange-600">{cursosStats.total}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Alumnos Activos:</span>
-                  <span className="text-lg font-bold text-blue-600">{cursosStats.alumnosActivos}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Certif. Pendientes:</span>
-                  <span className="text-lg font-bold text-gray-700">{cursosStats.certificacionesPendientes}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">Tasa de Finalización:</span>
-                  <span className="text-lg font-bold text-green-600">{cursosStats.tasaFinalizacion}%</span>
                 </div>
               </div>
             )}
