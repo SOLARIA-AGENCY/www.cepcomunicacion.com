@@ -79,7 +79,7 @@ export default function AdministrativosPage() {
   }, [])
 
   const handleAdd = () => {
-    console.log('Crear nuevo administrativo')
+    router.push('/administrativo/nuevo')
   }
 
   const departments = Array.from(new Set(administrativosData.map((a) => a.department)))

@@ -36,6 +36,7 @@ interface StaffMember {
     name: string
     city: string
   }>
+  courseRunsCount?: number
   isActive: boolean
 }
 
@@ -45,7 +46,7 @@ interface TeacherExpanded extends StaffMember {
   department: string
   specialties: string[]
   certifications: any[]
-  courses_count: number
+  courseRunsCount: number
 }
 
 export default function ProfesoresPage() {
@@ -90,7 +91,7 @@ export default function ProfesoresPage() {
           department: staff.position, // Using position as department for now
           specialties: [], // No specialties in current schema
           certifications: [],
-          courses_count: 0, // TODO: Load from courses relationship
+          courseRunsCount: staff.courseRunsCount || 0,
           first_name: staff.firstName,
           last_name: staff.lastName,
           photo: staff.photo,
@@ -152,9 +153,9 @@ export default function ProfesoresPage() {
     total: teachersExpanded.length,
     active: teachersExpanded.filter((t) => t.active).length,
     inactive: teachersExpanded.filter((t) => !t.active).length,
-    totalCourses: teachersExpanded.reduce((sum, t) => sum + t.courses_count, 0),
-    avgCoursesPerTeacher: (
-      teachersExpanded.reduce((sum, t) => sum + t.courses_count, 0) / teachersExpanded.length
+    totalCourseRuns: teachersExpanded.reduce((sum, t) => sum + t.courseRunsCount, 0),
+    avgCourseRunsPerTeacher: (
+      teachersExpanded.reduce((sum, t) => sum + t.courseRunsCount, 0) / teachersExpanded.length
     ).toFixed(1),
   }
 
@@ -240,21 +241,21 @@ export default function ProfesoresPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cursos</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Convocatorias</CardTitle>
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalCourses}</div>
+            <div className="text-2xl font-bold">{stats.totalCourseRuns}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Promedio Cursos</CardTitle>
+            <CardTitle className="text-sm font-medium">Promedio Convocatorias</CardTitle>
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.avgCoursesPerTeacher}</div>
+            <div className="text-2xl font-bold">{stats.avgCourseRunsPerTeacher}</div>
           </CardContent>
         </Card>
       </div>
@@ -397,9 +398,9 @@ export default function ProfesoresPage() {
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1">
                       <BookOpen className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-bold">{teacher.courses_count}</span>
+                      <span className="font-bold">{teacher.courseRunsCount}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">Cursos</p>
+                    <p className="text-xs text-muted-foreground mt-1">Convocatorias</p>
                   </div>
 
                   <div className="text-center">

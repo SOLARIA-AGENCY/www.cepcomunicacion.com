@@ -86,11 +86,11 @@ export function CourseTemplateCard({
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">Precio:</span>
               {template.precioReferencia !== undefined && template.precioReferencia > 0 ? (
-                <span className={`font-bold text-lg ${typeConfig.textColor}`}>
+                <span className={`font-bold text-base ${typeConfig.textColor}`}>
                   {template.precioReferencia}€
                 </span>
               ) : (
-                <span className="font-bold text-lg text-green-600">
+                <span className="font-bold text-sm text-green-600 whitespace-nowrap">
                   {template.porcentajeSubvencion || 100}% SUBV.
                 </span>
               )}

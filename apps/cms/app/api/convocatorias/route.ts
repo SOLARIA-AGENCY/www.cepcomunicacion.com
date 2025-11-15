@@ -86,12 +86,25 @@ export async function POST(request: NextRequest) {
     const earliestStart = startTimes.sort()[0] || '09:00:00';
     const latestEnd = endTimes.sort().reverse()[0] || '14:00:00';
 
+    // Parse and validate campus ID
+    let campusId: number | undefined = undefined;
+    if (sedeId) {
+      const parsedCampusId = parseInt(sedeId, 10);
+      if (isNaN(parsedCampusId)) {
+        return NextResponse.json(
+          { success: false, error: `Invalid campus ID: ${sedeId}` },
+          { status: 400 }
+        );
+      }
+      campusId = parsedCampusId;
+    }
+
     // Crear convocatoria en Payload
     const convocation = await payload.create({
       collection: 'course-runs' as any,
       data: {
         course: parseInt(courseId),
-        campus: sedeId ? parseInt(sedeId) : undefined, // Campus assignment
+        campus: campusId, // Validated campus ID
         start_date: fechaInicio,
         end_date: fechaFin,
         schedule_days: horario.map((e: ScheduleEntry) => e.day), // Array de días (english weekdays)

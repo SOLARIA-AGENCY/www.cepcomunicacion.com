@@ -40,6 +40,7 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MenuItem } from '@/types'
+import { LogoutButton } from '@payload-config/components/ui/LogoutButton'
 
 // Menu structure
 const menuItems: MenuItem[] = [
@@ -183,17 +184,22 @@ const menuItems: MenuItem[] = [
     url: '/analiticas',
   },
   {
-    title: 'Configuración',
-    icon: Settings,
-    url: '/configuracion',
-  },
-  {
     title: 'Administración',
     icon: Shield,
     items: [
-      { title: 'Usuarios', icon: Users, url: '/admin/usuarios' },
-      { title: 'Roles y Permisos', icon: Shield, url: '/admin/roles' },
-      { title: 'Registro de Actividad', icon: FileText, url: '/admin/actividad' },
+      { title: 'Usuarios', icon: Users, url: '/administracion/usuarios' },
+      { title: 'Roles y Permisos', icon: Shield, url: '/administracion/roles' },
+      { title: 'Registro de Actividad', icon: FileText, url: '/administracion/actividad' },
+    ],
+  },
+  {
+    title: 'Configuración',
+    icon: Settings,
+    items: [
+      { title: 'General', icon: Settings, url: '/configuracion/general' },
+      { title: 'Áreas de Estudio', icon: BookOpen, url: '/configuracion/areas' },
+      { title: 'APIs y Webhooks', icon: Globe, url: '/configuracion/apis' },
+      { title: 'Personalización', icon: Sparkles, url: '/configuracion/personalizacion' },
     ],
   },
 ]
@@ -369,26 +375,50 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
       </nav>
 
       {/* Footer - Always Visible */}
-      <div className="border-t border-sidebar-border p-4 flex items-center justify-between">
+      <div className="border-t border-sidebar-border">
+        {/* Logout Button */}
         {!isCollapsed && (
-          <p className="text-xs opacity-70">© 2025 CEP Comunicación</p>
+          <div className="px-4 py-2 border-b border-sidebar-border">
+            <LogoutButton />
+          </div>
         )}
-        {/* Toggle Button */}
-        {onToggle && (
-          <button
-            onClick={onToggle}
-            className={`flex h-9 w-9 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors ${
-              isCollapsed ? 'mx-auto' : 'ml-auto'
-            }`}
-            title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
+
+        {/* Help Section */}
+        {!isCollapsed && (
+          <Link
+            href="/ayuda"
+            className="flex items-center gap-3 px-4 py-3 hover:bg-sidebar-accent transition-colors border-b border-sidebar-border"
           >
-            {isCollapsed ? (
-              <ChevronRight className="h-5 w-5" />
-            ) : (
-              <ChevronLeft className="h-5 w-5" />
-            )}
-          </button>
+            <HelpCircle className="h-5 w-5 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-medium">Ayuda y Documentación</p>
+              <p className="text-xs opacity-70">Guías y soporte técnico</p>
+            </div>
+          </Link>
         )}
+
+        {/* Copyright and Toggle */}
+        <div className="p-4 flex items-center justify-between">
+          {!isCollapsed && (
+            <p className="text-xs opacity-70">© 2025 CEP Comunicación</p>
+          )}
+          {/* Toggle Button */}
+          {onToggle && (
+            <button
+              onClick={onToggle}
+              className={`flex h-9 w-9 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors ${
+                isCollapsed ? 'mx-auto' : 'ml-auto'
+              }`}
+              title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-5 w-5" />
+              ) : (
+                <ChevronLeft className="h-5 w-5" />
+              )}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

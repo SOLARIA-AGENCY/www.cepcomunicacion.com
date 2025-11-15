@@ -23,7 +23,7 @@ interface Campus {
   city: string
 }
 
-export default function NewProfesorPage() {
+export default function NewAdministrativoPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [loadingCampuses, setLoadingCampuses] = useState(true)
@@ -74,7 +74,7 @@ export default function NewProfesorPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          staffType: 'profesor',
+          staffType: 'administrativo',
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
@@ -89,19 +89,19 @@ export default function NewProfesorPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to create professor')
+        throw new Error('Failed to create administrative staff')
       }
 
       const result = await response.json()
 
       if (!result.success) {
-        throw new Error(result.error || 'Error creating professor')
+        throw new Error(result.error || 'Error creating administrative staff')
       }
 
       // Redirect to detail page
-      router.push(`/profesores/${result.data.id}`)
+      router.push(`/administrativo/${result.data.id}`)
     } catch (err) {
-      console.error('Error creating professor:', err)
+      console.error('Error creating administrative staff:', err)
       setError(err instanceof Error ? err.message : 'Unknown error')
       setLoading(false)
     }
@@ -128,24 +128,24 @@ export default function NewProfesorPage() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Nuevo Profesor</h1>
-          <p className="text-muted-foreground mt-1">Añade un nuevo profesor al sistema</p>
+          <h1 className="text-3xl font-bold tracking-tight">Nuevo Personal Administrativo</h1>
+          <p className="text-muted-foreground mt-1">Añade un nuevo miembro del personal administrativo</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Card>
           <CardHeader>
-            <CardTitle>Información del Profesor</CardTitle>
+            <CardTitle>Información del Personal Administrativo</CardTitle>
             <CardDescription>
-              Completa los datos del nuevo profesor. Los campos marcados con * son obligatorios.
+              Completa los datos del nuevo miembro. Los campos marcados con * son obligatorios.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Error Message */}
             {error && (
               <div className="p-4 rounded-md bg-destructive/10 text-destructive text-sm">
-                <p className="font-semibold">Error al crear profesor</p>
+                <p className="font-semibold">Error al crear personal administrativo</p>
                 <p>{error}</p>
               </div>
             )}
@@ -161,7 +161,7 @@ export default function NewProfesorPage() {
                   value={formData.firstName}
                   onChange={(e) => handleChange('firstName', e.target.value)}
                   required
-                  placeholder="Juan"
+                  placeholder="María"
                 />
               </div>
 
@@ -174,7 +174,7 @@ export default function NewProfesorPage() {
                   value={formData.lastName}
                   onChange={(e) => handleChange('lastName', e.target.value)}
                   required
-                  placeholder="Pérez García"
+                  placeholder="González López"
                 />
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function NewProfesorPage() {
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
                   required
-                  placeholder="juan.perez@cepcomunicacion.com"
+                  placeholder="maria.gonzalez@cepcomunicacion.com"
                 />
               </div>
 
@@ -210,14 +210,14 @@ export default function NewProfesorPage() {
             {/* Position */}
             <div className="space-y-2">
               <Label htmlFor="position">
-                Especialidad / Área <span className="text-destructive">*</span>
+                Posición / Cargo <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="position"
                 value={formData.position}
                 onChange={(e) => handleChange('position', e.target.value)}
                 required
-                placeholder="Profesor de Marketing Digital"
+                placeholder="Secretaria Académica"
               />
             </div>
 
@@ -272,7 +272,7 @@ export default function NewProfesorPage() {
             {/* Assigned Campuses */}
             <div className="space-y-2">
               <Label>
-                Campus / Sedes Asignadas <span className="text-destructive">*</span>
+                Sedes Asignadas <span className="text-destructive">*</span>
               </Label>
               {loadingCampuses ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -307,13 +307,13 @@ export default function NewProfesorPage() {
 
             {/* Bio */}
             <div className="space-y-2">
-              <Label htmlFor="bio">Biografía Profesional</Label>
+              <Label htmlFor="bio">Biografía / Notas</Label>
               <Textarea
                 id="bio"
                 value={formData.bio}
                 onChange={(e) => handleChange('bio', e.target.value)}
                 rows={4}
-                placeholder="Experiencia profesional, formación académica, especialidades..."
+                placeholder="Información adicional sobre el personal administrativo..."
               />
             </div>
 
@@ -339,7 +339,7 @@ export default function NewProfesorPage() {
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Crear Profesor
+                    Crear Personal Administrativo
                   </>
                 )}
               </Button>

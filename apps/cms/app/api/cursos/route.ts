@@ -171,8 +171,10 @@ export async function GET() {
         duracionReferencia: curso.duration_hours || 0,
         precioReferencia: curso.base_price || 0,
         porcentajeSubvencion: curso.subsidy_percentage || 100, // Porcentaje de subvención (default 100%)
-        // Placeholder de imagen (URL relativa o absoluta)
-        imagenPortada: '/placeholder-course.svg', // TODO: Agregar campo imagen en Payload
+        // Imagen del curso (construir URL desde filename para evitar transformación de Payload)
+        imagenPortada: typeof curso.featured_image === 'object' && curso.featured_image?.filename
+          ? `/media/${curso.featured_image.filename}` // URL relativa local
+          : '/placeholder-course.svg',
         totalConvocatorias: 0, // TODO: Contar convocatorias activas
       })),
       total: cursos.totalDocs,

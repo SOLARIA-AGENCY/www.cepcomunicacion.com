@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Bell, Search, User } from 'lucide-react'
 import { Button } from '@payload-config/components/ui/button'
 import { Input } from '@payload-config/components/ui/input'
@@ -12,15 +13,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@payload-config/components/ui/dropdown-menu'
+import { Avatar, AvatarImage, AvatarFallback } from '@payload-config/components/ui/avatar'
 import { AppSidebar } from '@payload-config/components/layout/AppSidebar'
 import { ThemeToggle } from '@payload-config/components/ui/ThemeToggle'
+import { ChatbotWidget } from '@payload-config/components/ui/ChatbotWidget'
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(true)
+
+  // Mock user data (replace with actual user data from context/session)
+  const currentUser = {
+    name: 'Admin User',
+    email: 'admin@cepcomunicacion.com',
+    avatar: null, // Set to photo URL when available
+    initials: 'AU'
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground">
@@ -82,22 +94,39 @@ export default function DashboardLayout({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="gap-2">
-                    <User className="h-5 w-5" />
+                    <Avatar className="h-8 w-8">
+                      {currentUser.avatar ? (
+                        <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+                      ) : null}
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
+                        {currentUser.initials}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="hidden md:inline-block font-semibold">
-                      ADMIN USER
+                      {currentUser.name}
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{currentUser.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{currentUser.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Perfil</DropdownMenuItem>
-                  <DropdownMenuItem>Configuración</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/perfil')}>
+                    Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/configuracion')}>
+                    Configuración
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                       e.preventDefault()
                       console.log('Cerrar sesión')
+                      // TODO: Implement logout
                     }}
                   >
                     Cerrar sesión
@@ -110,6 +139,9 @@ export default function DashboardLayout({
           {/* Scrollable Main Content */}
           <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
         </div>
+
+        {/* Chatbot Widget - Fixed Position */}
+        <ChatbotWidget />
       </div>
   )
 }

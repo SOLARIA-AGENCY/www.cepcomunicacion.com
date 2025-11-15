@@ -31,34 +31,34 @@
   --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
-/* Dark mode overrides using CSS variables */
+/* Dark mode overrides - neutral grays with proper hierarchy */
 .dark {
-  --color-background: hsl(222.2 84% 4.9%);
-  --color-foreground: hsl(210 40% 98%);
-  --color-card: hsl(222.2 84% 4.9%);
-  --color-card-foreground: hsl(210 40% 98%);
-  --color-popover: hsl(222.2 84% 4.9%);
-  --color-popover-foreground: hsl(210 40% 98%);
-  --color-primary: hsl(217.2 91.2% 59.8%);
-  --color-primary-foreground: hsl(222.2 47.4% 11.2%);
-  --color-secondary: hsl(217.2 32.6% 17.5%);
-  --color-secondary-foreground: hsl(210 40% 98%);
-  --color-muted: hsl(217.2 32.6% 17.5%);
-  --color-muted-foreground: hsl(215 20.2% 65.1%);
-  --color-accent: hsl(217.2 32.6% 17.5%);
-  --color-accent-foreground: hsl(210 40% 98%);
-  --color-destructive: hsl(0 62.8% 30.6%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-border: hsl(217.2 32.6% 17.5%);
-  --color-input: hsl(217.2 32.6% 17.5%);
-  --color-ring: hsl(224.3 76.3% 48%);
-  --color-sidebar: hsl(240 5.9% 10%);
-  --color-sidebar-foreground: hsl(240 4.8% 95.9%);
-  --color-sidebar-primary: hsl(224.3 76.3% 48%);
-  --color-sidebar-primary-foreground: hsl(0 0% 100%);
-  --color-sidebar-accent: hsl(240 3.7% 15.9%);
-  --color-sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --color-sidebar-border: hsl(240 3.7% 15.9%);
+  --color-background: hsl(0 0% 6%);              /* Extremely dark base (#0f0f0f) */
+  --color-foreground: hsl(0 0% 95%);             /* Light gray text (#f2f2f2) */
+  --color-card: hsl(0 0% 10%);                   /* Dark gray cards (#1a1a1a) */
+  --color-card-foreground: hsl(0 0% 95%);
+  --color-popover: hsl(0 0% 10%);
+  --color-popover-foreground: hsl(0 0% 95%);
+  --color-primary: hsl(217.2 91.2% 59.8%);       /* Keep brand color vibrant */
+  --color-primary-foreground: hsl(0 0% 10%);
+  --color-secondary: hsl(0 0% 13%);              /* Medium dark (#212121) */
+  --color-secondary-foreground: hsl(0 0% 95%);
+  --color-muted: hsl(0 0% 13%);
+  --color-muted-foreground: hsl(0 0% 65%);       /* Medium gray text (#a6a6a6) */
+  --color-accent: hsl(0 0% 13%);
+  --color-accent-foreground: hsl(0 0% 95%);
+  --color-destructive: hsl(0 62.8% 50%);         /* Brighter red for visibility */
+  --color-destructive-foreground: hsl(0 0% 98%);
+  --color-border: hsl(0 0% 17%);                 /* Perceptible (#2b2b2b) */
+  --color-input: hsl(0 0% 17%);
+  --color-ring: hsl(217.2 91.2% 59.8%);
+  --color-sidebar: hsl(0 0% 4%);                 /* Very dark (#0a0a0a) */
+  --color-sidebar-foreground: hsl(0 0% 90%);
+  --color-sidebar-primary: hsl(217.2 91.2% 59.8%);
+  --color-sidebar-primary-foreground: hsl(0 0% 95%); /* No pure white */
+  --color-sidebar-accent: hsl(0 0% 8%);
+  --color-sidebar-accent-foreground: hsl(0 0% 95%);
+  --color-sidebar-border: hsl(0 0% 14%);
   --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
@@ -107,42 +107,61 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    /* Base backgrounds - neutral grays with proper hierarchy */
+    --background: 0 0% 6%;              /* Extremely dark base (#0f0f0f) */
+    --foreground: 0 0% 95%;             /* Light gray text (#f2f2f2) */
 
-    /* Sidebar dark mode */
-    --sidebar: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
+    /* Cards - 4% lighter than background */
+    --card: 0 0% 10%;                   /* Dark gray cards (#1a1a1a) */
+    --card-foreground: 0 0% 95%;        /* Light gray text */
+
+    /* Popovers - same as cards */
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Primary - keep brand color vibrant */
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 0 0% 10%;     /* Dark text on bright primary */
+
+    /* Secondary - 3% lighter than card */
+    --secondary: 0 0% 13%;              /* Medium dark (#212121) */
+    --secondary-foreground: 0 0% 95%;
+
+    /* Muted - same as secondary */
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 65%;       /* Medium gray text (#a6a6a6) */
+
+    /* Accent - same as secondary */
+    --accent: 0 0% 13%;
+    --accent-foreground: 0 0% 95%;
+
+    /* Destructive - keep red visible */
+    --destructive: 0 62.8% 50%;         /* Brighter red for visibility */
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders - perceptible against dark backgrounds */
+    --border: 0 0% 17%;                 /* Light enough to see (#2b2b2b) */
+    --input: 0 0% 17%;
+
+    /* Focus ring - keep brand color */
+    --ring: 217.2 91.2% 59.8%;
+
+    /* Sidebar - darker than main background */
+    --sidebar: 0 0% 4%;                 /* Very dark (#0a0a0a) */
+    --sidebar-foreground: 0 0% 90%;     /* Slightly dimmer than main text */
+    --sidebar-primary: 217.2 91.2% 59.8%;
+    --sidebar-primary-foreground: 0 0% 95%; /* No pure white */
+    --sidebar-accent: 0 0% 8%;          /* Subtle highlight */
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 14%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Chart colors dark */
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Chart colors - vibrant but not oversaturated */
+    --chart-1: 217 70% 55%;             /* Blue */
+    --chart-2: 142 60% 50%;             /* Green */
+    --chart-3: 25 80% 60%;              /* Orange */
+    --chart-4: 280 60% 55%;             /* Purple */
+    --chart-5: 340 70% 55%;             /* Pink */
   }
 }
 

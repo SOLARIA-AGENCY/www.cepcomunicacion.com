@@ -52,23 +52,24 @@ const mockProfesores = [
   { id: 'prof-5', nombre: 'Laura Fernández Ruiz' },
 ]
 
+// REAL CAMPUS IDs from database (matching Payload campuses collection)
 const mockSedes = [
-  { id: 'sede-1', nombre: 'CEP Norte' },
-  { id: 'sede-2', nombre: 'CEP Santa Cruz' },
-  { id: 'sede-3', nombre: 'CEP Sur' },
+  { id: '1', nombre: 'CEP Norte' },
+  { id: '2', nombre: 'CEP Santa Cruz' },
+  { id: '3', nombre: 'CEP Sur' },
 ]
 
 const mockAulas = {
-  'sede-1': [
+  '1': [
     { id: 'aula-1-1', nombre: 'Aula 101 - Diseño' },
     { id: 'aula-1-2', nombre: 'Aula 102 - Informática' },
     { id: 'aula-1-3', nombre: 'Aula 103 - Audiovisual' },
   ],
-  'sede-2': [
+  '2': [
     { id: 'aula-2-1', nombre: 'Aula 201 - Marketing' },
     { id: 'aula-2-2', nombre: 'Aula 202 - Desarrollo' },
   ],
-  'sede-3': [
+  '3': [
     { id: 'aula-3-1', nombre: 'Aula 301 - Multiusos' },
     { id: 'aula-3-2', nombre: 'Aula 302 - Lab Informática' },
   ],

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import postgres from 'postgres';
+import { getPayloadHMR } from '@payloadcms/next/utilities';
+import configPromise from '@payload-config';
 
 // PostgreSQL connection
 const sql = postgres(process.env.DATABASE_URI || 'postgres://cepcomunicacion:wGWxjMYsUWSBvlqw2K9KU2BKUI=@localhost:5432/cepcomunicacion');
@@ -33,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
-    // Query staff with photo and campus relationships
+    // Query staff with photo, campus relationships, and assigned course runs
     const query = `
       SELECT
         s.id,
@@ -57,11 +59,30 @@ export async function GET(request: NextRequest) {
             DISTINCT jsonb_build_object('id', c.id, 'name', c.name, 'city', c.city)
           ) FILTER (WHERE c.id IS NOT NULL),
           '[]'::json
-        ) as campuses
+        ) as campuses,
+        COALESCE(
+          json_agg(
+            DISTINCT jsonb_build_object(
+              'id', cr.id,
+              'codigo', cr.codigo,
+              'status', cr.status,
+              'startDate', cr.start_date,
+              'endDate', cr.end_date,
+              'courseName', course.name,
+              'courseSlug', course.slug,
+              'campusName', camp.name,
+              'campusCity', camp.city
+            )
+          ) FILTER (WHERE cr.id IS NOT NULL),
+          '[]'::json
+        ) as course_runs
       FROM staff s
       LEFT JOIN media m ON s.photo_id = m.id
       LEFT JOIN staff_rels sr ON sr.parent_id = s.id AND sr.path = 'assigned_campuses'
       LEFT JOIN campuses c ON c.id = sr.campuses_id
+      LEFT JOIN course_runs cr ON cr.instructor_id = s.id
+      LEFT JOIN courses course ON course.id = cr.course_id
+      LEFT JOIN campuses camp ON camp.id = cr.campus_id
       ${whereClause}
       ${campusId ? `AND EXISTS (SELECT 1 FROM staff_rels sr2 WHERE sr2.parent_id = s.id AND sr2.campuses_id = ${parseInt(campusId)})` : ''}
       GROUP BY s.id, m.filename
@@ -88,6 +109,8 @@ export async function GET(request: NextRequest) {
         photo: member.photo_filename ? `/media/${member.photo_filename}` : '/placeholder-avatar.svg',
         bio: member.bio,
         assignedCampuses: member.campuses || [],
+        courseRuns: member.course_runs || [],
+        courseRunsCount: Array.isArray(member.course_runs) ? member.course_runs.length : 0,
         isActive: member.is_active,
         createdAt: member.created_at,
         updatedAt: member.updated_at,
@@ -165,7 +188,7 @@ export async function POST(request: NextRequest) {
         photo: photoId ? parseInt(photoId) : undefined,
         specialties: specialties || [],
         certifications: certifications || [],
-        assigned_campuses: assignedCampuses.map((id: string) => parseInt(id)),
+        assigned_campuses: assignedCampuses.map((id: string | number) => typeof id === 'string' ? parseInt(id) : id),
         is_active: true,
       },
     });
@@ -223,7 +246,7 @@ export async function PUT(request: NextRequest) {
     if (body.specialties) updateData.specialties = body.specialties;
     if (body.certifications) updateData.certifications = body.certifications;
     if (body.assignedCampuses)
-      updateData.assigned_campuses = body.assignedCampuses.map((cid: string) => parseInt(cid));
+      updateData.assigned_campuses = body.assignedCampuses.map((cid: string | number) => typeof cid === 'string' ? parseInt(cid) : cid);
     if (body.isActive !== undefined) updateData.is_active = body.isActive;
 
     const staffMember = await payload.update({

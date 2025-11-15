@@ -19,18 +19,6 @@ import {
   Building2,
 } from 'lucide-react'
 
-interface CourseRun {
-  id: number
-  codigo: string
-  status: string
-  startDate: string
-  endDate: string
-  courseName: string
-  courseSlug: string
-  campusName: string
-  campusCity: string
-}
-
 interface StaffMember {
   id: number
   staffType: string
@@ -49,31 +37,29 @@ interface StaffMember {
     name: string
     city: string
   }>
-  courseRuns?: CourseRun[]
-  courseRunsCount?: number
   isActive: boolean
   hireDate?: string
   createdAt: string
   updatedAt: string
 }
 
-export default function ProfesorDetailPage() {
+export default function AdministrativoDetailPage() {
   const router = useRouter()
   const params = useParams()
-  const professorId = params.id as string
+  const adminId = params.id as string
 
-  const [professor, setProfessor] = useState<StaffMember | null>(null)
+  const [admin, setAdmin] = useState<StaffMember | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function loadProfessor() {
+    async function loadAdmin() {
       try {
         setLoading(true)
-        const response = await fetch('/api/staff?type=profesor&limit=100')
+        const response = await fetch('/api/staff?type=administrativo&limit=100')
 
         if (!response.ok) {
-          throw new Error('Failed to load professor data')
+          throw new Error('Failed to load administrative staff data')
         }
 
         const result = await response.json()
@@ -82,48 +68,48 @@ export default function ProfesorDetailPage() {
           throw new Error('API returned error')
         }
 
-        // Find the specific professor
-        const foundProfessor = result.data.find(
-          (s: StaffMember) => s.id.toString() === professorId
+        // Find the specific admin staff member
+        const foundAdmin = result.data.find(
+          (s: StaffMember) => s.id.toString() === adminId
         )
 
-        if (!foundProfessor) {
-          throw new Error('Professor not found')
+        if (!foundAdmin) {
+          throw new Error('Administrative staff member not found')
         }
 
-        setProfessor(foundProfessor)
+        setAdmin(foundAdmin)
         setError(null)
       } catch (err) {
-        console.error('Error loading professor:', err)
+        console.error('Error loading administrative staff:', err)
         setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setLoading(false)
       }
     }
 
-    if (professorId) {
-      loadProfessor()
+    if (adminId) {
+      loadAdmin()
     }
-  }, [professorId])
+  }, [adminId])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center space-y-4">
           <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-          <p className="text-muted-foreground">Cargando información del profesor...</p>
+          <p className="text-muted-foreground">Cargando información del personal administrativo...</p>
         </div>
       </div>
     )
   }
 
-  if (error || !professor) {
+  if (error || !admin) {
     return (
       <div className="flex items-center justify-center h-96">
         <Card className="max-w-md">
           <CardContent className="pt-6 text-center space-y-4">
-            <p className="text-destructive font-semibold">Error al cargar profesor</p>
-            <p className="text-sm text-muted-foreground">{error || 'Profesor no encontrado'}</p>
+            <p className="text-destructive font-semibold">Error al cargar personal administrativo</p>
+            <p className="text-sm text-muted-foreground">{error || 'Personal administrativo no encontrado'}</p>
             <div className="flex gap-2 justify-center">
               <Button onClick={() => router.back()}>Volver</Button>
               <Button variant="outline" onClick={() => window.location.reload()}>
@@ -157,13 +143,13 @@ export default function ProfesorDetailPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{professor.fullName}</h1>
-            <p className="text-muted-foreground mt-1">{professor.position}</p>
+            <h1 className="text-3xl font-bold tracking-tight">{admin.fullName}</h1>
+            <p className="text-muted-foreground mt-1">{admin.position}</p>
           </div>
         </div>
-        <Button onClick={() => router.push(`/profesores/${professorId}/editar`)}>
+        <Button onClick={() => router.push(`/administrativo/${adminId}/editar`)}>
           <Edit className="mr-2 h-4 w-4" />
-          Editar Profesor
+          Editar Personal
         </Button>
       </div>
 
@@ -173,23 +159,23 @@ export default function ProfesorDetailPage() {
           <CardContent className="pt-6 space-y-6">
             {/* Photo */}
             <div className="flex flex-col items-center">
-              {professor.photo ? (
+              {admin.photo ? (
                 <img
-                  src={professor.photo}
-                  alt={professor.fullName}
+                  src={admin.photo}
+                  alt={admin.fullName}
                   className="h-48 w-48 rounded-full object-cover border-4 border-background shadow-lg"
                 />
               ) : (
                 <div className="flex h-48 w-48 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   <span className="text-6xl font-bold">
-                    {professor.firstName[0]}
-                    {professor.lastName[0]}
+                    {admin.firstName[0]}
+                    {admin.lastName[0]}
                   </span>
                 </div>
               )}
               <div className="mt-4 text-center">
-                <h2 className="text-xl font-bold">{professor.fullName}</h2>
-                <p className="text-sm text-muted-foreground">{professor.position}</p>
+                <h2 className="text-xl font-bold">{admin.fullName}</h2>
+                <p className="text-sm text-muted-foreground">{admin.position}</p>
               </div>
             </div>
 
@@ -199,14 +185,14 @@ export default function ProfesorDetailPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Estado</span>
-                <Badge variant={professor.employmentStatus === 'active' ? 'default' : 'secondary'}>
-                  {statusLabels[professor.employmentStatus] || professor.employmentStatus}
+                <Badge variant={admin.employmentStatus === 'active' ? 'default' : 'secondary'}>
+                  {statusLabels[admin.employmentStatus] || admin.employmentStatus}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Contrato</span>
                 <Badge variant="outline">
-                  {contractTypeLabels[professor.contractType] || professor.contractType}
+                  {contractTypeLabels[admin.contractType] || admin.contractType}
                 </Badge>
               </div>
             </div>
@@ -221,22 +207,22 @@ export default function ProfesorDetailPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <a href={`mailto:${professor.email}`} className="hover:underline">
-                    {professor.email}
+                  <a href={`mailto:${admin.email}`} className="hover:underline">
+                    {admin.email}
                   </a>
                 </div>
-                {professor.phone && (
+                {admin.phone && (
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <a href={`tel:${professor.phone}`} className="hover:underline">
-                      {professor.phone}
+                    <a href={`tel:${admin.phone}`} className="hover:underline">
+                      {admin.phone}
                     </a>
                   </div>
                 )}
               </div>
             </div>
 
-            {professor.hireDate && (
+            {admin.hireDate && (
               <>
                 <Separator />
                 <div className="flex items-center gap-3 text-sm">
@@ -244,7 +230,7 @@ export default function ProfesorDetailPage() {
                   <div>
                     <p className="text-muted-foreground">Fecha de Contratación</p>
                     <p className="font-medium">
-                      {new Date(professor.hireDate).toLocaleDateString('es-ES', {
+                      {new Date(admin.hireDate).toLocaleDateString('es-ES', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
@@ -260,7 +246,7 @@ export default function ProfesorDetailPage() {
         {/* Right Column - Detailed Info */}
         <div className="md:col-span-2 space-y-6">
           {/* Bio */}
-          {professor.bio && (
+          {admin.bio && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -269,7 +255,7 @@ export default function ProfesorDetailPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground leading-relaxed">{professor.bio}</p>
+                <p className="text-muted-foreground leading-relaxed">{admin.bio}</p>
               </CardContent>
             </Card>
           )}
@@ -283,9 +269,9 @@ export default function ProfesorDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {professor.assignedCampuses.length > 0 ? (
+              {admin.assignedCampuses.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2">
-                  {professor.assignedCampuses.map((campus) => (
+                  {admin.assignedCampuses.map((campus) => (
                     <div
                       key={campus.id}
                       className="flex items-center gap-3 p-3 rounded-lg border bg-card"
@@ -304,84 +290,6 @@ export default function ProfesorDetailPage() {
             </CardContent>
           </Card>
 
-          {/* Course Runs (Convocatorias) */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5" />
-                Convocatorias Asignadas
-                {professor.courseRunsCount ? (
-                  <Badge variant="secondary" className="ml-2">
-                    {professor.courseRunsCount}
-                  </Badge>
-                ) : null}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {professor.courseRuns && professor.courseRuns.length > 0 ? (
-                <div className="space-y-4">
-                  {professor.courseRuns.map((courseRun) => (
-                    <div
-                      key={courseRun.id}
-                      className="flex flex-col gap-3 p-4 rounded-lg border bg-card hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold text-base">{courseRun.courseName}</h4>
-                            <Badge
-                              variant={
-                                courseRun.status === 'active'
-                                  ? 'default'
-                                  : courseRun.status === 'scheduled'
-                                  ? 'secondary'
-                                  : 'outline'
-                              }
-                            >
-                              {courseRun.status}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Código: {courseRun.codigo}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid gap-2 text-sm">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Calendar className="h-4 w-4" />
-                          <span>
-                            {new Date(courseRun.startDate).toLocaleDateString('es-ES', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}{' '}
-                            -{' '}
-                            {new Date(courseRun.endDate).toLocaleDateString('es-ES', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <MapPin className="h-4 w-4" />
-                          <span>
-                            {courseRun.campusName} - {courseRun.campusCity}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  No tiene convocatorias asignadas actualmente
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
           {/* Employment Details */}
           <Card>
             <CardHeader>
@@ -395,22 +303,22 @@ export default function ProfesorDetailPage() {
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Tipo de Contrato</p>
                   <p className="font-medium">
-                    {contractTypeLabels[professor.contractType] || professor.contractType}
+                    {contractTypeLabels[admin.contractType] || admin.contractType}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Estado de Empleo</p>
                   <p className="font-medium">
-                    {statusLabels[professor.employmentStatus] || professor.employmentStatus}
+                    {statusLabels[admin.employmentStatus] || admin.employmentStatus}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Tipo de Personal</p>
-                  <p className="font-medium capitalize">{professor.staffType}</p>
+                  <p className="font-medium capitalize">{admin.staffType}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">ID del Profesor</p>
-                  <p className="font-medium">#{professor.id}</p>
+                  <p className="text-sm text-muted-foreground mb-1">ID</p>
+                  <p className="font-medium">#{admin.id}</p>
                 </div>
               </div>
             </CardContent>
@@ -426,13 +334,13 @@ export default function ProfesorDetailPage() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Creado:</span>
                   <span className="font-medium">
-                    {new Date(professor.createdAt).toLocaleDateString('es-ES')}
+                    {new Date(admin.createdAt).toLocaleDateString('es-ES')}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Última actualización:</span>
                   <span className="font-medium">
-                    {new Date(professor.updatedAt).toLocaleDateString('es-ES')}
+                    {new Date(admin.updatedAt).toLocaleDateString('es-ES')}
                   </span>
                 </div>
               </div>
@@ -446,9 +354,9 @@ export default function ProfesorDetailPage() {
         <Button variant="outline" onClick={() => router.back()}>
           Volver
         </Button>
-        <Button onClick={() => router.push(`/profesores/${professorId}/editar`)}>
+        <Button onClick={() => router.push(`/administrativo/${adminId}/editar`)}>
           <Edit className="mr-2 h-4 w-4" />
-          Editar Profesor
+          Editar Personal
         </Button>
       </div>
     </div>
