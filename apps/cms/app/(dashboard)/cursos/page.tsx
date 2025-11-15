@@ -38,6 +38,13 @@ export default function CursosPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Sincronizar filterType con searchParams
+  useEffect(() => {
+    if (tipo) {
+      setFilterType(tipo)
+    }
+  }, [tipo])
+
   // Cargar cursos desde API con retry logic
   useEffect(() => {
     const fetchCursosWithRetry = async (retries = 2) => {
@@ -133,7 +140,9 @@ export default function CursosPage() {
       (course.descripcion && course.descripcion.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (course.area && course.area.toLowerCase().includes(searchTerm.toLowerCase()))
 
-    const matchesType = filterType === 'all' || course.tipo === filterType
+    // Normalizar tipos para el filtro (privados → privado)
+    const normalizedFilterType = filterType === 'privados' ? 'privado' : filterType
+    const matchesType = filterType === 'all' || course.tipo === normalizedFilterType
     const matchesArea = filterArea === 'all' || course.area === filterArea
 
     return matchesSearch && matchesType && matchesArea
