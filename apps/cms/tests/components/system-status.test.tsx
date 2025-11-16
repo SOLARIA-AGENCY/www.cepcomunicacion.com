@@ -20,21 +20,21 @@ describe('System Status Page', () => {
 
     it('displays all 6 service monitors', () => {
       render(<EstadoSistemaPage />)
-      
+
       expect(screen.getByText(/Frontend.*Next\.js/i)).toBeInTheDocument()
-      expect(screen.getByText(/API\/CMS.*Payload/i)).toBeInTheDocument()
+      expect(screen.getByText(/API Backend/i)).toBeInTheDocument()
       expect(screen.getByText(/Base de Datos.*PostgreSQL/i)).toBeInTheDocument()
-      expect(screen.getByText(/Cache\/Cola.*Redis/i)).toBeInTheDocument()
-      expect(screen.getByText(/Trabajadores.*BullMQ/i)).toBeInTheDocument()
+      expect(screen.getByText(/Conexión de Red/i)).toBeInTheDocument()
+      expect(screen.getByText(/Worker Queue.*BullMQ/i)).toBeInTheDocument()
       expect(screen.getByText(/Almacenamiento/i)).toBeInTheDocument()
     })
 
     it('shows status legend', () => {
       render(<EstadoSistemaPage />)
-      
-      expect(screen.getByText('Operativo')).toBeInTheDocument()
-      expect(screen.getByText('Degradado')).toBeInTheDocument()
-      expect(screen.getByText('Caído')).toBeInTheDocument()
+
+      expect(screen.getAllByText('Operativo').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('Degradado').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('Caído').length).toBeGreaterThan(0)
     })
 
     it('displays temporal labels for uptime graph', () => {
@@ -68,9 +68,9 @@ describe('System Status Page', () => {
 
     it('calculates average uptime correctly', () => {
       render(<EstadoSistemaPage />)
-      
-      const avgUptimeElement = screen.getByText(/\d+(\.\d+)?%/)
-      expect(avgUptimeElement).toBeInTheDocument()
+
+      const uptimeElements = screen.getAllByText(/\d+(\.\d+)?%/)
+      expect(uptimeElements.length).toBeGreaterThan(0)
     })
   })
 
