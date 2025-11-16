@@ -38,6 +38,7 @@ import {
   Eye,
 } from 'lucide-react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { usePathname } from 'next/navigation'
 import { MenuItem } from '@/types'
 import { LogoutButton } from '@payload-config/components/ui/LogoutButton'
@@ -280,6 +281,30 @@ interface AppSidebarProps {
 export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
   const pathname = usePathname()
   const [openSections, setOpenSections] = React.useState<string[]>([])
+  const [logoUrl, setLogoUrl] = React.useState('/logos/cep-logo-alpha.png')
+  const [academyName, setAcademyName] = React.useState('CEP Formación')
+
+  // Fetch logo config from API
+  React.useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/api/config?section=logos')
+        if (response.ok) {
+          const { data } = await response.json()
+          setLogoUrl(data.claro || '/logos/cep-logo-alpha.png')
+        }
+
+        const academyResponse = await fetch('/api/config?section=academia')
+        if (academyResponse.ok) {
+          const { data } = await academyResponse.json()
+          setAcademyName(data.nombre || 'CEP Formación')
+        }
+      } catch (error) {
+        console.error('Error fetching sidebar config:', error)
+      }
+    }
+    fetchConfig()
+  }, [])
 
   // Accordion behavior: only one section open at a time
   const toggleSection = (title: string) => {
@@ -296,18 +321,24 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
       {/* Header - Logo Only */}
       <div className="flex h-16 items-center justify-center border-b border-sidebar-border px-4">
         {isCollapsed ? (
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <BookOpen className="h-6 w-6" />
+          <div className="flex items-center justify-center">
+            <NextImage
+              src={logoUrl}
+              alt={academyName}
+              width={40}
+              height={40}
+              className="w-10 h-10 object-contain"
+            />
           </div>
         ) : (
           <div className="flex items-center gap-3 w-full">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
-              <BookOpen className="h-6 w-6" />
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-lg font-bold truncate">CEP Admin</span>
-              <span className="text-xs opacity-70 truncate">Dashboard v2.0</span>
-            </div>
+            <NextImage
+              src={logoUrl}
+              alt={academyName}
+              width={140}
+              height={48}
+              className="h-12 w-auto object-contain"
+            />
           </div>
         )}
       </div>

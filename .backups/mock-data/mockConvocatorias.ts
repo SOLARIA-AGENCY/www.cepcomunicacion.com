@@ -1,0 +1,152 @@
+export interface Convocatoria {
+  id: string
+  curso: string
+  codigo_curso: string
+  sede: string
+  aula: string
+  capacidad_aula: number
+  profesor_principal: string
+  horario_resumen: string
+  fecha_inicio: string
+  fecha_fin: string
+  plazas_totales: number
+  plazas_ocupadas: number
+  estado: 'planificada' | 'abierta' | 'en_curso' | 'completada' | 'cancelada'
+  tiene_conflictos: boolean
+  conflictos?: string[]
+}
+
+export const convocatoriasMockData: Convocatoria[] = [
+  {
+    id: '1',
+    curso: 'Marketing Digital Avanzado',
+    codigo_curso: 'MKT-ADV-001',
+    sede: 'CEP Norte',
+    aula: 'Aula A1',
+    capacidad_aula: 30,
+    profesor_principal: 'Juan García Martínez',
+    horario_resumen: 'L-X-V: 09:00-11:00',
+    fecha_inicio: '2025-01-15',
+    fecha_fin: '2025-03-30',
+    plazas_totales: 25,
+    plazas_ocupadas: 23,
+    estado: 'en_curso',
+    tiene_conflictos: false,
+  },
+  {
+    id: '2',
+    curso: 'SEO y Posicionamiento Web',
+    codigo_curso: 'SEO-001',
+    sede: 'CEP Norte',
+    aula: 'Lab Informática 1',
+    capacidad_aula: 20,
+    profesor_principal: 'María López Ruiz',
+    horario_resumen: 'M-J: 10:00-12:00',
+    fecha_inicio: '2025-01-20',
+    fecha_fin: '2025-04-10',
+    plazas_totales: 20,
+    plazas_ocupadas: 18,
+    estado: 'abierta',
+    tiene_conflictos: false,
+  },
+  {
+    id: '3',
+    curso: 'Community Manager Profesional',
+    codigo_curso: 'CMM-PRO-001',
+    sede: 'CEP Norte',
+    aula: 'Aula A1',
+    capacidad_aula: 30,
+    profesor_principal: 'Juan García Martínez',
+    horario_resumen: 'L-X: 10:00-12:00',
+    fecha_inicio: '2025-02-01',
+    fecha_fin: '2025-04-15',
+    plazas_totales: 22,
+    plazas_ocupadas: 0,
+    estado: 'planificada',
+    tiene_conflictos: true,
+    conflictos: [
+      'Aula A1 ocupada miércoles 10:00-12:00 (Marketing Digital)',
+      'Profesor necesita 2h entre clases en diferentes sedes',
+    ],
+  },
+  {
+    id: '4',
+    curso: 'Desarrollo de Aplicaciones Web',
+    codigo_curso: 'DAW-001',
+    sede: 'CEP Sur',
+    aula: 'Lab Informática 2',
+    capacidad_aula: 18,
+    profesor_principal: 'Ana Ruiz Torres',
+    horario_resumen: 'L-M-X: 16:00-18:00',
+    fecha_inicio: '2025-01-15',
+    fecha_fin: '2025-05-30',
+    plazas_totales: 18,
+    plazas_ocupadas: 18,
+    estado: 'en_curso',
+    tiene_conflictos: false,
+  },
+  {
+    id: '5',
+    curso: 'Administración y Finanzas',
+    codigo_curso: 'ADMIN-FIN-001',
+    sede: 'CEP Santa Cruz',
+    aula: 'Aula B1',
+    capacidad_aula: 32,
+    profesor_principal: 'Luis Sánchez Pérez',
+    horario_resumen: 'M-J: 12:00-14:00',
+    fecha_inicio: '2025-02-10',
+    fecha_fin: '2025-06-20',
+    plazas_totales: 30,
+    plazas_ocupadas: 0,
+    estado: 'planificada',
+    tiene_conflictos: false,
+  },
+  {
+    id: '6',
+    curso: 'Diseño Gráfico Digital',
+    codigo_curso: 'DGD-001',
+    sede: 'CEP Norte',
+    aula: 'Lab Diseño 1',
+    capacidad_aula: 15,
+    profesor_principal: 'Carmen Díaz López',
+    horario_resumen: 'L-X-V: 14:00-16:00',
+    fecha_inicio: '2024-11-15',
+    fecha_fin: '2025-01-20',
+    plazas_totales: 15,
+    plazas_ocupadas: 14,
+    estado: 'completada',
+    tiene_conflictos: false,
+  },
+  {
+    id: '7',
+    curso: 'Gestión de Proyectos con Agile',
+    codigo_curso: 'AGILE-001',
+    sede: 'CEP Sur',
+    aula: 'Aula C1',
+    capacidad_aula: 25,
+    profesor_principal: 'Pedro Martín Gómez',
+    horario_resumen: 'M-J: 09:00-11:00',
+    fecha_inicio: '2025-01-22',
+    fecha_fin: '2025-03-15',
+    plazas_totales: 22,
+    plazas_ocupadas: 0,
+    estado: 'cancelada',
+    tiene_conflictos: false,
+  },
+  {
+    id: '8',
+    curso: 'Fotografía Profesional',
+    codigo_curso: 'FOTO-PRO-001',
+    sede: 'CEP Santa Cruz',
+    aula: 'Estudio Fotográfico',
+    capacidad_aula: 12,
+    profesor_principal: 'Laura Fernández Silva',
+    horario_resumen: 'S: 10:00-14:00',
+    fecha_inicio: '2025-02-05',
+    fecha_fin: '2025-04-30',
+    plazas_totales: 12,
+    plazas_ocupadas: 8,
+    estado: 'abierta',
+    tiene_conflictos: false,
+  },
+]

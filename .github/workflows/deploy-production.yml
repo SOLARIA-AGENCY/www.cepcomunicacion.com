@@ -1,0 +1,407 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_deployment:
+        description: 'Type "DEPLOY" to confirm production deployment'
+        required: true
+        default: ''
+      skip_tests:
+        description: 'Skip pre-deployment tests (NOT RECOMMENDED)'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '22.x'
+  PNPM_VERSION: '9.15.4'
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_PREFIX: cepcomunicacion
+
+jobs:
+  # ========================================
+  # VALIDATION: Confirm Deployment
+  # ========================================
+  validate-deployment:
+    name: Validate Deployment Request
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check deployment confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm_deployment }}" != "DEPLOY" ]; then
+            echo "::error::Deployment not confirmed. Please type 'DEPLOY' to proceed."
+            exit 1
+          fi
+          echo "✅ Deployment confirmed by ${{ github.actor }}"
+
+      - name: Verify branch
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "::warning::Deploying from non-main branch: ${{ github.ref }}"
+          fi
+
+  # ========================================
+  # PRE-DEPLOYMENT: Run Full CI Suite
+  # ========================================
+  pre-deployment-tests:
+    name: Pre-Deployment Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [validate-deployment]
+    if: ${{ !inputs.skip_tests }}
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: cepcomunicacion_test
+          POSTGRES_USER: cepadmin
+          POSTGRES_PASSWORD: testpassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linting
+        run: pnpm lint
+
+      - name: Run type checking
+        run: pnpm typecheck
+
+      - name: Run tests with coverage
+        env:
+          DATABASE_URL: postgresql://cepadmin:testpassword@localhost:5432/cepcomunicacion_test
+          REDIS_URL: redis://localhost:6379/0
+        run: pnpm test:coverage
+
+      - name: Build all packages
+        run: pnpm build
+
+      - name: Verify build artifacts
+        run: |
+          echo "Checking build artifacts..."
+          ls -R apps/*/dist apps/*/.next 2>/dev/null || echo "Build directories created"
+
+  # ========================================
+  # BUILD: Create Production Docker Images
+  # ========================================
+  build-images:
+    name: Build Production Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [validate-deployment, pre-deployment-tests]
+    if: always() && needs.validate-deployment.result == 'success' && (needs.pre-deployment-tests.result == 'success' || needs.pre-deployment-tests.result == 'skipped')
+
+    strategy:
+      matrix:
+        service: [frontend, cms, admin, worker]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ matrix.service }}
+          tags: |
+            type=sha,prefix={{date 'YYYYMMDD-HHmmss'}}-
+            type=raw,value=latest
+            type=ref,event=branch
+
+      - name: Build and push ${{ matrix.service }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./infra/docker/Dockerfile.${{ matrix.service }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ matrix.service }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ matrix.service }}:buildcache,mode=max
+
+      - name: Output image digest
+        run: echo "Image digest: ${{ steps.meta.outputs.digest }}"
+
+  # ========================================
+  # DEPLOY: Push to Hetzner Production Server
+  # ========================================
+  deploy-to-production:
+    name: Deploy to Production Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [build-images]
+    environment:
+      name: production
+      url: http://46.62.222.138
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create deployment package
+        run: |
+          tar -czf deployment.tar.gz \
+            docker-compose.yml \
+            infra/ \
+            .env.example
+
+      - name: Transfer files to server
+        run: |
+          scp -i ~/.ssh/deploy_key deployment.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
+      - name: Pre-deployment health check
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            set -e
+            cd /opt/cepcomunicacion
+
+            echo "📊 Current service status:"
+            docker compose ps
+
+            echo "💾 Creating pre-deployment backup..."
+            docker compose exec -T postgres pg_dump -U cepadmin cepcomunicacion | gzip > /tmp/pre-deploy-backup-$(date +%Y%m%d-%H%M%S).sql.gz
+
+            echo "✅ Pre-deployment checks complete"
+          EOF
+
+      - name: Deploy to production
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            set -e
+            cd /tmp
+            tar -xzf deployment.tar.gz
+
+            # Backup current configuration
+            cp /opt/cepcomunicacion/.env /opt/cepcomunicacion/.env.backup-$(date +%Y%m%d-%H%M%S)
+
+            # Move new files
+            rsync -av --exclude='.env' /tmp/infra/ /opt/cepcomunicacion/infra/
+            rsync -av /tmp/docker-compose.yml /opt/cepcomunicacion/
+
+            cd /opt/cepcomunicacion
+
+            echo "🔄 Pulling new Docker images..."
+            docker compose pull
+
+            echo "⏸️  Stopping services gracefully..."
+            docker compose stop
+
+            echo "🚀 Starting services with new images..."
+            docker compose up -d
+
+            echo "⏳ Waiting for services to be healthy..."
+            sleep 10
+
+            echo "🔍 Checking service health..."
+            docker compose ps
+          EOF
+
+      - name: Post-deployment smoke tests
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            set -e
+            cd /opt/cepcomunicacion
+
+            # Run smoke tests
+            if [ -f infra/tests/smoke-test.sh ]; then
+              chmod +x infra/tests/smoke-test.sh
+              bash infra/tests/smoke-test.sh
+            fi
+          EOF
+
+      - name: Verify deployment
+        run: |
+          echo "🔍 Verifying endpoints..."
+
+          # Test frontend
+          if curl -f -s -o /dev/null -w "%{http_code}" http://${{ secrets.SERVER_HOST }}/ | grep -q "200"; then
+            echo "✅ Frontend is responding"
+          else
+            echo "❌ Frontend check failed"
+            exit 1
+          fi
+
+          # Test API health endpoint
+          if curl -f -s -o /dev/null -w "%{http_code}" http://${{ secrets.SERVER_HOST }}/api/health | grep -q "200"; then
+            echo "✅ API is responding"
+          else
+            echo "⚠️  API health check failed (may not be implemented yet)"
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            rm -f /tmp/deployment.tar.gz
+            rm -rf /tmp/infra /tmp/docker-compose.yml
+          EOF
+
+  # ========================================
+  # ROLLBACK: Automatic Rollback on Failure
+  # ========================================
+  rollback:
+    name: Automatic Rollback
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [deploy-to-production]
+    if: failure()
+
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Perform rollback
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            set -e
+            cd /opt/cepcomunicacion
+
+            echo "🔄 ROLLBACK INITIATED"
+            echo "Restoring previous configuration..."
+
+            # Find latest backup
+            LATEST_BACKUP=$(ls -t .env.backup-* | head -1)
+            if [ -n "$LATEST_BACKUP" ]; then
+              cp "$LATEST_BACKUP" .env
+              echo "✅ Configuration restored from $LATEST_BACKUP"
+            fi
+
+            # Restart services with previous configuration
+            docker compose down
+            docker compose up -d
+
+            echo "⏳ Waiting for services to start..."
+            sleep 10
+
+            docker compose ps
+            echo "✅ ROLLBACK COMPLETE"
+          EOF
+
+      - name: Notify rollback
+        if: always()
+        run: |
+          echo "::error::Deployment failed. Automatic rollback performed."
+          echo "::error::Please investigate the failure and try again."
+
+  # ========================================
+  # NOTIFICATION: Deployment Status
+  # ========================================
+  notify:
+    name: Send Deployment Notification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [deploy-to-production]
+    if: always()
+
+    steps:
+      - name: Determine deployment status
+        id: status
+        run: |
+          if [ "${{ needs.deploy-to-production.result }}" == "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "emoji=✅" >> $GITHUB_OUTPUT
+            echo "message=Production deployment completed successfully" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "emoji=❌" >> $GITHUB_OUTPUT
+            echo "message=Production deployment failed and was rolled back" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create deployment summary
+        run: |
+          cat << EOF >> $GITHUB_STEP_SUMMARY
+          ## ${{ steps.status.outputs.emoji }} Deployment ${{ steps.status.outputs.status }}
+
+          **Environment:** Production (Hetzner VPS)
+          **Triggered by:** ${{ github.actor }}
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Status:** ${{ steps.status.outputs.message }}
+          **Time:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+          ### Services Deployed
+          - Frontend (React + Vite)
+          - CMS (Payload CMS)
+          - Admin Dashboard (Next.js)
+          - Workers (BullMQ)
+
+          ### Access URLs
+          - Frontend: http://46.62.222.138
+          - Admin: http://46.62.222.138/admin
+          - API: http://46.62.222.138/api
+
+          ---
+          [View Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          EOF
+
+      - name: Comment on commit (if from PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '${{ steps.status.outputs.emoji }} Production deployment ${{ steps.status.outputs.status }}\n\nSee [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            })

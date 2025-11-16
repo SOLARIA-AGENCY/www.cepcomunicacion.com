@@ -1,0 +1,51 @@
+# CMS Dockerfile - Development with Hot Reload
+# Single-stage for fast rebuilds and code mounting
+
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS development
+
+# Install development dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    curl \
+    postgresql-client
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy package files
+COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/cms/package.json ./apps/cms/
+COPY packages/ ./packages/
+
+# Install ALL dependencies (including dev dependencies)
+RUN pnpm install --filter cms...
+
+# Copy source code (will be overridden by volume mount in docker-compose)
+COPY apps/cms ./apps/cms
+COPY packages ./packages
+COPY tsconfig.json ./
+
+# Set working directory
+WORKDIR /app/apps/cms
+
+# Expose ports
+EXPOSE 3002
+EXPOSE 9231
+
+# Environment
+ENV NODE_ENV=development
+ENV PORT=3002
+ENV HOSTNAME=0.0.0.0
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3002/api || exit 1
+
+# Default command (can be overridden in docker-compose)
+CMD ["pnpm", "dev", "--port", "3002"]

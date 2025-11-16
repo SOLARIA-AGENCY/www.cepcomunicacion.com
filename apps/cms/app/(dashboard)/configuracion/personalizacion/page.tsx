@@ -22,6 +22,17 @@ interface ThemePreset {
 
 const DEFAULT_THEMES: ThemePreset[] = [
   {
+    name: 'CEP FORMACIÓN',
+    colors: {
+      primary: '#f2014b',
+      secondary: '#64748b',
+      accent: '#f2014b',
+      success: '#22c55e',
+      warning: '#f59e0b',
+      danger: '#ef4444',
+    },
+  },
+  {
     name: 'Default Blue',
     colors: {
       primary: '#3b82f6',

@@ -1,15 +1,16 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
 import { Input } from '@payload-config/components/ui/input'
 import { Label } from '@payload-config/components/ui/label'
-import { 
-  Lock, 
-  Mail, 
-  Eye, 
-  EyeOff, 
+import {
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
   AlertTriangle,
   GraduationCap,
   Shield,
@@ -21,11 +22,35 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [logoUrl, setLogoUrl] = useState('/logos/cep-logo-alpha.png')
+  const [academyName, setAcademyName] = useState('CEP Formación')
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
     remember: false,
   })
+
+  // Fetch logo and academy config from API
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/api/config?section=logos')
+        if (response.ok) {
+          const { data } = await response.json()
+          setLogoUrl(data.claro || '/logos/cep-logo-alpha.png')
+        }
+
+        const academyResponse = await fetch('/api/config?section=academia')
+        if (academyResponse.ok) {
+          const { data } = await academyResponse.json()
+          setAcademyName(data.nombre || 'CEP Formación')
+        }
+      } catch (error) {
+        console.error('Error fetching config:', error)
+      }
+    }
+    fetchConfig()
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,10 +85,19 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-primary text-primary-foreground mb-4">
-            <GraduationCap className="h-10 w-10" />
+          <div className="inline-flex items-center justify-center mb-6">
+            <div className="relative rounded-full border-4 border-[#f2014b] p-6 bg-white shadow-xl shadow-[#f2014b]/30">
+              <Image
+                src={logoUrl}
+                alt={academyName}
+                width={280}
+                height={112}
+                className="h-28 w-auto"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-3xl font-bold">CEP Admin</h1>
+          <h1 className="text-3xl font-bold">{academyName}</h1>
           <p className="text-muted-foreground mt-2">Panel de Administración</p>
         </div>
 
@@ -178,18 +212,18 @@ export default function LoginPage() {
         </Card>
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 CEP Comunicación. Todos los derechos reservados.</p>
+          <p>© 2025 CEP FORMACIÓN Y COMUNICACIÓN S.L. Todos los derechos reservados.</p>
           <div className="flex items-center justify-center gap-4 mt-2">
-            <a href="/ayuda" className="hover:text-foreground transition-colors">
-              Ayuda
-            </a>
-            <span>•</span>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="/legal/privacidad" className="hover:text-foreground transition-colors">
               Política de Privacidad
             </a>
             <span>•</span>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Términos de Uso
+            <a href="/legal/terminos" className="hover:text-foreground transition-colors">
+              Términos y Condiciones
+            </a>
+            <span>•</span>
+            <a href="/legal/cookies" className="hover:text-foreground transition-colors">
+              Cookies
             </a>
           </div>
         </div>

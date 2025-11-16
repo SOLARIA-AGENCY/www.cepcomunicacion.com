@@ -81,6 +81,7 @@ export const getPayloadConfig = () => buildConfig({
       connectionString: process.env.DATABASE_URL ||
         `postgresql://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
     },
+    push: false, // CRITICAL: Disable Drizzle interactive schema push prompts in dev mode
     migrationDir: path.resolve(__dirname, '../migrations'),
   }),
   plugins: [

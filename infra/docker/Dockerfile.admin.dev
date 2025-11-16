@@ -1,0 +1,51 @@
+# Admin Dockerfile - Development with Hot Reload
+# Single-stage for fast rebuilds and code mounting
+
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS development
+
+# Install development dependencies
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++ \
+    curl
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy package files
+COPY package*.json pnpm-*.yaml ./
+COPY apps/admin/package.json ./apps/admin/
+COPY packages/ ./packages/
+
+# Install ALL dependencies (including dev dependencies)
+RUN pnpm install --filter admin...
+
+# Copy source code (will be overridden by volume mount in docker-compose)
+COPY apps/admin ./apps/admin
+COPY packages ./packages
+COPY tsconfig.json ./
+
+# Set working directory
+WORKDIR /app/apps/admin
+
+# Expose ports
+EXPOSE 3001
+EXPOSE 9230
+
+# Environment
+ENV NODE_ENV=development
+ENV PORT=3001
+ENV HOSTNAME=0.0.0.0
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3001/ || exit 1
+
+# Default command (can be overridden in docker-compose)
+CMD ["pnpm", "dev", "--port", "3001"]

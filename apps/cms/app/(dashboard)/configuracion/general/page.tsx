@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
 import { Input } from '@payload-config/components/ui/input'
 import { Label } from '@payload-config/components/ui/label'
 import { Textarea } from '@payload-config/components/ui/textarea'
-import { Save, Building2, Mail, Phone, MapPin, Globe, Image as ImageIcon, Facebook, Twitter, Instagram, Linkedin, Youtube, Check } from 'lucide-react'
+import { Save, Building2, Mail, Phone, MapPin, Globe, Image as ImageIcon, Facebook, Twitter, Instagram, Linkedin, Youtube, Check, Upload } from 'lucide-react'
 
 export default function ConfigGeneralPage() {
   const [showSuccess, setShowSuccess] = useState(false)
@@ -14,7 +15,7 @@ export default function ConfigGeneralPage() {
     academyName: 'CEP Comunicación',
     fiscalName: 'Centro de Estudios Profesionales Comunicación S.L.',
     cif: 'B12345678',
-    
+
     // Contacto
     address: 'Calle Principal 123, 38001 Santa Cruz de Tenerife',
     city: 'Santa Cruz de Tenerife',
@@ -26,14 +27,14 @@ export default function ConfigGeneralPage() {
     emailAdmissions: 'admisiones@cepcomunicacion.com',
     emailSupport: 'soporte@cepcomunicacion.com',
     website: 'https://www.cepcomunicacion.com',
-    
+
     // Redes Sociales
     facebook: 'https://facebook.com/cepcomunicacion',
     twitter: 'https://twitter.com/cepcomunicacion',
     instagram: 'https://instagram.com/cepcomunicacion',
     linkedin: 'https://linkedin.com/company/cepcomunicacion',
     youtube: 'https://youtube.com/@cepcomunicacion',
-    
+
     // Información Adicional
     description: 'Centro especializado en formación profesional en comunicación, marketing digital y diseño gráfico con más de 15 años de experiencia.',
     slogan: 'Tu futuro empieza aquí',
@@ -42,24 +43,73 @@ export default function ConfigGeneralPage() {
   })
 
   const [logos, setLogos] = useState({
-    primary: null,
-    dark: null,
-    favicon: null,
-    compact: null,
+    principal: '/logos/cep-logo.png',
+    oscuro: '/logos/cep-logo.png',
+    claro: '/logos/cep-logo-alpha.png',
+    favicon: '/logos/cep-logo-alpha.png',
   })
 
-  const handleSave = () => {
-    // TODO: Save to database/API
-    console.log('Saving configuration:', config)
-    setShowSuccess(true)
-    setTimeout(() => setShowSuccess(false), 3000)
+  // Fetch existing configuration
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const [academiaRes, logosRes] = await Promise.all([
+          fetch('/api/config?section=academia'),
+          fetch('/api/config?section=logos'),
+        ])
+
+        if (academiaRes.ok) {
+          const { data } = await academiaRes.json()
+          setConfig(prev => ({ ...prev, ...data }))
+        }
+
+        if (logosRes.ok) {
+          const { data } = await logosRes.json()
+          setLogos(data)
+        }
+      } catch (error) {
+        console.error('Error fetching config:', error)
+      }
+    }
+    fetchConfig()
+  }, [])
+
+  const handleSave = async () => {
+    try {
+      // Save academia config
+      const academiaResponse = await fetch('/api/config', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section: 'academia', data: config }),
+      })
+
+      // Save logos config
+      const logosResponse = await fetch('/api/config', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section: 'logos', data: logos }),
+      })
+
+      if (academiaResponse.ok && logosResponse.ok) {
+        setShowSuccess(true)
+        setTimeout(() => setShowSuccess(false), 3000)
+
+        // Trigger a reload of logos in other components
+        window.dispatchEvent(new Event('config-updated'))
+      }
+    } catch (error) {
+      console.error('Error saving configuration:', error)
+    }
   }
 
   const handleLogoUpload = (type: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      // TODO: Upload to media library and save URL
-      console.log(`Uploading ${type} logo:`, file.name)
+      // For demo, use URL.createObjectURL
+      // In production, upload to media library first
+      const url = URL.createObjectURL(file)
+      setLogos(prev => ({ ...prev, [type]: url }))
+      console.log(`Logo ${type} updated:`, file.name)
     }
   }
 
@@ -358,18 +408,18 @@ export default function ConfigGeneralPage() {
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="logo-primary">Logo Principal (Modo Claro)</Label>
+              <Label htmlFor="logo-principal">Logo Principal</Label>
               <div className="border-2 border-dashed rounded-lg p-6 text-center bg-card hover:bg-accent/5 transition-colors">
-                {logos.primary ? (
+                {logos.principal ? (
                   <div className="relative">
-                    <img src={logos.primary} alt="Logo principal" className="max-h-24 mx-auto" />
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Image src={logos.principal} alt="Logo principal" width={200} height={80} className="max-h-24 w-auto mx-auto" />
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-2"
-                      onClick={() => setLogos({...logos, primary: null})}
+                      onClick={() => setLogos({...logos, principal: '/logos/cep-logo.png'})}
                     >
-                      Eliminar
+                      Cambiar
                     </Button>
                   </div>
                 ) : (
@@ -377,17 +427,18 @@ export default function ConfigGeneralPage() {
                     <ImageIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground mb-2">Haz clic para subir</p>
                     <input
-                      id="logo-primary"
+                      id="logo-principal"
                       type="file"
                       accept="image/png,image/svg+xml,image/jpeg"
-                      onChange={(e) => handleLogoUpload('primary', e)}
+                      onChange={(e) => handleLogoUpload('principal', e)}
                       className="hidden"
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
-                      onClick={() => document.getElementById('logo-primary')?.click()}
+                      onClick={() => document.getElementById('logo-principal')?.click()}
                     >
+                      <Upload className="mr-2 h-4 w-4" />
                       Seleccionar Archivo
                     </Button>
                     <p className="text-xs text-muted-foreground mt-2">PNG, SVG, JPG (Max 2MB)</p>
@@ -397,18 +448,18 @@ export default function ConfigGeneralPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="logo-dark">Logo Modo Oscuro</Label>
+              <Label htmlFor="logo-oscuro">Logo Oscuro (Sidebar/Login Fondo Oscuro)</Label>
               <div className="border-2 border-dashed rounded-lg p-6 text-center bg-card hover:bg-accent/5 transition-colors">
-                {logos.dark ? (
+                {logos.oscuro ? (
                   <div className="relative">
-                    <img src={logos.dark} alt="Logo oscuro" className="max-h-24 mx-auto" />
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Image src={logos.oscuro} alt="Logo oscuro" width={200} height={80} className="max-h-24 w-auto mx-auto" />
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-2"
-                      onClick={() => setLogos({...logos, dark: null})}
+                      onClick={() => setLogos({...logos, oscuro: '/logos/cep-logo.png'})}
                     >
-                      Eliminar
+                      Cambiar
                     </Button>
                   </div>
                 ) : (
@@ -416,17 +467,18 @@ export default function ConfigGeneralPage() {
                     <ImageIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground mb-2">Haz clic para subir</p>
                     <input
-                      id="logo-dark"
+                      id="logo-oscuro"
                       type="file"
                       accept="image/png,image/svg+xml,image/jpeg"
-                      onChange={(e) => handleLogoUpload('dark', e)}
+                      onChange={(e) => handleLogoUpload('oscuro', e)}
                       className="hidden"
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
-                      onClick={() => document.getElementById('logo-dark')?.click()}
+                      onClick={() => document.getElementById('logo-oscuro')?.click()}
                     >
+                      <Upload className="mr-2 h-4 w-4" />
                       Seleccionar Archivo
                     </Button>
                     <p className="text-xs text-muted-foreground mt-2">PNG, SVG, JPG (Max 2MB)</p>
@@ -436,18 +488,58 @@ export default function ConfigGeneralPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="logo-favicon">Favicon</Label>
+              <Label htmlFor="logo-claro">Logo Claro (Login/Sidebar)</Label>
+              <div className="border-2 border-dashed rounded-lg p-6 text-center bg-card hover:bg-accent/5 transition-colors">
+                {logos.claro ? (
+                  <div className="relative">
+                    <Image src={logos.claro} alt="Logo claro" width={200} height={80} className="max-h-24 w-auto mx-auto" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2"
+                      onClick={() => setLogos({...logos, claro: '/logos/cep-logo-alpha.png'})}
+                    >
+                      Cambiar
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <ImageIcon className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground mb-2">Haz clic para subir</p>
+                    <input
+                      id="logo-claro"
+                      type="file"
+                      accept="image/png,image/svg+xml,image/jpeg"
+                      onChange={(e) => handleLogoUpload('claro', e)}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('logo-claro')?.click()}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Seleccionar Archivo
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-2">PNG con transparencia</p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="logo-favicon">Favicon (32x32px)</Label>
               <div className="border-2 border-dashed rounded-lg p-6 text-center bg-card hover:bg-accent/5 transition-colors">
                 {logos.favicon ? (
                   <div className="relative">
-                    <img src={logos.favicon} alt="Favicon" className="max-h-16 mx-auto" />
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Image src={logos.favicon} alt="Favicon" width={32} height={32} className="max-h-16 w-auto mx-auto" />
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="mt-2"
-                      onClick={() => setLogos({...logos, favicon: null})}
+                      onClick={() => setLogos({...logos, favicon: '/logos/cep-logo-alpha.png'})}
                     >
-                      Eliminar
+                      Cambiar
                     </Button>
                   </div>
                 ) : (
@@ -461,11 +553,12 @@ export default function ConfigGeneralPage() {
                       onChange={(e) => handleLogoUpload('favicon', e)}
                       className="hidden"
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => document.getElementById('logo-favicon')?.click()}
                     >
+                      <Upload className="mr-2 h-4 w-4" />
                       Seleccionar Archivo
                     </Button>
                     <p className="text-xs text-muted-foreground mt-2">ICO, PNG (32x32px)</p>
@@ -473,45 +566,17 @@ export default function ConfigGeneralPage() {
                 )}
               </div>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="logo-compact">Logo Compacto (Sidebar)</Label>
-              <div className="border-2 border-dashed rounded-lg p-6 text-center bg-card hover:bg-accent/5 transition-colors">
-                {logos.compact ? (
-                  <div className="relative">
-                    <img src={logos.compact} alt="Logo compacto" className="max-h-16 mx-auto" />
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="mt-2"
-                      onClick={() => setLogos({...logos, compact: null})}
-                    >
-                      Eliminar
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <ImageIcon className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">Haz clic para subir</p>
-                    <input
-                      id="logo-compact"
-                      type="file"
-                      accept="image/png,image/svg+xml,image/jpeg"
-                      onChange={(e) => handleLogoUpload('compact', e)}
-                      className="hidden"
-                    />
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => document.getElementById('logo-compact')?.click()}
-                    >
-                      Seleccionar Archivo
-                    </Button>
-                    <p className="text-xs text-muted-foreground mt-2">Cuadrado recomendado</p>
-                  </>
-                )}
-              </div>
-            </div>
+          <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+            <p className="text-sm text-muted-foreground">
+              <strong>Nota:</strong> Los logos se utilizan en diferentes contextos:
+            </p>
+            <ul className="text-sm text-muted-foreground mt-2 space-y-1 ml-4">
+              <li>• <strong>Logo Claro:</strong> Login page y sidebar (fondo claro)</li>
+              <li>• <strong>Logo Oscuro:</strong> Alternativa para fondos oscuros</li>
+              <li>• <strong>Favicon:</strong> Icono que aparece en la pestaña del navegador</li>
+            </ul>
           </div>
         </CardContent>
       </Card>

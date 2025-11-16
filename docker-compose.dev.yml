@@ -1,0 +1,427 @@
+# CEPComunicacion v2 - Local Development Environment
+# Optimized for rapid iteration with hot reload and debugging
+# DO NOT USE IN PRODUCTION
+
+version: '3.9'
+
+# ========================================
+# NETWORKS (same as production for compatibility)
+# ========================================
+networks:
+  external:
+    driver: bridge
+  internal:
+    driver: bridge
+
+# ========================================
+# VOLUMES (ephemeral data for dev - can be wiped)
+# ========================================
+volumes:
+  postgres-data-dev:
+  redis-data-dev:
+  minio-data-dev:
+
+# ========================================
+# SERVICES - Development Mode
+# ========================================
+services:
+
+  # ========================================
+  # NGINX - Development Reverse Proxy
+  # Simple configuration without SSL
+  # ========================================
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: cep-nginx-dev
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./infra/nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/nginx/conf.d/dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./infra/nginx/logs:/var/log/nginx
+    depends_on:
+      - frontend
+      - admin
+      - cms
+    networks:
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ========================================
+  # FRONTEND - Next.js 16 (Hot Reload with Turbopack)
+  # ========================================
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.frontend.dev
+      target: development
+    container_name: cep-frontend-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost/api
+      - NEXT_PUBLIC_ENABLE_ANALYTICS=false
+      - NEXT_PUBLIC_ENABLE_LLM=false
+      - NEXT_PUBLIC_ENABLE_WHATSAPP=false
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - WATCHPACK_POLLING=true  # Next.js hot reload in Docker
+    volumes:
+      # Mount source code for hot reload
+      - ./apps/web-next:/app/apps/web-next:delegated
+      - ./packages:/app/packages:delegated
+      - /app/node_modules
+      - /app/apps/web-next/node_modules
+      - /app/apps/web-next/.next
+    ports:
+      - "3000:3000"   # Next.js dev server
+      - "9229:9229"   # Node.js inspector (if needed)
+    networks:
+      - external
+    command: pnpm --filter web-next dev --turbopack
+
+  # ========================================
+  # ADMIN - Next.js Admin Dashboard (Hot Reload)
+  # ========================================
+  admin:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.admin.dev
+      target: development
+    container_name: cep-admin-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost/api
+      - NEXT_PUBLIC_ENABLE_DEV_LOGIN=true
+      - PORT=3001
+      - HOSTNAME=0.0.0.0
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=minioadmin
+      - S3_SECRET_ACCESS_KEY=minioadmin
+      - S3_BUCKET=cepcomunicacion
+      - WATCHPACK_POLLING=true  # Next.js hot reload in Docker
+    volumes:
+      - ./apps/admin:/app/apps/admin:delegated
+      - ./packages:/app/packages:delegated
+      - /app/node_modules
+      - /app/apps/admin/node_modules
+      - /app/apps/admin/.next
+    ports:
+      - "3001:3001"   # Next.js dev server
+      - "9230:9230"   # Node.js inspector
+    networks:
+      - external
+      - internal
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    command: pnpm --filter admin dev
+
+  # ========================================
+  # CMS - Payload CMS Backend (Hot Reload)
+  # ========================================
+  cms:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.cms.dev
+      target: development
+    container_name: cep-cms-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://cepadmin:devpassword123@postgres:5432/cepcomunicacion
+      - REDIS_URL=redis://redis:6379/0
+      - PAYLOAD_SECRET=dev-secret-change-in-production
+      - PORT=3002
+      - CORS_ORIGINS=http://localhost,http://localhost:3000,http://localhost:3001
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=minioadmin
+      - S3_SECRET_ACCESS_KEY=minioadmin
+      - S3_BUCKET=cep-uploads
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - ENABLE_META_INTEGRATION=false
+      - ENABLE_MAILCHIMP_INTEGRATION=false
+      - ENABLE_WHATSAPP_INTEGRATION=false
+      - ENABLE_LLM_INTEGRATION=false
+      # Debugging
+      - DEBUG=payload:*
+    volumes:
+      - ./apps/cms:/app/apps/cms:delegated
+      - ./packages:/app/packages:delegated
+      - /app/node_modules
+      - /app/apps/cms/node_modules
+      - /app/apps/cms/.next
+    ports:
+      - "3002:3002"   # Payload CMS
+      - "9231:9231"   # Node.js inspector
+    networks:
+      - external
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    command: pnpm --filter cms dev
+
+  # ========================================
+  # WORKER: Automation (Optional in dev)
+  # Start only when needed: docker compose -f docker-compose.dev.yml up worker-automation
+  # ========================================
+  worker-automation:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker.dev
+      target: development
+    container_name: cep-worker-automation-dev
+    restart: "no"  # Don't auto-start in dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://cepadmin:devpassword123@postgres:5432/cepcomunicacion
+      - REDIS_URL=redis://redis:6379/0
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - ENABLE_META_INTEGRATION=false
+      - ENABLE_MAILCHIMP_INTEGRATION=false
+      - ENABLE_WHATSAPP_INTEGRATION=false
+    volumes:
+      - ./workers:/app/workers:delegated
+      - ./packages:/app/packages:delegated
+      - /app/node_modules
+    ports:
+      - "9232:9232"   # Node.js inspector
+    networks:
+      - internal
+    depends_on:
+      - postgres
+      - redis
+    profiles: ["workers"]  # Start with: docker compose --profile workers up
+    command: pnpm --filter workers dev:automation
+
+  # ========================================
+  # WORKER: LLM (Optional in dev)
+  # ========================================
+  worker-llm:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker.dev
+      target: development
+    container_name: cep-worker-llm-dev
+    restart: "no"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://cepadmin:devpassword123@postgres:5432/cepcomunicacion
+      - REDIS_URL=redis://redis:6379/0
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY_ID=minioadmin
+      - S3_SECRET_ACCESS_KEY=minioadmin
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ENABLE_LLM_INTEGRATION=false
+    volumes:
+      - ./workers:/app/workers:delegated
+      - ./packages:/app/packages:delegated
+      - /app/node_modules
+    ports:
+      - "9233:9233"
+    networks:
+      - internal
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    profiles: ["workers"]
+    command: pnpm --filter workers dev:llm
+
+  # ========================================
+  # POSTGRESQL 16 - Development Database
+  # ========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: cep-postgres-dev
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=cepcomunicacion
+      - POSTGRES_USER=cepadmin
+      - POSTGRES_PASSWORD=devpassword123
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data-dev:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"  # Expose for local tools (DBeaver, psql)
+    networks:
+      - internal
+    command: >
+      postgres
+      -c max_connections=50
+      -c shared_buffers=128MB
+      -c log_statement=all
+      -c log_min_duration_statement=100
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cepadmin -d cepcomunicacion"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  # ========================================
+  # REDIS 7 - Development Queue + Cache
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    container_name: cep-redis-dev
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --loglevel verbose
+    volumes:
+      - redis-data-dev:/data
+    ports:
+      - "6379:6379"  # Expose for Redis CLI
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  # ========================================
+  # MINIO - S3-Compatible Storage (Dev)
+  # ========================================
+  minio:
+    image: minio/minio:latest
+    container_name: cep-minio-dev
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio-data-dev:/data
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    networks:
+      - external
+      - internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ========================================
+  # MINIO INIT - Create dev buckets
+  # ========================================
+  minio-init:
+    image: minio/mc:latest
+    container_name: cep-minio-init-dev
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set minio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb --ignore-existing minio/cep-uploads;
+      /usr/bin/mc mb --ignore-existing minio/cep-backups;
+      /usr/bin/mc anonymous set download minio/cep-uploads;
+      exit 0;
+      "
+    networks:
+      - internal
+
+  # ========================================
+  # MAILHOG - Local SMTP Testing
+  # ========================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cep-mailhog-dev
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+    networks:
+      - internal
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8025"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ========================================
+  # BULLBOARD - Queue Monitoring UI
+  # ========================================
+  bullboard:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.bullboard
+    container_name: cep-bullboard-dev
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - PORT=3010
+      - BASIC_AUTH_USER=admin
+      - BASIC_AUTH_PASSWORD=admin
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "3010:3010"
+    networks:
+      - internal
+      - external
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3010"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+# ========================================
+# DEVELOPMENT NOTES
+# ========================================
+#
+# Start full stack:
+#   pnpm dev:docker
+#
+# Start minimal (frontend + cms + db):
+#   pnpm dev:docker:minimal
+#
+# Start with workers:
+#   docker compose -f docker-compose.dev.yml --profile workers up
+#
+# View logs:
+#   pnpm dev:docker:logs
+#
+# Access services:
+#   Frontend:    http://localhost:3000
+#   Admin:       http://localhost:3001
+#   CMS:         http://localhost:3002
+#   MailHog:     http://localhost:8025
+#   BullBoard:   http://localhost:3010
+#   MinIO:       http://localhost:9001 (minioadmin/minioadmin)
+#   PostgreSQL:  localhost:5432 (cepadmin/devpassword123)
+#   Redis:       localhost:6379
+#
+# Reset database:
+#   ./scripts/dev/reset-database.sh
+#
+# ========================================

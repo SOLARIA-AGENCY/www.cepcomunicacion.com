@@ -15,6 +15,7 @@ import {
 } from '@payload-config/components/ui/dropdown-menu'
 import { Avatar, AvatarImage, AvatarFallback } from '@payload-config/components/ui/avatar'
 import { AppSidebar } from '@payload-config/components/layout/AppSidebar'
+import { DashboardFooter } from '@payload-config/components/layout/DashboardFooter'
 import { ThemeToggle } from '@payload-config/components/ui/ThemeToggle'
 import { ChatbotWidget } from '@payload-config/components/ui/ChatbotWidget'
 
@@ -138,6 +139,9 @@ export default function DashboardLayout({
 
           {/* Scrollable Main Content */}
           <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+
+          {/* Footer */}
+          <DashboardFooter />
         </div>
 
         {/* Chatbot Widget - Fixed Position */}
