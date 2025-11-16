@@ -187,8 +187,9 @@ describe('Config API Endpoint', () => {
       const response = await GET(request)
       const data = await response.json()
 
-      expect(response.status).toBe(404)
+      expect(response.status).toBe(400) // Empty param is bad request, not not-found
       expect(data.success).toBe(false)
+      expect(data.error).toBe('Section parameter is required')
     })
   })
 

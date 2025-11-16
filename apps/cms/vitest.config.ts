@@ -31,6 +31,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './'),
       '@payload-config': path.resolve(__dirname, './@payload-config'),
+      'next/navigation': 'next-router-mock',
     },
   },
 })
