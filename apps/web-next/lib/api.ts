@@ -5,41 +5,8 @@
 
 import { PayloadClient } from './payloadClient';
 
-export interface Course {
-  id: string;
-  slug: string;
-  name: string;
-  short_description: string;
-  long_description?: string;
-  modality: 'presencial' | 'online' | 'hibrido';
-  duration_hours: number;
-  base_price: number;
-  financial_aid_available: boolean;
-  active: boolean;
-  featured: boolean;
-  code?: string;
-  description?: string;
-  type?: string;
-  area?: string;
-  cycle?: {
-    id: string;
-    slug: string;
-    name: string;
-    level: string;
-  };
-  campuses?: Array<{
-    id: string;
-    name: string;
-  }>;
-  featured_image?: {
-    url: string;
-    alt?: string;
-  };
-  meta_title?: string;
-  meta_description?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+// Import the shared Course type instead of redefining
+export type { Course } from '@cepcomunicacion/types';
 
 export interface PaginatedResponse<T> {
   docs: T[];
