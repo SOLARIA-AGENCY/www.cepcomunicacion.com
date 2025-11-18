@@ -8,19 +8,21 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Acceso Alumnos - CEP Formación',
-  description: 'Portal de acceso para alumnos matriculados. Accede a tus cursos, materiales y seguimiento académico.',
+  description:
+    'Portal de acceso para alumnos matriculados. Accede a tus cursos, materiales y seguimiento académico.',
 };
 
 export default function AccesoAlumnosPage() {
   return (
     <div className="acceso-alumnos-page">
       {/* Hero Section */}
-      <section className="hero bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}>
+      <section
+        className="hero bg-gradient-to-r from-primary to-primary-light text-white"
+        style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}
+      >
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-fluid-hero title-hero font-bold mb-4">
-              Acceso Alumnos
-            </h1>
+            <h1 className="text-fluid-hero title-hero font-bold mb-4">Acceso Alumnos</h1>
             <p className="text-fluid-hero-sub mb-6 opacity-90">
               Accede a tu campus virtual y gestiona tu formación
             </p>
@@ -33,9 +35,7 @@ export default function AccesoAlumnosPage() {
         <div className="container">
           <div className="max-w-md mx-auto">
             <div className="card">
-              <h2 className="section-title-uppercase text-2xl mb-6">
-                Identificación de Usuario
-              </h2>
+              <h2 className="section-title-uppercase text-2xl mb-6">Identificación de Usuario</h2>
 
               <div className="space-y-6">
                 <p className="text-center text-neutral-700">

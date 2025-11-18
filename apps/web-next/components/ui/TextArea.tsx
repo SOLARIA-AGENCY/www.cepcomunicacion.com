@@ -31,7 +31,9 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           id={textareaId}
           className={`form-input ${error ? 'border-red-600 focus:border-red-600 focus:ring-red-600' : ''} ${className}`}
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${textareaId}-error` : helperText ? `${textareaId}-helper` : undefined}
+          aria-describedby={
+            error ? `${textareaId}-error` : helperText ? `${textareaId}-helper` : undefined
+          }
           {...props}
         />
         {error && (
@@ -46,7 +48,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 TextArea.displayName = 'TextArea';

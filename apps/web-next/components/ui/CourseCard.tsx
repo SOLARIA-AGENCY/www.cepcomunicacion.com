@@ -12,7 +12,7 @@
 
 import { memo, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import type { Course, CourseRun } from '@/lib/types';
+import type { Course, CourseRun, CourseType, CourseArea } from '@/lib/types';
 import { isCampusPopulated, isCourseRunPopulated } from '@/lib/types';
 
 export interface CourseCardProps {
@@ -29,12 +29,36 @@ const MODALITY_LABELS = {
 
 // Course type labels and colors - CEP Formación Brand Colors
 const COURSE_TYPE_CONFIG = {
-  privado: { label: 'PRIVADO', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
-  ocupados: { label: 'TRABAJADORES OCUPADOS', color: 'bg-cep-ocupados', buttonColor: 'bg-cep-ocupados hover:bg-cep-ocupados-dark' },
-  desempleados: { label: 'TRABAJADORES DESEMPLEADOS', color: 'bg-cep-desempleados', buttonColor: 'bg-cep-desempleados hover:bg-cep-desempleados-dark' },
-  teleformacion: { label: 'TELEFORMACIÓN', color: 'bg-cep-teleformacion', buttonColor: 'bg-cep-teleformacion hover:bg-cep-teleformacion-dark' },
-  ciclo_medio: { label: 'CICLO MEDIO', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
-  ciclo_superior: { label: 'CICLO SUPERIOR', color: 'bg-cep-rosa', buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark' },
+  privado: {
+    label: 'PRIVADO',
+    color: 'bg-cep-rosa',
+    buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark',
+  },
+  ocupados: {
+    label: 'TRABAJADORES OCUPADOS',
+    color: 'bg-cep-ocupados',
+    buttonColor: 'bg-cep-ocupados hover:bg-cep-ocupados-dark',
+  },
+  desempleados: {
+    label: 'TRABAJADORES DESEMPLEADOS',
+    color: 'bg-cep-desempleados',
+    buttonColor: 'bg-cep-desempleados hover:bg-cep-desempleados-dark',
+  },
+  teleformacion: {
+    label: 'TELEFORMACIÓN',
+    color: 'bg-cep-teleformacion',
+    buttonColor: 'bg-cep-teleformacion hover:bg-cep-teleformacion-dark',
+  },
+  ciclo_medio: {
+    label: 'CICLO MEDIO',
+    color: 'bg-cep-rosa',
+    buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark',
+  },
+  ciclo_superior: {
+    label: 'CICLO SUPERIOR',
+    color: 'bg-cep-rosa',
+    buttonColor: 'bg-cep-rosa hover:bg-cep-rosa-dark',
+  },
 } as const;
 
 // Area labels and colors for badges
@@ -49,35 +73,86 @@ const AREA_CONFIG = {
   educacion: { label: 'EDUCACIÓN', color: 'bg-yellow-600' },
 } as const;
 
+// Helper functions for safe type indexing
+function getCourseTypeConfig(type: string) {
+  return (
+    COURSE_TYPE_CONFIG[type as keyof typeof COURSE_TYPE_CONFIG] || {
+      label: type.toUpperCase(),
+      color: 'bg-gray-600',
+      buttonColor: 'bg-gray-600 hover:bg-gray-700',
+    }
+  );
+}
+
+function getAreaConfig(area: string) {
+  const areaMapping = {
+    computing: 'tecnologia',
+    communication: 'audiovisual',
+    business: 'administracion',
+    languages: 'educacion',
+    health: 'salud',
+    industry: 'administracion',
+  };
+
+  const configKey = areaMapping[area as keyof typeof areaMapping] as keyof typeof AREA_CONFIG;
+  return AREA_CONFIG[configKey] || { label: area.toUpperCase(), color: 'bg-gray-600' };
+}
+
 // Placeholder images from Pexels (high quality, course-related)
 const PLACEHOLDER_IMAGES = {
-  default: 'https://images.pexels.com/photos/5905857/pexels-photo-5905857.jpeg?auto=compress&cs=tinysrgb&w=800',
-  marketing: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800',
-  design: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800',
-  programming: 'https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg?auto=compress&cs=tinysrgb&w=800',
-  business: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=800',
+  default:
+    'https://images.pexels.com/photos/5905857/pexels-photo-5905857.jpeg?auto=compress&cs=tinysrgb&w=800',
+  marketing:
+    'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800',
+  design:
+    'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800',
+  programming:
+    'https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg?auto=compress&cs=tinysrgb&w=800',
+  business:
+    'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=800',
 } as const;
 
 export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCardProps) {
-  // Extract image URL - use featured_image or intelligent placeholder
+  // Extract image URL - use image or featured_image or intelligent placeholder
   const imageUrl = useMemo(() => {
-    // If course has featured_image, use it
-    if (course.featured_image && typeof course.featured_image === 'object' && 'url' in course.featured_image) {
-      return course.featured_image.url;
+    // If course has image, use it
+    if (course.image) {
+      return course.image;
+    }
+
+    // If course has featured_image (legacy), use it
+    if (course.featured_image) {
+      return course.featured_image;
     }
 
     // Otherwise, select intelligent placeholder based on course name
     const nameLower = course.name.toLowerCase();
-    if (nameLower.includes('marketing') || nameLower.includes('social') || nameLower.includes('digital')) {
+    if (
+      nameLower.includes('marketing') ||
+      nameLower.includes('social') ||
+      nameLower.includes('digital')
+    ) {
       return PLACEHOLDER_IMAGES.marketing;
     }
-    if (nameLower.includes('diseño') || nameLower.includes('gráfico') || nameLower.includes('photoshop')) {
+    if (
+      nameLower.includes('diseño') ||
+      nameLower.includes('gráfico') ||
+      nameLower.includes('photoshop')
+    ) {
       return PLACEHOLDER_IMAGES.design;
     }
-    if (nameLower.includes('desarrollo') || nameLower.includes('web') || nameLower.includes('programación')) {
+    if (
+      nameLower.includes('desarrollo') ||
+      nameLower.includes('web') ||
+      nameLower.includes('programación')
+    ) {
       return PLACEHOLDER_IMAGES.programming;
     }
-    if (nameLower.includes('administración') || nameLower.includes('gestión') || nameLower.includes('empresa')) {
+    if (
+      nameLower.includes('administración') ||
+      nameLower.includes('gestión') ||
+      nameLower.includes('empresa')
+    ) {
       return PLACEHOLDER_IMAGES.business;
     }
     return PLACEHOLDER_IMAGES.default;
@@ -97,30 +172,27 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
 
   // Get active course run (first enrollment_open or published)
   const activeCourseRun = useMemo(() => {
-    if (!course.course_runs || course.course_runs.length === 0) return null;
+    const courseRuns = course.courseRuns || course.course_runs;
+    if (!courseRuns || courseRuns.length === 0) return null;
 
-    const run = course.course_runs[0];
+    const run = courseRuns[0];
     if (isCourseRunPopulated(run)) {
       return run;
     }
     return null;
-  }, [course.course_runs]);
+  }, [course.courseRuns, course.course_runs]);
 
-  // Get campus name from active course run
-  const campusName = useMemo(() => {
-    if (!activeCourseRun?.campus) return null;
-
-    if (isCampusPopulated(activeCourseRun.campus)) {
-      return activeCourseRun.campus.name;
-    }
-    return null;
+  // Get location from active course run
+  const locationName = useMemo(() => {
+    if (!activeCourseRun?.location) return null;
+    return activeCourseRun.location;
   }, [activeCourseRun]);
 
   // Format start date
   const formattedStartDate = useMemo(() => {
-    if (!activeCourseRun?.start_date) return null;
+    if (!activeCourseRun?.startDate) return null;
 
-    const date = new Date(activeCourseRun.start_date);
+    const date = new Date(activeCourseRun.startDate);
     return new Intl.DateTimeFormat('es-ES', {
       day: 'numeric',
       month: 'long',
@@ -133,7 +205,11 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
     const courseType = course.course_type;
 
     // PRIVADO/CICLOS: "CONSULTAR PRECIO"
-    if (courseType === 'privado' || courseType === 'ciclo_medio' || courseType === 'ciclo_superior') {
+    if (
+      courseType === 'privado' ||
+      courseType === 'ciclo_medio' ||
+      courseType === 'ciclo_superior'
+    ) {
       return {
         text: 'CONSULTAR PRECIO',
         highlight: false,
@@ -204,16 +280,20 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         {/* Badges Container - Course Type and Area */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-2">
           {/* Course Type Badge */}
-          {course.course_type && COURSE_TYPE_CONFIG[course.course_type] && (
-            <span className={`${COURSE_TYPE_CONFIG[course.course_type].color} text-white text-xs font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-wide`}>
-              {COURSE_TYPE_CONFIG[course.course_type].label}
+          {course.course_type && (
+            <span
+              className={`${getCourseTypeConfig(course.course_type).color} text-white text-xs font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-wide`}
+            >
+              {getCourseTypeConfig(course.course_type).label}
             </span>
           )}
 
           {/* Area Badge */}
-          {course.area && AREA_CONFIG[course.area] && (
-            <span className={`${AREA_CONFIG[course.area].color} text-white text-xs font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-wide`}>
-              {AREA_CONFIG[course.area].label}
+          {course.area && (
+            <span
+              className={`${getAreaConfig(course.area).color} text-white text-xs font-bold px-3 py-1.5 rounded shadow-md uppercase tracking-wide`}
+            >
+              {getAreaConfig(course.area).label}
             </span>
           )}
         </div>
@@ -243,20 +323,30 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
         {/* Course Info Panel - CEP Formación Standardized */}
         <div className="flex flex-col gap-3 mb-4 p-4 bg-neutral-50 rounded-lg flex-grow">
           {/* Campus/Location - CEP Tenerife */}
-          {(campusName || course.modality === 'online') && (
+          {(locationName || course.modality === 'online') && (
             <div className="flex items-center gap-2 text-sm text-neutral-700">
-              <svg className="w-4 h-4 flex-shrink-0 text-neutral-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              <svg
+                className="w-4 h-4 flex-shrink-0 text-neutral-500"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
               </svg>
-              <span>{campusName || 'Online'}, Tenerife</span>
+              <span>{locationName || 'Online'}, Tenerife</span>
             </div>
           )}
 
           {/* Start Date */}
           {formattedStartDate && (
             <div className="flex items-center gap-2 text-sm text-neutral-700">
-              <svg className="w-4 h-4 flex-shrink-0 text-neutral-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/>
+              <svg
+                className="w-4 h-4 flex-shrink-0 text-neutral-500"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z" />
               </svg>
               <span>Inicio: {formattedStartDate}</span>
             </div>
@@ -264,7 +354,9 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
 
           {/* Modality + Hours - UPPERCASE + BOLD */}
           <div className="flex items-center gap-2 text-sm font-bold text-neutral-900">
-            <span className="uppercase">{course.modality ? MODALITY_LABELS[course.modality].toUpperCase() : 'ONLINE'}</span>
+            <span className="uppercase">
+              {course.modality ? MODALITY_LABELS[course.modality].toUpperCase() : 'ONLINE'}
+            </span>
             {course.duration_hours && (
               <>
                 <span className="text-neutral-400">•</span>
@@ -275,11 +367,16 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
 
           {/* Price/Subsidy - Color by type */}
           <div className="flex items-center gap-2 text-sm font-bold">
-            <svg className={`w-4 h-4 flex-shrink-0 ${priceInfo.iconColor}`} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              className={`w-4 h-4 flex-shrink-0 ${priceInfo.iconColor}`}
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               {course.course_type === 'desempleados' || course.course_type === 'ocupados' ? (
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
               ) : (
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z" />
               )}
             </svg>
             <span className={`${priceInfo.colorClass} uppercase text-xs tracking-wide`}>
@@ -290,14 +387,16 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
 
         {/* CTA Button - Color by course type */}
         <div className="mt-auto" data-course-type={course.course_type}>
-          <div className={`inline-flex items-center justify-center gap-2 w-full px-6 py-3 text-white font-bold text-sm uppercase tracking-wide rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 ${
-            course.course_type && COURSE_TYPE_CONFIG[course.course_type]
-              ? COURSE_TYPE_CONFIG[course.course_type].buttonColor
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}>
+          <div
+            className={`inline-flex items-center justify-center gap-2 w-full px-6 py-3 text-white font-bold text-sm uppercase tracking-wide rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 ${
+              course.course_type
+                ? getCourseTypeConfig(course.course_type).buttonColor
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
             VER CURSO
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
             </svg>
           </div>
         </div>

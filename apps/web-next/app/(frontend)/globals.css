@@ -6,8 +6,7 @@
  * Color Palette: Professional education theme
  */
 
-/* Import Montserrat Font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+/* Font is imported in layout.tsx to avoid duplication */
 
 @tailwind base;
 @tailwind components;
@@ -53,10 +52,10 @@
     /* CEP Formación Course Type Colors */
     --color-cep-rosa: #f2014b; /* Rosa CEP - PRIVADO/CICLOS */
     --color-cep-rosa-dark: #d6013f;
-    --color-cep-ocupados: #10B981; /* Verde - TRABAJADORES OCUPADOS */
+    --color-cep-ocupados: #10b981; /* Verde - TRABAJADORES OCUPADOS */
     --color-cep-ocupados-dark: #059669;
-    --color-cep-desempleados: #3B82F6; /* Azul - TRABAJADORES DESEMPLEADOS */
-    --color-cep-desempleados-dark: #2563EB;
+    --color-cep-desempleados: #3b82f6; /* Azul - TRABAJADORES DESEMPLEADOS */
+    --color-cep-desempleados-dark: #2563eb;
     --color-cep-teleformacion: #ffa800; /* Naranja - TELEFORMACIÓN */
     --color-cep-teleformacion-dark: #e69500;
 
@@ -72,21 +71,21 @@
     --color-neutral-900: #111827;
 
     /* Spacing - Consistent spacing scale */
-    --spacing-xs: 0.25rem;  /* 4px */
-    --spacing-sm: 0.5rem;   /* 8px */
-    --spacing-md: 1rem;     /* 16px */
-    --spacing-lg: 1.5rem;   /* 24px */
-    --spacing-xl: 2rem;     /* 32px */
-    --spacing-2xl: 3rem;    /* 48px */
-    --spacing-3xl: 4rem;    /* 64px */
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem; /* 8px */
+    --spacing-md: 1rem; /* 16px */
+    --spacing-lg: 1.5rem; /* 24px */
+    --spacing-xl: 2rem; /* 32px */
+    --spacing-2xl: 3rem; /* 48px */
+    --spacing-3xl: 4rem; /* 64px */
 
     /* Border Radius - Soft, modern feel */
-    --radius-sm: 0.25rem;   /* 4px */
-    --radius-md: 0.5rem;    /* 8px */
-    --radius-lg: 0.75rem;   /* 12px */
-    --radius-xl: 1rem;      /* 16px */
-    --radius-2xl: 1.5rem;   /* 24px */
-    --radius-full: 9999px;  /* Fully rounded */
+    --radius-sm: 0.25rem; /* 4px */
+    --radius-md: 0.5rem; /* 8px */
+    --radius-lg: 0.75rem; /* 12px */
+    --radius-xl: 1rem; /* 16px */
+    --radius-2xl: 1.5rem; /* 24px */
+    --radius-full: 9999px; /* Fully rounded */
 
     /* Shadows - Elevation system */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -103,7 +102,14 @@
 
   /* Body defaults */
   body {
-    font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family:
+      'Montserrat',
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
     line-height: 1.6;
     color: var(--color-neutral-900);
     background-color: var(--color-neutral-50);
@@ -111,7 +117,12 @@
   }
 
   /* Typography scale */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: 700;
     line-height: 1.2;
     color: var(--color-neutral-900);
@@ -220,7 +231,9 @@
     color: white;
     background-color: var(--color-primary);
     border-radius: var(--radius-lg);
-    transition: background-color var(--transition-base), transform var(--transition-fast);
+    transition:
+      background-color var(--transition-base),
+      transform var(--transition-fast);
     box-shadow: var(--shadow-md);
   }
 
@@ -262,13 +275,85 @@
     transform: translateY(-1px);
   }
 
+  /* Button CEP Rosa */
+  .btn-cep-rosa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: white;
+    background-color: var(--color-cep-rosa);
+    border-radius: var(--radius-lg);
+    transition:
+      background-color var(--transition-base),
+      transform var(--transition-fast);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-cep-rosa:hover {
+    background-color: var(--color-cep-rosa-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Button White */
+  .btn-white {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-neutral-900);
+    background-color: white;
+    border-radius: var(--radius-lg);
+    transition:
+      background-color var(--transition-base),
+      transform var(--transition-fast);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-white:hover {
+    background-color: var(--color-neutral-100);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Button Outline White */
+  .btn-outline-white {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+  }
+
+  .btn-outline-white:hover {
+    background-color: white;
+    color: var(--color-neutral-900);
+    transform: translateY(-1px);
+  }
+
   /* Card */
   .card {
     background-color: white;
     border-radius: var(--radius-xl);
     padding: var(--spacing-xl);
     box-shadow: var(--shadow-md);
-    transition: box-shadow var(--transition-base), transform var(--transition-base);
+    transition:
+      box-shadow var(--transition-base),
+      transform var(--transition-base);
   }
 
   .card:hover {
@@ -286,7 +371,9 @@
     background-color: white;
     border: 1px solid var(--color-neutral-300);
     border-radius: var(--radius-md);
-    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    transition:
+      border-color var(--transition-base),
+      box-shadow var(--transition-base);
   }
 
   .form-input:focus {
@@ -436,50 +523,116 @@
   }
 
   /* Tailwind color utilities using CSS variables */
-  .bg-primary { background-color: var(--color-primary); }
-  .bg-primary-dark { background-color: var(--color-primary-dark); }
-  .bg-primary-light { background-color: var(--color-primary-light); }
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  .bg-primary-dark {
+    background-color: var(--color-primary-dark);
+  }
+  .bg-primary-light {
+    background-color: var(--color-primary-light);
+  }
 
-  .bg-secondary { background-color: var(--color-secondary); }
-  .bg-secondary-dark { background-color: var(--color-secondary-dark); }
-  .bg-secondary-light { background-color: var(--color-secondary-light); }
+  .bg-secondary {
+    background-color: var(--color-secondary);
+  }
+  .bg-secondary-dark {
+    background-color: var(--color-secondary-dark);
+  }
+  .bg-secondary-light {
+    background-color: var(--color-secondary-light);
+  }
 
-  .bg-accent { background-color: var(--color-accent); }
-  .bg-accent-dark { background-color: var(--color-accent-dark); }
-  .bg-accent-light { background-color: var(--color-accent-light); }
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  .bg-accent-dark {
+    background-color: var(--color-accent-dark);
+  }
+  .bg-accent-light {
+    background-color: var(--color-accent-light);
+  }
 
-  .text-primary { color: var(--color-primary); }
-  .text-primary-dark { color: var(--color-primary-dark); }
-  .text-primary-light { color: var(--color-primary-light); }
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .text-primary-dark {
+    color: var(--color-primary-dark);
+  }
+  .text-primary-light {
+    color: var(--color-primary-light);
+  }
 
-  .text-secondary { color: var(--color-secondary); }
-  .text-secondary-dark { color: var(--color-secondary-dark); }
-  .text-secondary-light { color: var(--color-secondary-light); }
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+  .text-secondary-dark {
+    color: var(--color-secondary-dark);
+  }
+  .text-secondary-light {
+    color: var(--color-secondary-light);
+  }
 
-  .text-accent { color: var(--color-accent); }
-  .text-accent-dark { color: var(--color-accent-dark); }
-  .text-accent-light { color: var(--color-accent-light); }
+  .text-accent {
+    color: var(--color-accent);
+  }
+  .text-accent-dark {
+    color: var(--color-accent-dark);
+  }
+  .text-accent-light {
+    color: var(--color-accent-light);
+  }
 
-  .border-primary { border-color: var(--color-primary); }
-  .border-secondary { border-color: var(--color-secondary); }
-  .border-accent { border-color: var(--color-accent); }
+  .border-primary {
+    border-color: var(--color-primary);
+  }
+  .border-secondary {
+    border-color: var(--color-secondary);
+  }
+  .border-accent {
+    border-color: var(--color-accent);
+  }
 
   /* CEP Formación Course Type Colors */
-  .bg-cep-rosa { background-color: var(--color-cep-rosa); }
-  .bg-cep-rosa-dark { background-color: var(--color-cep-rosa-dark); }
-  .text-cep-rosa { color: var(--color-cep-rosa); }
+  .bg-cep-rosa {
+    background-color: var(--color-cep-rosa);
+  }
+  .bg-cep-rosa-dark {
+    background-color: var(--color-cep-rosa-dark);
+  }
+  .text-cep-rosa {
+    color: var(--color-cep-rosa);
+  }
 
-  .bg-cep-ocupados { background-color: var(--color-cep-ocupados); }
-  .bg-cep-ocupados-dark { background-color: var(--color-cep-ocupados-dark); }
-  .text-cep-ocupados { color: var(--color-cep-ocupados); }
+  .bg-cep-ocupados {
+    background-color: var(--color-cep-ocupados);
+  }
+  .bg-cep-ocupados-dark {
+    background-color: var(--color-cep-ocupados-dark);
+  }
+  .text-cep-ocupados {
+    color: var(--color-cep-ocupados);
+  }
 
-  .bg-cep-desempleados { background-color: var(--color-cep-desempleados); }
-  .bg-cep-desempleados-dark { background-color: var(--color-cep-desempleados-dark); }
-  .text-cep-desempleados { color: var(--color-cep-desempleados); }
+  .bg-cep-desempleados {
+    background-color: var(--color-cep-desempleados);
+  }
+  .bg-cep-desempleados-dark {
+    background-color: var(--color-cep-desempleados-dark);
+  }
+  .text-cep-desempleados {
+    color: var(--color-cep-desempleados);
+  }
 
-  .bg-cep-teleformacion { background-color: var(--color-cep-teleformacion); }
-  .bg-cep-teleformacion-dark { background-color: var(--color-cep-teleformacion-dark); }
-  .text-cep-teleformacion { color: var(--color-cep-teleformacion); }
+  .bg-cep-teleformacion {
+    background-color: var(--color-cep-teleformacion);
+  }
+  .bg-cep-teleformacion-dark {
+    background-color: var(--color-cep-teleformacion-dark);
+  }
+  .text-cep-teleformacion {
+    color: var(--color-cep-teleformacion);
+  }
 
   /* Typography Uppercase Classes - Montserrat Headings */
   .title-uppercase {
@@ -517,7 +670,10 @@
  */
 @layer components {
   /* Main page titles and section headings - UPPERCASE and CENTERED */
-  h1, h2, h3, h4,
+  h1,
+  h2,
+  h3,
+  h4,
   .section-title,
   .hero-title,
   .page-title {

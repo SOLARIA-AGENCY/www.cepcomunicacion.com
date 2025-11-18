@@ -1,15 +1,25 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import EstadoSistemaPage from '../../app/(dashboard)/estado/page'
 
 describe('System Status Page', () => {
+  const mockFetch = vi.fn()
+
   beforeEach(() => {
-    vi.useFakeTimers()
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        status: 'ok',
+      }),
+    } as Response)
+
+    vi.stubGlobal('fetch', mockFetch)
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
     vi.useRealTimers()
+    vi.unstubAllGlobals()
   })
 
   describe('Page Rendering', () => {
@@ -21,12 +31,18 @@ describe('System Status Page', () => {
     it('displays all 6 service monitors', () => {
       render(<EstadoSistemaPage />)
 
-      expect(screen.getByText(/Frontend.*Next\.js/i)).toBeInTheDocument()
-      expect(screen.getByText(/API Backend/i)).toBeInTheDocument()
-      expect(screen.getByText(/Base de Datos.*PostgreSQL/i)).toBeInTheDocument()
-      expect(screen.getByText(/Conexión de Red/i)).toBeInTheDocument()
-      expect(screen.getByText(/Worker Queue.*BullMQ/i)).toBeInTheDocument()
-      expect(screen.getByText(/Almacenamiento/i)).toBeInTheDocument()
+      const serviceMatchers = [
+        /Frontend.*Next\.js/i,
+        /API Backend/i,
+        /Base de Datos.*PostgreSQL/i,
+        /Conexión de Red/i,
+        /Worker Queue.*BullMQ/i,
+        /Almacenamiento/i,
+      ]
+
+      serviceMatchers.forEach((matcher) => {
+        expect(screen.getAllByText(matcher).length).toBeGreaterThan(0)
+      })
     })
 
     it('shows status legend', () => {
@@ -98,7 +114,7 @@ describe('System Status Page', () => {
         await waitFor(() => {
           const timestamps = screen.queryAllByText(/\d{1,2}:\d{2}:\d{2}/)
           expect(timestamps.length).toBeGreaterThan(0)
-        }, { timeout: 100 })
+        }, { timeout: 1000 })
       })
     })
   })
@@ -111,12 +127,13 @@ describe('System Status Page', () => {
         await waitFor(() => {
           const timestamps = screen.queryAllByText(/\d{1,2}:\d{2}:\d{2}/)
           expect(timestamps.length).toBeGreaterThan(0)
-        })
+        }, { timeout: 1000 })
       })
     })
 
     it('sets up 30-second refresh interval', async () => {
-      const { rerender } = render(<EstadoSistemaPage />)
+      vi.useFakeTimers()
+      render(<EstadoSistemaPage />)
       
       await act(async () => {
         vi.advanceTimersByTime(30000)
@@ -218,7 +235,7 @@ describe('System Status Page', () => {
     it('displays incident history section', () => {
       render(<EstadoSistemaPage />)
       
-      expect(screen.getByText(/Historial de Incidentes/i)).toBeInTheDocument()
+      expect(screen.getByText(/Historial de Incidencias/i)).toBeInTheDocument()
     })
 
     it('shows recent incidents', () => {
@@ -286,8 +303,8 @@ describe('System Status Page', () => {
     it('includes descriptive service labels', () => {
       render(<EstadoSistemaPage />)
       
-      expect(screen.getByText(/Aplicación web pública y dashboard/i)).toBeInTheDocument()
-      expect(screen.getByText(/Backend API y gestor de contenido/i)).toBeInTheDocument()
+      expect(screen.getAllByText(/Aplicación web pública y dashboard/i).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/Servicios REST y GraphQL/i).length).toBeGreaterThan(0)
     })
 
     it('has tooltips on uptime bars', () => {

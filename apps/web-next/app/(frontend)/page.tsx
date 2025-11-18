@@ -1,131 +1,68 @@
 /**
- * Home Page Component
+ * Homepage Component
  *
- * Main landing page with hero section, featured courses, and CTA
- * Server Component with data fetching from Payload CMS
+ * Complete landing page for CEP Formación
+ * Features: Hero carousel, Featured Courses, Features, CTA
  */
 
-import Link from 'next/link';
-import { CourseCard } from '@/components/ui';
-import { payloadClient } from '@/lib/payloadClient';
-import type { Course } from '@/lib/types';
+import { HeroCarousel } from '@/components/ui/HeroCarousel';
+import { CourseCard } from '@/components/ui/CourseCard';
+import { getCourses } from '@/lib/api';
 
+// Force dynamic rendering to avoid static generation issues
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  // Fetch featured courses from Payload CMS via REST API
-  let featuredCourses: Course[] = [];
-  try {
-    const coursesData = await payloadClient.find<Course>('courses', {
-      where: {
-        featured: {
-          equals: true,
-        },
-        active: {
-          equals: true,
-        },
-      },
-      limit: 3,
-      depth: 2, // Include cycle data
-    });
-    featuredCourses = coursesData.docs || [];
-  } catch (error) {
-    console.error('Error fetching featured courses:', error);
-  }
+  // Fetch featured courses from API
+  const coursesData = await getCourses({ featured: true, limit: 3 });
+  const courses = coursesData?.docs || [];
 
   return (
     <div className="home-page">
-      {/* Hero Section - Fluid Responsive */}
-      <section className="hero bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}>
-        <div className="container">
-          <div className="max-w-3xl xl:max-w-4xl mx-auto text-center">
-            <h1 className="text-fluid-hero title-hero font-bold mb-4 md:mb-6">
-              Formación Profesional de Calidad
-            </h1>
-            <p className="text-fluid-hero-sub mb-6 md:mb-8 opacity-90">
-              Cursos presenciales, online y semipresenciales. Ciclos formativos y formación
-              para el empleo con ayudas disponibles.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Link href="/cursos" className="btn-primary bg-white text-primary hover:bg-neutral-100 text-center text-sm md:text-base">
-                Ver Cursos
-              </Link>
-              <Link href="/contacto" className="btn-secondary bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary text-center text-sm md:text-base">
-                Solicitar Información
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section with Carousel */}
+      <HeroCarousel />
 
-      {/* Featured Courses Section - Fluid Responsive */}
+      {/* Featured Courses Section */}
       <section className="bg-neutral-50" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container">
           <div className="mb-6 md:mb-8">
-            <h2 className="text-fluid-section-title section-title-uppercase font-bold mb-2">Cursos Destacados</h2>
+            <h2 className="text-fluid-section-title section-title-uppercase font-bold mb-2">
+              Cursos Destacados
+            </h2>
             <p className="text-fluid-body text-neutral-600 text-left">
               Descubre nuestros cursos más populares y con mayor demanda
             </p>
           </div>
 
-          {featuredCourses.length > 0 ? (
-            <>
-              <div className="grid-fluid-cards">
-                {featuredCourses.map((course) => (
-                  <div
-                    key={course.id}
-                    className={
-                      course.course_type === 'ciclo_medio' || course.course_type === 'ciclo_superior'
-                        ? 'cycle-card-wide'
-                        : ''
-                    }
-                  >
-                    <CourseCard course={course} />
-                  </div>
-                ))}
-              </div>
+          <div className="grid-fluid-cards">
+            {courses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
+          </div>
 
-              {/* View All Courses Link */}
-              <div className="text-center mt-8">
-                <Link
-                  href="/cursos"
-                  className="inline-flex items-center text-primary font-semibold hover:underline"
-                >
-                  Ver todos los cursos
-                  <svg
-                    className="ml-2 w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </Link>
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-neutral-600">
-                No hay cursos destacados disponibles en este momento.
-              </p>
-              <Link href="/cursos" className="mt-4 inline-block text-primary hover:underline">
-                Ver todos los cursos disponibles
-              </Link>
-            </div>
-          )}
+          <div className="text-center mt-8">
+            <a
+              className="inline-flex items-center text-primary font-semibold hover:underline"
+              href="/cursos"
+            >
+              Ver todos los cursos
+              <svg className="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Features Section - Fluid Responsive */}
+      {/* Features Section */}
       <section style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
         <div className="container">
           <div className="grid-fluid-features">
-            {/* Feature 1 */}
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <svg
@@ -142,13 +79,17 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="card-title-uppercase font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Formación de Calidad</h3>
+              <h3
+                className="card-title-uppercase font-semibold mb-2"
+                style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}
+              >
+                Formación de Calidad
+              </h3>
               <p className="text-fluid-body text-neutral-600 text-center">
                 Cursos homologados con docentes expertos y contenidos actualizados
               </p>
             </div>
 
-            {/* Feature 2 */}
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary/10 rounded-full mb-4">
                 <svg
@@ -165,13 +106,17 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="card-title-uppercase font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Ayudas Disponibles</h3>
+              <h3
+                className="card-title-uppercase font-semibold mb-2"
+                style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}
+              >
+                Ayudas Disponibles
+              </h3>
               <p className="text-fluid-body text-neutral-600 text-center">
                 Acceso a becas y financiación para facilitar tu formación profesional
               </p>
             </div>
 
-            {/* Feature 3 */}
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 rounded-full mb-4">
                 <svg
@@ -188,7 +133,12 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="card-title-uppercase font-semibold mb-2" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>Flexibilidad</h3>
+              <h3
+                className="card-title-uppercase font-semibold mb-2"
+                style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}
+              >
+                Flexibilidad
+              </h3>
               <p className="text-fluid-body text-neutral-600 text-center">
                 Modalidades presencial, online y semipresencial para adaptarnos a ti
               </p>
@@ -197,19 +147,25 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section - Fluid Responsive */}
-      <section className="bg-secondary text-white" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
+      {/* CTA Section */}
+      <section
+        className="bg-secondary text-white"
+        style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}
+      >
         <div className="container text-center">
           <h2 className="text-fluid-section-title font-bold mb-4 md:mb-6">
             ¿Listo para dar el siguiente paso?
           </h2>
           <p className="text-fluid-hero-sub mb-6 md:mb-8 opacity-90 max-w-2xl xl:max-w-3xl mx-auto px-4">
-            Contacta con nosotros y te ayudaremos a encontrar el curso perfecto para
-            impulsar tu carrera profesional
+            Contacta con nosotros y te ayudaremos a encontrar el curso perfecto para impulsar tu
+            carrera profesional
           </p>
-          <Link href="/contacto" className="btn-primary bg-white text-secondary hover:bg-neutral-100 inline-block">
+          <a
+            className="btn-primary bg-white text-secondary hover:bg-neutral-100 inline-block"
+            href="/contacto"
+          >
             Solicitar Información
-          </Link>
+          </a>
         </div>
       </section>
     </div>

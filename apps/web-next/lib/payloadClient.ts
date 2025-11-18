@@ -95,10 +95,7 @@ export class PayloadClient {
    * const course = coursesData.docs[0];
    * ```
    */
-  async find<T>(
-    collection: string,
-    options: PayloadFindOptions
-  ): Promise<PayloadResponse<T>> {
+  async find<T>(collection: string, options: PayloadFindOptions): Promise<PayloadResponse<T>> {
     const params = new URLSearchParams();
 
     // Construct query parameters
@@ -128,17 +125,13 @@ export class PayloadClient {
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to fetch ${collection}: ${response.status} ${response.statusText}`
-        );
+        throw new Error(`Failed to fetch ${collection}: ${response.status} ${response.statusText}`);
       }
 
       return await response.json();
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(
-          `Failed to fetch ${collection}: ${error.message} (URL: ${url})`
-        );
+        throw new Error(`Failed to fetch ${collection}: ${error.message} (URL: ${url})`);
       }
       throw error;
     }
@@ -162,11 +155,7 @@ export class PayloadClient {
    * console.log(course.name);
    * ```
    */
-  async findByID<T>(
-    collection: string,
-    id: string | number,
-    depth: number = 0
-  ): Promise<T> {
+  async findByID<T>(collection: string, id: string | number, depth: number = 0): Promise<T> {
     const url = `${this.baseUrl}/api/${collection}/${id}?depth=${depth}`;
 
     try {
@@ -180,7 +169,7 @@ export class PayloadClient {
 
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch ${collection} with ID ${id}: ${response.status} ${response.statusText}`
+          `Failed to fetch ${collection} with ID ${id}: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -188,7 +177,7 @@ export class PayloadClient {
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(
-          `Failed to fetch ${collection} with ID ${id}: ${error.message} (URL: ${url})`
+          `Failed to fetch ${collection} with ID ${id}: ${error.message} (URL: ${url})`,
         );
       }
       throw error;

@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -10,19 +10,19 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3B82F6', // Blue-500
-          light: '#60A5FA',   // Blue-400
-          dark: '#2563EB',    // Blue-600
+          DEFAULT: '#1e40af', // Professional blue
+          dark: '#1e3a8a',
+          light: '#3b82f6',
         },
         secondary: {
-          DEFAULT: '#10B981', // Green-500
-          light: '#34D399',   // Green-400
-          dark: '#059669',    // Green-600
+          DEFAULT: '#059669', // Success green
+          dark: '#047857',
+          light: '#10b981',
         },
         accent: {
-          DEFAULT: '#F59E0B', // Amber-500
-          light: '#FBBF24',   // Amber-400
-          dark: '#D97706',    // Amber-600
+          DEFAULT: '#ea580c', // Call-to-action orange
+          dark: '#c2410c',
+          light: '#f97316',
         },
         neutral: {
           50: '#F9FAFB',
@@ -35,6 +35,23 @@ const config: Config = {
           700: '#374151',
           800: '#1F2937',
           900: '#111827',
+        },
+        // CEP Formación Course Type Colors
+        'cep-rosa': {
+          DEFAULT: '#f2014b', // Rosa CEP - PRIVADO/CICLOS
+          dark: '#d6013f',
+        },
+        'cep-ocupados': {
+          DEFAULT: '#10b981', // Verde - TRABAJADORES OCUPADOS
+          dark: '#059669',
+        },
+        'cep-desempleados': {
+          DEFAULT: '#3b82f6', // Azul - TRABAJADORES DESEMPLEADOS
+          dark: '#2563eb',
+        },
+        'cep-teleformacion': {
+          DEFAULT: '#ffa800', // Naranja - TELEFORMACIÓN
+          dark: '#e69500',
         },
       },
       fontFamily: {
@@ -60,6 +77,6 @@ const config: Config = {
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;

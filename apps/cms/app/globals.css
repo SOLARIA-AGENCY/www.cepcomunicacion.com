@@ -1,65 +1,108 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  /* Light mode colors - CEP FORMACIÓN Theme */
-  --color-background: hsl(0 0% 97%);
-  --color-foreground: hsl(222.2 84% 4.9%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(222.2 84% 4.9%);
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(222.2 84% 4.9%);
-  --color-primary: hsl(342 99% 48%);
-  --color-primary-foreground: hsl(0 0% 100%);
-  --color-secondary: hsl(210 40% 96.1%);
-  --color-secondary-foreground: hsl(222.2 47.4% 11.2%);
-  --color-muted: hsl(210 40% 96.1%);
-  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
-  --color-accent: hsl(342 99% 48%);
-  --color-accent-foreground: hsl(0 0% 100%);
-  --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-border: hsl(214.3 31.8% 91.4%);
-  --color-input: hsl(214.3 31.8% 91.4%);
-  --color-ring: hsl(342 99% 48%);
-  --color-sidebar: hsl(0 0% 100%);
-  --color-sidebar-foreground: hsl(240 5.3% 26.1%);
-  --color-sidebar-primary: hsl(342 99% 48%);
-  --color-sidebar-primary-foreground: hsl(0 0% 100%);
-  --color-sidebar-accent: hsl(342 10% 96%);
-  --color-sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --color-sidebar-border: hsl(220 13% 91%);
-  --color-sidebar-ring: hsl(342 99% 48%);
-}
+@layer base {
+  :root {
+    /* CSS variables for runtime theming - CEP FORMACIÓN */
+    --background: 0 0% 97%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 342 99% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 342 99% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 342 99% 48%;
 
-/* Dark mode overrides - CEP FORMACIÓN Dark Theme */
-.dark {
-  --color-background: hsl(0 0% 6%);              /* Extremely dark base (#0f0f0f) */
-  --color-foreground: hsl(0 0% 95%);             /* Light gray text (#f2f2f2) */
-  --color-card: hsl(0 0% 10%);                   /* Dark gray cards (#1a1a1a) */
-  --color-card-foreground: hsl(0 0% 95%);
-  --color-popover: hsl(0 0% 10%);
-  --color-popover-foreground: hsl(0 0% 95%);
-  --color-primary: hsl(342 99% 58%);             /* CEP pink brighter for dark mode */
-  --color-primary-foreground: hsl(0 0% 100%);
-  --color-secondary: hsl(0 0% 13%);              /* Medium dark (#212121) */
-  --color-secondary-foreground: hsl(0 0% 95%);
-  --color-muted: hsl(0 0% 13%);
-  --color-muted-foreground: hsl(0 0% 65%);       /* Medium gray text (#a6a6a6) */
-  --color-accent: hsl(342 99% 58%);
-  --color-accent-foreground: hsl(0 0% 100%);
-  --color-destructive: hsl(0 62.8% 50%);         /* Brighter red for visibility */
-  --color-destructive-foreground: hsl(0 0% 98%);
-  --color-border: hsl(0 0% 17%);                 /* Perceptible (#2b2b2b) */
-  --color-input: hsl(0 0% 17%);
-  --color-ring: hsl(342 99% 58%);
-  --color-sidebar: hsl(0 0% 4%);                 /* Very dark (#0a0a0a) */
-  --color-sidebar-foreground: hsl(0 0% 90%);
-  --color-sidebar-primary: hsl(342 99% 58%);
-  --color-sidebar-primary-foreground: hsl(0 0% 100%);
-  --color-sidebar-accent: hsl(0 0% 8%);
-  --color-sidebar-accent-foreground: hsl(0 0% 95%);
-  --color-sidebar-border: hsl(0 0% 14%);
-  --color-sidebar-ring: hsl(342 99% 58%);
+    /* Sidebar colors - CEP FORMACIÓN */
+    --sidebar: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 342 99% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 342 10% 96%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 342 99% 48%;
+
+    /* Border radius */
+    --radius: 0.5rem;
+
+    /* Chart colors */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    /* Base backgrounds - neutral grays with proper hierarchy */
+    --background: 0 0% 6%; /* Extremely dark base (#0f0f0f) */
+    --foreground: 0 0% 95%; /* Light gray text (#f2f2f2) */
+
+    /* Cards - 4% lighter than background */
+    --card: 0 0% 10%; /* Dark gray cards (#1a1a1a) */
+    --card-foreground: 0 0% 95%; /* Light gray text */
+
+    /* Popovers - same as cards */
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Primary - CEP FORMACIÓN brand color */
+    --primary: 342 99% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - 3% lighter than card */
+    --secondary: 0 0% 13%; /* Medium dark (#212121) */
+    --secondary-foreground: 0 0% 95%;
+
+    /* Muted - same as secondary */
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 65%; /* Medium gray text (#a6a6a6) */
+
+    /* Accent - CEP FORMACIÓN brand color */
+    --accent: 342 99% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive - keep red visible */
+    --destructive: 0 62.8% 50%; /* Brighter red for visibility */
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders - perceptible against dark backgrounds */
+    --border: 0 0% 17%; /* Light enough to see (#2b2b2b) */
+    --input: 0 0% 17%;
+
+    /* Focus ring - CEP brand color */
+    --ring: 342 99% 58%;
+
+    /* Sidebar - darker than main background */
+    --sidebar: 0 0% 4%; /* Very dark (#0a0a0a) */
+    --sidebar-foreground: 0 0% 90%; /* Slightly dimmer than main text */
+    --sidebar-primary: 342 99% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 8%; /* Subtle highlight */
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 342 99% 58%;
+
+    /* Chart colors - vibrant but not oversaturated */
+    --chart-1: 342 70% 55%; /* CEP Pink */
+    --chart-2: 142 60% 50%; /* Green */
+    --chart-3: 25 80% 60%; /* Orange */
+    --chart-4: 280 60% 55%; /* Purple */
+    --chart-5: 340 70% 55%; /* Pink variant */
+  }
 }
 
 @layer base {
@@ -108,12 +151,12 @@
 
   .dark {
     /* Base backgrounds - neutral grays with proper hierarchy */
-    --background: 0 0% 6%;              /* Extremely dark base (#0f0f0f) */
-    --foreground: 0 0% 95%;             /* Light gray text (#f2f2f2) */
+    --background: 0 0% 6%; /* Extremely dark base (#0f0f0f) */
+    --foreground: 0 0% 95%; /* Light gray text (#f2f2f2) */
 
     /* Cards - 4% lighter than background */
-    --card: 0 0% 10%;                   /* Dark gray cards (#1a1a1a) */
-    --card-foreground: 0 0% 95%;        /* Light gray text */
+    --card: 0 0% 10%; /* Dark gray cards (#1a1a1a) */
+    --card-foreground: 0 0% 95%; /* Light gray text */
 
     /* Popovers - same as cards */
     --popover: 0 0% 10%;
@@ -124,44 +167,44 @@
     --primary-foreground: 0 0% 100%;
 
     /* Secondary - 3% lighter than card */
-    --secondary: 0 0% 13%;              /* Medium dark (#212121) */
+    --secondary: 0 0% 13%; /* Medium dark (#212121) */
     --secondary-foreground: 0 0% 95%;
 
     /* Muted - same as secondary */
     --muted: 0 0% 13%;
-    --muted-foreground: 0 0% 65%;       /* Medium gray text (#a6a6a6) */
+    --muted-foreground: 0 0% 65%; /* Medium gray text (#a6a6a6) */
 
     /* Accent - CEP FORMACIÓN brand color */
     --accent: 342 99% 58%;
     --accent-foreground: 0 0% 100%;
 
     /* Destructive - keep red visible */
-    --destructive: 0 62.8% 50%;         /* Brighter red for visibility */
+    --destructive: 0 62.8% 50%; /* Brighter red for visibility */
     --destructive-foreground: 0 0% 98%;
 
     /* Borders - perceptible against dark backgrounds */
-    --border: 0 0% 17%;                 /* Light enough to see (#2b2b2b) */
+    --border: 0 0% 17%; /* Light enough to see (#2b2b2b) */
     --input: 0 0% 17%;
 
     /* Focus ring - CEP brand color */
     --ring: 342 99% 58%;
 
     /* Sidebar - darker than main background */
-    --sidebar: 0 0% 4%;                 /* Very dark (#0a0a0a) */
-    --sidebar-foreground: 0 0% 90%;     /* Slightly dimmer than main text */
+    --sidebar: 0 0% 4%; /* Very dark (#0a0a0a) */
+    --sidebar-foreground: 0 0% 90%; /* Slightly dimmer than main text */
     --sidebar-primary: 342 99% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 8%;          /* Subtle highlight */
+    --sidebar-accent: 0 0% 8%; /* Subtle highlight */
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 0 0% 14%;
     --sidebar-ring: 342 99% 58%;
 
     /* Chart colors - vibrant but not oversaturated */
-    --chart-1: 342 70% 55%;             /* CEP Pink */
-    --chart-2: 142 60% 50%;             /* Green */
-    --chart-3: 25 80% 60%;              /* Orange */
-    --chart-4: 280 60% 55%;             /* Purple */
-    --chart-5: 340 70% 55%;             /* Pink variant */
+    --chart-1: 342 70% 55%; /* CEP Pink */
+    --chart-2: 142 60% 50%; /* Green */
+    --chart-3: 25 80% 60%; /* Orange */
+    --chart-4: 280 60% 55%; /* Purple */
+    --chart-5: 340 70% 55%; /* Pink variant */
   }
 }
 
@@ -173,7 +216,9 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
   }
 }
 
@@ -208,7 +253,9 @@
   width: auto;
   object-fit: contain;
   filter: grayscale(0.2);
-  transition: filter 0.2s ease, opacity 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    opacity 0.2s ease;
   opacity: 0.85;
 }
 

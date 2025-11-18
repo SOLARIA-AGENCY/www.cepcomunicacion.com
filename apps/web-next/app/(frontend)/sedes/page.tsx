@@ -11,43 +11,44 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Nuestras Sedes - CEP Formación Tenerife',
-  description: 'Sedes de CEP Formación en Tenerife: CEP Norte y CEP Santa Cruz. Encuentra nuestra ubicación, horarios y cómo llegar.',
+  description:
+    'Sedes de CEP Formación en Tenerife: CEP Norte y CEP Santa Cruz. Encuentra nuestra ubicación, horarios y cómo llegar.',
 };
 
 // Icon components
 const LocationIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
   </svg>
 );
 
 const PhoneIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
   </svg>
 );
 
 const EmailIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
   </svg>
 );
 
 const ClockIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
   </svg>
 );
 
 const DirectionsIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
   </svg>
 );
 
 const MapPinIcon = () => (
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
   </svg>
 );
 
@@ -64,9 +65,7 @@ function InfoBlock({ icon, title, children }: InfoBlockProps) {
         <div className="text-primary">{icon}</div>
         <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">{title}</h3>
       </div>
-      <div className="text-neutral-700 text-sm space-y-2">
-        {children}
-      </div>
+      <div className="text-neutral-700 text-sm space-y-2">{children}</div>
     </div>
   );
 }
@@ -106,9 +105,8 @@ function SedeCard({
   mapEmbedUrl,
   contactUrl,
 }: SedeCardProps) {
-  const badgeClasses = badgeVariant === 'primary'
-    ? 'bg-primary text-white'
-    : 'bg-blue-500 text-white';
+  const badgeClasses =
+    badgeVariant === 'primary' ? 'bg-primary text-white' : 'bg-blue-500 text-white';
 
   return (
     <article className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
@@ -120,7 +118,9 @@ function SedeCard({
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
         <div className="absolute top-6 left-6">
-          <span className={`${badgeClasses} px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-lg`}>
+          <span
+            className={`${badgeClasses} px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-lg`}
+          >
             {badgeText}
           </span>
         </div>
@@ -140,18 +140,35 @@ function SedeCard({
           </InfoBlock>
 
           <InfoBlock icon={<PhoneIcon />} title="Teléfono">
-            <p><a href={`tel:${telefono}`} className="text-primary hover:underline font-semibold">{telefono}</a></p>
-            <p><a href={`tel:${telefonoWhatsapp}`} className="text-primary hover:underline font-semibold">{telefonoWhatsapp}</a> (WhatsApp)</p>
+            <p>
+              <a href={`tel:${telefono}`} className="text-primary hover:underline font-semibold">
+                {telefono}
+              </a>
+            </p>
+            <p>
+              <a
+                href={`tel:${telefonoWhatsapp}`}
+                className="text-primary hover:underline font-semibold"
+              >
+                {telefonoWhatsapp}
+              </a>{' '}
+              (WhatsApp)
+            </p>
           </InfoBlock>
 
           <InfoBlock icon={<EmailIcon />} title="Email">
-            <p><a href={`mailto:${email}`} className="text-primary hover:underline font-semibold">{email}</a></p>
+            <p>
+              <a href={`mailto:${email}`} className="text-primary hover:underline font-semibold">
+                {email}
+              </a>
+            </p>
           </InfoBlock>
 
           <InfoBlock icon={<ClockIcon />} title="Horario">
             {horario.map((item, i) => (
               <p key={i}>
-                <strong className="text-neutral-900 font-semibold">{item.label}:</strong> {item.value}
+                <strong className="text-neutral-900 font-semibold">{item.label}:</strong>{' '}
+                {item.value}
               </p>
             ))}
           </InfoBlock>
@@ -159,7 +176,8 @@ function SedeCard({
           <InfoBlock icon={<DirectionsIcon />} title="Cómo Llegar">
             {transporte.map((item, i) => (
               <p key={i}>
-                <strong className="text-neutral-900 font-semibold">{item.label}:</strong> {item.value}
+                <strong className="text-neutral-900 font-semibold">{item.label}:</strong>{' '}
+                {item.value}
               </p>
             ))}
           </InfoBlock>
@@ -209,12 +227,13 @@ export default function SedesPage() {
     subtitle: 'Santa Cruz de Tenerife - Zona Norte',
     badgeText: 'SEDE PRINCIPAL',
     badgeVariant: 'primary',
-    imageUrl: 'https://images.pexels.com/photos/1595385/pexels-photo-1595385.jpeg?auto=compress&cs=tinysrgb&w=800',
+    imageUrl:
+      'https://images.pexels.com/photos/1595385/pexels-photo-1595385.jpeg?auto=compress&cs=tinysrgb&w=800',
     imageAlt: 'CEP Norte - Instalaciones modernas en Santa Cruz de Tenerife',
     direccion: [
       'Calle Ejemplo Norte, 123',
       '38001 Santa Cruz de Tenerife',
-      'Islas Canarias, España'
+      'Islas Canarias, España',
     ],
     telefono: '+34 922 123 456',
     telefonoWhatsapp: '+34 622 123 456',
@@ -222,16 +241,17 @@ export default function SedesPage() {
     horario: [
       { label: 'Lunes a Viernes', value: '9:00 - 20:00' },
       { label: 'Sábados', value: '9:00 - 14:00' },
-      { label: 'Domingos', value: 'Cerrado' }
+      { label: 'Domingos', value: 'Cerrado' },
     ],
     transporte: [
       { label: 'Guagua (Bus)', value: 'Líneas 910, 920, 925' },
       { label: 'Tranvía', value: 'Parada "La Trinidad"' },
-      { label: 'Parking', value: 'Parking gratuito disponible' }
+      { label: 'Parking', value: 'Parking gratuito disponible' },
     ],
     mapUrl: 'https://maps.google.com/?q=CEP+Norte+Tenerife',
-    mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.123456789012!2d-16.2546568!3d28.4636296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDI3JzQ5LjEiTiAxNsKwMTUnMTYuOCJX!5e0!3m2!1ses!2ses!4v1234567890123!5m2!1ses!2ses',
-    contactUrl: '/contacto?sede=norte'
+    mapEmbedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.123456789012!2d-16.2546568!3d28.4636296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDI3JzQ5LjEiTiAxNsKwMTUnMTYuOCJX!5e0!3m2!1ses!2ses!4v1234567890123!5m2!1ses!2ses',
+    contactUrl: '/contacto?sede=norte',
   };
 
   const sedeSantaCruz: SedeCardProps = {
@@ -239,12 +259,13 @@ export default function SedesPage() {
     subtitle: 'Santa Cruz de Tenerife - Centro Ciudad',
     badgeText: 'SEDE CENTRO',
     badgeVariant: 'secondary',
-    imageUrl: 'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=800',
+    imageUrl:
+      'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=800',
     imageAlt: 'CEP Santa Cruz - Centro de formación en pleno centro de la ciudad',
     direccion: [
       'Avenida Principal Centro, 45',
       '38003 Santa Cruz de Tenerife',
-      'Islas Canarias, España'
+      'Islas Canarias, España',
     ],
     telefono: '+34 922 654 321',
     telefonoWhatsapp: '+34 622 654 321',
@@ -252,16 +273,17 @@ export default function SedesPage() {
     horario: [
       { label: 'Lunes a Viernes', value: '8:30 - 21:00' },
       { label: 'Sábados', value: '9:00 - 15:00' },
-      { label: 'Domingos', value: 'Cerrado' }
+      { label: 'Domingos', value: 'Cerrado' },
     ],
     transporte: [
       { label: 'Guagua (Bus)', value: 'Líneas 101, 102, 103, 105' },
       { label: 'Tranvía', value: 'Parada "Weyler"' },
-      { label: 'Parking', value: 'Parking público cercano' }
+      { label: 'Parking', value: 'Parking público cercano' },
     ],
     mapUrl: 'https://maps.google.com/?q=CEP+Santa+Cruz+Tenerife',
-    mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.987654321098!2d-16.2513568!3d28.4678296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDI4JzA0LjIiTiAxNsKwMTUnMDQuOSJX!5e0!3m2!1ses!2ses!4v1234567890124!5m2!1ses!2ses',
-    contactUrl: '/contacto?sede=santacruz'
+    mapEmbedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.987654321098!2d-16.2513568!3d28.4678296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDI4JzA0LjIiTiAxNsKwMTUnMDQuOSJX!5e0!3m2!1ses!2ses!4v1234567890124!5m2!1ses!2ses',
+    contactUrl: '/contacto?sede=santacruz',
   };
 
   return (
@@ -273,8 +295,8 @@ export default function SedesPage() {
             Nuestras Sedes en Tenerife
           </h1>
           <p className="text-lg md:text-xl opacity-95 leading-relaxed">
-            Dos centros estratégicamente ubicados en Santa Cruz de Tenerife
-            para ofrecerte la mejor formación profesional cerca de ti.
+            Dos centros estratégicamente ubicados en Santa Cruz de Tenerife para ofrecerte la mejor
+            formación profesional cerca de ti.
           </p>
         </div>
       </section>

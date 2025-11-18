@@ -3,7 +3,12 @@
  * Handles authentication and API requests
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+import { PayloadClient } from '@cepcomunicacion/api-client';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+
+// Create shared API client instance
+export const apiClient = new PayloadClient(API_URL);
 
 export interface LoginCredentials {
   email: string;
@@ -61,21 +66,21 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
   }
 
   // Production authentication via Payload CMS
-  const response = await fetch(`${API_URL}/users/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
-    credentials: 'include', // Important: include cookies
-  });
+  try {
+    const result = await apiClient.login(credentials.email, credentials.password);
 
-  if (!response.ok) {
-    const error: ApiError = await response.json();
-    throw new Error(error.errors[0]?.message || 'Login failed');
+    // Set auth token on client
+    apiClient.setAuthToken(result.token);
+
+    return {
+      message: 'Login successful',
+      user: result.user,
+      token: result.token,
+      exp: Date.now() + 86400000, // 24 hours
+    };
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Login failed');
   }
-
-  return response.json();
 }
 
 /**
@@ -88,13 +93,14 @@ export async function logout(): Promise<void> {
     localStorage.removeItem('dev_session');
   }
 
-  const response = await fetch(`${API_URL}/users/logout`, {
-    method: 'POST',
-    credentials: 'include',
-  });
+  // Clear auth token
+  apiClient.clearAuthToken();
 
-  if (!response.ok) {
-    throw new Error('Logout failed');
+  try {
+    await apiClient.logout();
+  } catch (error) {
+    // Don't throw error for logout, just log it
+    console.warn('Logout API call failed:', error);
   }
 }
 
@@ -121,13 +127,10 @@ export async function getCurrentUser() {
     }
   }
 
-  const response = await fetch(`${API_URL}/users/me`, {
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
+  try {
+    const user = await apiClient.getMe();
+    return { user };
+  } catch (error) {
     return null;
   }
-
-  return response.json();
 }

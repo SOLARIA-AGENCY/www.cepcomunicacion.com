@@ -1,0 +1,157 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Deploy Frontend (web-next)
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/web-next/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd apps/web-next
+          npm ci
+
+      - name: Type check
+        run: |
+          cd apps/web-next
+          npm run type-check
+
+      - name: Run tests
+        run: |
+          cd apps/web-next
+          npm run test:unit
+
+      - name: Build
+        run: |
+          cd apps/web-next
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=apps/web-next/out --prod=${{ github.ref == 'refs/heads/main' }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_FRONTEND }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_FRONTEND }}
+
+  # Deploy Admin Panel
+  deploy-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd apps/admin
+          npm ci
+
+      - name: Build
+        run: |
+          cd apps/admin
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=apps/admin/out --prod=${{ github.ref == 'refs/heads/main' }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_ADMIN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_ADMIN }}
+
+  # Preview deployments for PRs
+  preview-frontend:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/web-next/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd apps/web-next
+          npm ci
+
+      - name: Build
+        run: |
+          cd apps/web-next
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
+          NEXT_PUBLIC_ENVIRONMENT: preview
+
+      - name: Deploy Preview
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=apps/web-next/out
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_FRONTEND }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_FRONTEND }}
+
+  preview-admin:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd apps/admin
+          npm ci
+
+      - name: Build
+        run: |
+          cd apps/admin
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
+
+      - name: Deploy Preview
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=apps/admin/out
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_ADMIN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_ADMIN }}

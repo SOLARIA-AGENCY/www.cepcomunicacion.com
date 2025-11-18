@@ -22,6 +22,11 @@ out/
 .nuxt/
 .cache/
 
+# Next.js specific build artifacts
+apps/*/.next/
+apps/*/out/
+apps/*/build/
+
 # Testing
 coverage/
 .nyc_output/
@@ -84,6 +89,14 @@ secrets/
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Compiled JavaScript/TypeScript files (should not be tracked)
+**/*.js
+**/*.js.map
+**/*.d.ts
+**/*.d.ts.map
+!**/node_modules/**/*.js
+!**/node_modules/**/*.d.ts
 
 # Backup files
 *.bak

@@ -19,13 +19,21 @@ import type { Course } from '@/lib/types';
 // Mock course for preview
 const mockCourse: Course = {
   id: 1,
+  code: 'DWFS001',
   name: 'Desarrollo Web Full Stack',
-  short_description: 'Aprende a desarrollar aplicaciones web completas con las tecnologías más demandadas del mercado.',
+  description:
+    'Aprende a desarrollar aplicaciones web completas con las tecnologías más demandadas del mercado.',
+  short_description:
+    'Aprende a desarrollar aplicaciones web completas con las tecnologías más demandadas del mercado.',
   slug: 'desarrollo-web-full-stack',
-  modality: 'presencial',
-  cycle: 1, // Mock cycle ID
+  type: 'private' as any,
+  area: 'computing' as any,
+  duration: 450,
+  price: 1200,
   featured: true,
   active: true,
+  modality: 'presencial',
+  cycle: 1, // Mock cycle ID
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };
@@ -77,7 +85,19 @@ export default function DesignHubPage() {
 
     // Shadows
     root.style.setProperty('--shadow-md', `0 4px 6px -1px rgb(0 0 0 / ${shadowIntensity})`);
-  }, [h1Size, h2Size, h3Size, bodySize, lineHeight, primaryColor, secondaryColor, accentColor, spacing, borderRadius, shadowIntensity]);
+  }, [
+    h1Size,
+    h2Size,
+    h3Size,
+    bodySize,
+    lineHeight,
+    primaryColor,
+    secondaryColor,
+    accentColor,
+    spacing,
+    borderRadius,
+    shadowIntensity,
+  ]);
 
   const resetDefaults = () => {
     setH1Size(40);
@@ -134,7 +154,9 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
       <div className="container max-w-7xl">
         {/* Header */}
         <div className="mb-8 sm:mb-10 md:mb-12 text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-left">🎨 Design Hub</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-left">
+            🎨 Design Hub
+          </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-neutral-600 mb-4 sm:mb-6 text-left">
             Playground interactivo para ajustar el sistema de diseño
           </p>
@@ -334,7 +356,9 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
               <h2 className="text-2xl font-bold mb-4 text-primary">💫 Sombras</h2>
 
               <div>
-                <label className="form-label">Shadow Intensity: {(shadowIntensity * 100).toFixed(0)}%</label>
+                <label className="form-label">
+                  Shadow Intensity: {(shadowIntensity * 100).toFixed(0)}%
+                </label>
                 <input
                   type="range"
                   min="0"
@@ -352,7 +376,9 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
           <div className="lg:col-span-2 xl:col-span-3 space-y-6 sm:space-y-8">
             {/* Typography Preview */}
             <div className="card bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-3xl font-bold mb-6 text-primary text-left">Vista Previa: Tipografía</h2>
+              <h2 className="text-3xl font-bold mb-6 text-primary text-left">
+                Vista Previa: Tipografía
+              </h2>
               <div className="space-y-4" style={{ fontWeight }}>
                 <h1 style={{ fontSize: `${h1Size}px`, lineHeight }} className="text-left">
                   Heading 1: Formación Profesional de Calidad
@@ -363,17 +389,23 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
                 <h3 style={{ fontSize: `${h3Size}px`, lineHeight }} className="text-left">
                   Heading 3: Desarrollo Web Full Stack
                 </h3>
-                <p style={{ fontSize: `${bodySize}px`, lineHeight }} className="text-neutral-600 text-left">
-                  Cuerpo de texto: Aprende a desarrollar aplicaciones web completas con las tecnologías más
-                  demandadas del mercado. Este curso te preparará para trabajar como desarrollador Full Stack
-                  con React, Node.js, bases de datos y servicios en la nube.
+                <p
+                  style={{ fontSize: `${bodySize}px`, lineHeight }}
+                  className="text-neutral-600 text-left"
+                >
+                  Cuerpo de texto: Aprende a desarrollar aplicaciones web completas con las
+                  tecnologías más demandadas del mercado. Este curso te preparará para trabajar como
+                  desarrollador Full Stack con React, Node.js, bases de datos y servicios en la
+                  nube.
                 </p>
               </div>
             </div>
 
             {/* Color Preview */}
             <div className="card bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-3xl font-bold mb-6 text-primary text-left">Vista Previa: Colores</h2>
+              <h2 className="text-3xl font-bold mb-6 text-primary text-left">
+                Vista Previa: Colores
+              </h2>
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div
@@ -404,7 +436,9 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
 
             {/* Buttons Preview */}
             <div className="card bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-3xl font-bold mb-6 text-primary text-left">Vista Previa: Botones</h2>
+              <h2 className="text-3xl font-bold mb-6 text-primary text-left">
+                Vista Previa: Botones
+              </h2>
               <div className="flex flex-wrap gap-4">
                 <button className="btn-primary">Primary Button</button>
                 <button className="btn-secondary">Secondary Button</button>
@@ -419,7 +453,9 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
 
             {/* Course Card Preview */}
             <div className="card bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-3xl font-bold mb-6 text-primary text-left">Vista Previa: Course Card</h2>
+              <h2 className="text-3xl font-bold mb-6 text-primary text-left">
+                Vista Previa: Course Card
+              </h2>
               <div className="max-w-md">
                 <CourseCard course={mockCourse} />
               </div>
@@ -427,7 +463,9 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
 
             {/* Form Elements Preview */}
             <div className="card bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-3xl font-bold mb-6 text-primary text-left">Vista Previa: Formularios</h2>
+              <h2 className="text-3xl font-bold mb-6 text-primary text-left">
+                Vista Previa: Formularios
+              </h2>
               <div className="space-y-4 max-w-md">
                 <div>
                   <label className="form-label text-left block">Nombre</label>
@@ -439,7 +477,11 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
                 </div>
                 <div>
                   <label className="form-label text-left block">Mensaje</label>
-                  <textarea placeholder="Tu mensaje" className="form-input text-left" rows={4}></textarea>
+                  <textarea
+                    placeholder="Tu mensaje"
+                    className="form-input text-left"
+                    rows={4}
+                  ></textarea>
                 </div>
                 <button className="btn-primary w-full">Enviar</button>
               </div>
@@ -447,18 +489,29 @@ body { font-size: var(--body-size); line-height: var(--line-height); }
 
             {/* Spacing Preview */}
             <div className="card bg-white p-8 rounded-xl shadow-md">
-              <h2 className="text-3xl font-bold mb-6 text-primary text-left">Vista Previa: Espaciado</h2>
+              <h2 className="text-3xl font-bold mb-6 text-primary text-left">
+                Vista Previa: Espaciado
+              </h2>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="bg-primary h-12 rounded" style={{ width: `${spacing * 2}px` }}></div>
+                  <div
+                    className="bg-primary h-12 rounded"
+                    style={{ width: `${spacing * 2}px` }}
+                  ></div>
                   <span className="text-sm text-left">2x spacing = {spacing * 2}px</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="bg-secondary h-12 rounded" style={{ width: `${spacing * 3}px` }}></div>
+                  <div
+                    className="bg-secondary h-12 rounded"
+                    style={{ width: `${spacing * 3}px` }}
+                  ></div>
                   <span className="text-sm text-left">3x spacing = {spacing * 3}px</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="bg-accent h-12 rounded" style={{ width: `${spacing * 4}px` }}></div>
+                  <div
+                    className="bg-accent h-12 rounded"
+                    style={{ width: `${spacing * 4}px` }}
+                  ></div>
                   <span className="text-sm text-left">4x spacing = {spacing * 4}px</span>
                 </div>
               </div>

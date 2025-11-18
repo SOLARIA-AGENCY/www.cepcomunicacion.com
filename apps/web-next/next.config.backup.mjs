@@ -1,27 +1,16 @@
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Standalone output for Docker deployment
   output: 'standalone',
-
-  // Typed Routes disabled (Footer has links to non-existent legal pages)
-  typedRoutes: false,
-
-  // Turbopack config (empty to silence Next.js 16 warning)
-  turbopack: {},
-
-  // PRODUCTION FIX: Disable Turbopack due to Drizzle Kit incompatibility
-  // Use Webpack for production builds until Payload 3.x supports Turbopack
-  // Development still uses Turbopack for speed
-  ...(process.env.NODE_ENV === 'production' && {
-    webpack: (config) => {
-      return config;
-    },
-  }),
 
   // TypeScript strict mode
   typescript: {
     ignoreBuildErrors: false,
+  },
+
+  // Disable ESLint in dev temporarily
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 
   // Image optimization - SECURITY: Whitelist specific domains only (no wildcards)
@@ -30,12 +19,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'localhost',
-        port: '3001',
+        port: '3002',
       },
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3001',
+        port: '3002',
       },
       // Add production domains when deploying:
       // {

@@ -6,7 +6,7 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development next dev --port 3000",
+    "dev": "NODE_ENV=development node_modules/.bin/next dev --hostname 0.0.0.0 --port 3002",
     "build": "next build",
     "start": "cross-env NODE_ENV=production next start --port 3000",
     "test": "vitest run",

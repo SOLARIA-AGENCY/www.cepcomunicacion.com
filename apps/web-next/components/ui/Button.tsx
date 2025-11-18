@@ -24,12 +24,16 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses =
+    'inline-flex items-center justify-center font-semibold rounded-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantClasses = {
-    primary: 'bg-primary text-white hover:bg-primary-dark focus-visible:outline-primary shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0',
-    secondary: 'bg-secondary text-white hover:bg-secondary-dark focus-visible:outline-secondary shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0',
-    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white focus-visible:outline-primary',
+    primary:
+      'bg-primary text-white hover:bg-primary-dark focus-visible:outline-primary shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0',
+    secondary:
+      'bg-secondary text-white hover:bg-secondary-dark focus-visible:outline-secondary shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0',
+    outline:
+      'border-2 border-primary text-primary hover:bg-primary hover:text-white focus-visible:outline-primary',
   };
 
   const sizeClasses = {

@@ -34,12 +34,18 @@ export default async function CursosPage() {
   return (
     <div className="courses-page bg-neutral-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2rem, 6vw, 4rem) 0' }}>
+      <section
+        className="bg-gradient-to-r from-primary to-primary-light text-white"
+        style={{ padding: 'clamp(2rem, 6vw, 4rem) 0' }}
+      >
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-fluid-section-title font-bold uppercase mb-4">Catálogo de Cursos</h1>
+            <h1 className="text-fluid-section-title font-bold uppercase mb-4">
+              Catálogo de Cursos
+            </h1>
             <p className="text-fluid-body opacity-90 mb-4">
-              Descubre nuestra amplia oferta formativa. Tenemos {courses.length} cursos disponibles para impulsar tu carrera profesional.
+              Descubre nuestra amplia oferta formativa. Tenemos {courses.length} cursos disponibles
+              para impulsar tu carrera profesional.
             </p>
           </div>
         </div>
@@ -57,10 +63,7 @@ export default async function CursosPage() {
               <p className="text-neutral-600 mb-6">
                 Los cursos aparecerán aquí una vez sean publicados desde el panel de administración.
               </p>
-              <Link
-                href="/"
-                className="btn-primary inline-block"
-              >
+              <Link href="/" className="btn-primary inline-block">
                 Volver al inicio
               </Link>
             </div>
@@ -71,14 +74,18 @@ export default async function CursosPage() {
       )}
 
       {/* CTA Section */}
-      <section className="bg-white border-t border-neutral-200" style={{ padding: 'clamp(2rem, 4vw, 3rem) 0' }}>
+      <section
+        className="bg-white border-t border-neutral-200"
+        style={{ padding: 'clamp(2rem, 4vw, 3rem) 0' }}
+      >
         <div className="container">
           <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 md:p-12 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-3">
               ¿No encuentras lo que buscas?
             </h2>
             <p className="text-neutral-600 mb-6 max-w-2xl mx-auto">
-              Contacta con nuestro equipo y te ayudaremos a encontrar el curso perfecto para tus necesidades
+              Contacta con nuestro equipo y te ayudaremos a encontrar el curso perfecto para tus
+              necesidades
             </p>
             <Link href="/contacto" className="btn-primary inline-block">
               Solicitar Información

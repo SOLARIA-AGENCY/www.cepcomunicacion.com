@@ -8,19 +8,21 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Cursos para Ocupados - CEP Formación',
-  description: 'Cursos subvencionados para trabajadores en activo. Formación gratuita compatible con tu jornada laboral.',
+  description:
+    'Cursos subvencionados para trabajadores en activo. Formación gratuita compatible con tu jornada laboral.',
 };
 
 export default function CursosOcupadosPage() {
   return (
     <div className="cursos-ocupados-page">
       {/* Hero Section */}
-      <section className="hero bg-gradient-to-r from-primary to-primary-light text-white" style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}>
+      <section
+        className="hero bg-gradient-to-r from-primary to-primary-light text-white"
+        style={{ padding: 'clamp(2.5rem, 8vw, 6rem) 0' }}
+      >
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-fluid-hero title-hero font-bold mb-4">
-              Cursos para Ocupados
-            </h1>
+            <h1 className="text-fluid-hero title-hero font-bold mb-4">Cursos para Ocupados</h1>
             <p className="text-fluid-hero-sub mb-6 opacity-90">
               Formación subvencionada para trabajadores en activo
             </p>

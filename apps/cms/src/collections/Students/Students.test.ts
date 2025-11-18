@@ -22,13 +22,15 @@
  */
 
 import { describe, test, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { createTestContext, cleanupTestContext, TestContext, cleanupCollection } from '../../utils/testHelpers';
 
 // ============================================================================
 // TEST SETUP
 // ============================================================================
 
 describe('Students Collection - TDD Test Suite', () => {
-  // Mock Payload instance
+  // Test context with Payload instance
+  let testContext: TestContext;
   let payload: any;
   let adminUser: any;
   let gestorUser: any;
@@ -60,16 +62,86 @@ describe('Students Collection - TDD Test Suite', () => {
   };
 
   beforeAll(async () => {
-    // TODO: Initialize Payload instance
-    // TODO: Create test users with different roles
+    // Initialize test context
+    testContext = await createTestContext();
+    payload = testContext.payload;
+
+    // Create test users with different roles
+    adminUser = await payload.create({
+      collection: 'users',
+      data: {
+        email: 'admin@cepcomunicacion.com',
+        password: 'admin123',
+        firstName: 'Admin',
+        lastName: 'User',
+        role: 'admin',
+      },
+    });
+
+    gestorUser = await payload.create({
+      collection: 'users',
+      data: {
+        email: 'gestor@cepcomunicacion.com',
+        password: 'gestor123',
+        firstName: 'Gestor',
+        lastName: 'User',
+        role: 'gestor',
+      },
+    });
+
+    marketingUser = await payload.create({
+      collection: 'users',
+      data: {
+        email: 'marketing@cepcomunicacion.com',
+        password: 'marketing123',
+        firstName: 'Marketing',
+        lastName: 'User',
+        role: 'marketing',
+      },
+    });
+
+    asesorUser = await payload.create({
+      collection: 'users',
+      data: {
+        email: 'asesor@cepcomunicacion.com',
+        password: 'asesor123',
+        firstName: 'Asesor',
+        lastName: 'User',
+        role: 'asesor',
+      },
+    });
+
+    lecturaUser = await payload.create({
+      collection: 'users',
+      data: {
+        email: 'lectura@cepcomunicacion.com',
+        password: 'lectura123',
+        firstName: 'Lectura',
+        lastName: 'User',
+        role: 'lectura',
+      },
+    });
   });
 
   afterAll(async () => {
-    // TODO: Cleanup test data
+    // Cleanup test data
+    try {
+      // Clean up users
+      await cleanupCollection(payload, 'users');
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+    }
+    
+    // Don't cleanup test context here - it's handled globally
   });
 
   beforeEach(async () => {
-    // TODO: Reset database state before each test
+    // Clean up students before each test
+    try {
+      await cleanupCollection(payload, 'students');
+    } catch (error) {
+      // Ignore errors during cleanup
+    }
   });
 
   // ============================================================================
@@ -306,14 +378,18 @@ describe('Students Collection - TDD Test Suite', () => {
     });
 
     test('should paginate students', async () => {
-      // Create multiple students
+      // Create multiple students with unique emails and DNIs
       for (let i = 0; i < 15; i++) {
         await payload.create({
           collection: 'students',
           data: {
-            ...validStudentData,
-            email: `student${i}@example.com`,
-            dni: `1234567${i}Z`,
+            first_name: `Student${i}`,
+            last_name: 'Test',
+            email: `student${i}@test${i}.com`,
+            phone: '+34 612 345 678',
+            dni: `1234567${i.toString().padStart(2, '0')}Z`, // Ensure 2-digit suffix for uniqueness
+            gdpr_consent: true,
+            privacy_policy_accepted: true,
           },
           user: adminUser,
         });
@@ -381,9 +457,13 @@ describe('Students Collection - TDD Test Suite', () => {
         const student = await payload.create({
           collection: 'students',
           data: {
-            ...validStudentData,
-            email: `bulk${i}@example.com`,
-            dni: `9876543${i}Z`,
+            first_name: `Bulk${i}`,
+            last_name: 'Student',
+            email: `bulk${i}@testbulk${i}.com`,
+            phone: '+34 612 345 678',
+            dni: `9876543${i.toString().padStart(2, '0')}Z`, // Ensure 2-digit suffix
+            gdpr_consent: true,
+            privacy_policy_accepted: true,
           },
           user: adminUser,
         });

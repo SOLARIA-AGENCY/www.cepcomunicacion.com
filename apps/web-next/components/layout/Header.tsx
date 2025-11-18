@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 export function Header() {
@@ -29,6 +29,31 @@ export function Header() {
     }
   }, [dropdownOpen]);
 
+  // Memoized event handlers
+  const toggleDropdown = useCallback(() => {
+    setDropdownOpen((prev) => !prev);
+  }, []);
+
+  const closeDropdown = useCallback(() => {
+    setDropdownOpen(false);
+  }, []);
+
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen((prev) => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
+
+  const handleDropdownMouseEnter = useCallback(() => {
+    setDropdownOpen(true);
+  }, []);
+
+  const handleDropdownMouseLeave = useCallback(() => {
+    setDropdownOpen(false);
+  }, []);
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container py-4" role="navigation" aria-label="Navegación principal">
@@ -39,23 +64,32 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex gap-3 xl:gap-4 items-center">
-            <Link href="/" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+            <Link
+              href="/"
+              className="nav-uppercase text-neutral-700 hover:text-primary transition-colors"
+            >
               Inicio
             </Link>
 
-            <Link href="/ciclos" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+            <Link
+              href="/ciclos"
+              className="nav-uppercase text-neutral-700 hover:text-primary transition-colors"
+            >
               Ciclos
             </Link>
 
-            <Link href="/sedes" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+            <Link
+              href="/sedes"
+              className="nav-uppercase text-neutral-700 hover:text-primary transition-colors"
+            >
               Sedes
             </Link>
 
             {/* DROPDOWN CURSOS */}
             <div className="relative" ref={dropdownRef}>
               <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                onMouseEnter={() => setDropdownOpen(true)}
+                onClick={toggleDropdown}
+                onMouseEnter={handleDropdownMouseEnter}
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors flex items-center gap-1"
                 aria-haspopup="true"
                 aria-expanded={dropdownOpen}
@@ -66,7 +100,7 @@ export function Header() {
                   fill="currentColor"
                   viewBox="0 0 12 12"
                 >
-                  <path d="M6 8L2 4h8z"/>
+                  <path d="M6 8L2 4h8z" />
                 </svg>
               </button>
 
@@ -75,33 +109,33 @@ export function Header() {
                 <div
                   className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg py-2 min-w-[240px] border border-neutral-100"
                   role="menu"
-                  onMouseLeave={() => setDropdownOpen(false)}
+                  onMouseLeave={handleDropdownMouseLeave}
                 >
                   <Link
                     href="/cursos/privados"
                     className="block px-5 py-3 nav-uppercase text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary transition-all hover:pl-6"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={closeDropdown}
                   >
                     Cursos Privados
                   </Link>
                   <Link
                     href="/cursos/ocupados"
                     className="block px-5 py-3 nav-uppercase text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary transition-all hover:pl-6"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={closeDropdown}
                   >
                     Cursos Ocupados
                   </Link>
                   <Link
                     href="/cursos/desempleados"
                     className="block px-5 py-3 nav-uppercase text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary transition-all hover:pl-6"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={closeDropdown}
                   >
                     Cursos Desempleados
                   </Link>
                   <Link
                     href="/cursos/teleformacion"
                     className="block px-5 py-3 nav-uppercase text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary transition-all hover:pl-6"
-                    onClick={() => setDropdownOpen(false)}
+                    onClick={closeDropdown}
                   >
                     Cursos Teleformación
                   </Link>
@@ -109,15 +143,24 @@ export function Header() {
               )}
             </div>
 
-            <Link href="/sobre-nosotros" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+            <Link
+              href="/sobre-nosotros"
+              className="nav-uppercase text-neutral-700 hover:text-primary transition-colors"
+            >
               Nosotros
             </Link>
 
-            <Link href="/faq" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+            <Link
+              href="/faq"
+              className="nav-uppercase text-neutral-700 hover:text-primary transition-colors"
+            >
               FAQ
             </Link>
 
-            <Link href="/blog" className="nav-uppercase text-neutral-700 hover:text-primary transition-colors">
+            <Link
+              href="/blog"
+              className="nav-uppercase text-neutral-700 hover:text-primary transition-colors"
+            >
               Blog
             </Link>
 
@@ -132,18 +175,28 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={toggleMobileMenu}
             className="lg:hidden p-2 text-neutral-700 hover:text-primary"
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             ) : (
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             )}
           </button>
@@ -156,7 +209,7 @@ export function Header() {
               <Link
                 href="/"
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Inicio
               </Link>
@@ -164,7 +217,7 @@ export function Header() {
               <Link
                 href="/ciclos"
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Ciclos
               </Link>
@@ -172,7 +225,7 @@ export function Header() {
               <Link
                 href="/sedes"
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Sedes
               </Link>
@@ -180,7 +233,7 @@ export function Header() {
               {/* Mobile Dropdown CURSOS */}
               <div>
                 <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  onClick={toggleDropdown}
                   className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base flex items-center gap-2 w-full"
                   aria-haspopup="true"
                   aria-expanded={dropdownOpen}
@@ -191,7 +244,7 @@ export function Header() {
                     fill="currentColor"
                     viewBox="0 0 12 12"
                   >
-                    <path d="M6 8L2 4h8z"/>
+                    <path d="M6 8L2 4h8z" />
                   </svg>
                 </button>
 
@@ -244,7 +297,7 @@ export function Header() {
               <Link
                 href="/sobre-nosotros"
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Nosotros
               </Link>
@@ -252,7 +305,7 @@ export function Header() {
               <Link
                 href="/faq"
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 FAQ
               </Link>
@@ -260,7 +313,7 @@ export function Header() {
               <Link
                 href="/blog"
                 className="nav-uppercase text-neutral-700 hover:text-primary transition-colors text-base"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Blog
               </Link>
@@ -268,7 +321,7 @@ export function Header() {
               <Link
                 href="/contacto"
                 className="nav-uppercase btn-primary py-2 px-4 inline-block text-center"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Contacto
               </Link>
@@ -276,7 +329,7 @@ export function Header() {
               <Link
                 href="/acceso-alumnos"
                 className="nav-uppercase btn-secondary py-2 px-4 inline-block text-center"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 Acceso Alumnos
               </Link>

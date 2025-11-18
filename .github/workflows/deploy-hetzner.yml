@@ -1,0 +1,132 @@
+name: Deploy to Hetzner VPS
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Hetzner VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HETZNER_IP }}
+          username: root
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            echo "🚀 Starting deployment to Hetzner VPS..."
+
+            # Navigate to project directory
+            cd /opt/cepcomunicacion
+
+            # Pull latest changes
+            echo "📥 Pulling latest changes..."
+            git fetch origin
+            git reset --hard origin/${{ github.ref_name }}
+
+            # Build and deploy services
+            echo "🔨 Building and deploying services..."
+            cd infra/docker
+
+            # Pull latest images
+            docker-compose pull
+
+            # Build new images
+            docker-compose build
+
+            # Deploy with zero downtime
+            docker-compose up -d --force-recreate
+
+            # Wait for services to be ready
+            echo "⏳ Waiting for services to be ready..."
+            sleep 30
+
+            # Check service health
+            echo "🏥 Checking service health..."
+            if docker-compose ps | grep -q "Up"; then
+              echo "✅ All services are running!"
+            else
+              echo "❌ Some services failed to start"
+              docker-compose logs
+              exit 1
+            fi
+
+            # Clean up old images
+            echo "🧹 Cleaning up old Docker images..."
+            docker image prune -f
+
+            echo "🎉 Deployment completed successfully!"
+
+  preview:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Preview to Hetzner
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HETZNER_IP }}
+          username: root
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            echo "🚀 Starting preview deployment for PR #${{ github.event.number }}"
+
+            # Navigate to project directory
+            cd /opt/cepcomunicacion
+
+            # Create preview branch
+            git fetch origin
+            git checkout -b preview-pr-${{ github.event.number }}
+            git reset --hard origin/${{ github.head_ref }}
+
+            # Build and deploy preview services
+            echo "🔨 Building preview services..."
+            cd infra/docker
+
+            # Update environment for preview
+            export COMPOSE_PROJECT_NAME=cep-preview-${{ github.event.number }}
+            export DOMAIN=preview-${{ github.event.number }}.cepcomunicacion.com
+
+            # Pull and build
+            docker-compose pull
+            docker-compose build
+            docker-compose up -d --force-recreate
+
+            echo "🎉 Preview deployed at: https://preview-${{ github.event.number }}.cepcomunicacion.com"
+
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+
+    steps:
+      - name: Cleanup Preview
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HETZNER_IP }}
+          username: root
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            echo "🧹 Cleaning up preview for PR #${{ github.event.number }}"
+
+            cd /opt/cepcomunicacion
+
+            # Remove preview branch
+            git branch -D preview-pr-${{ github.event.number }} || true
+
+            # Stop and remove preview containers
+            cd infra/docker
+            export COMPOSE_PROJECT_NAME=cep-preview-${{ github.event.number }}
+            docker-compose down -v || true
+
+            echo "✅ Preview cleanup completed"

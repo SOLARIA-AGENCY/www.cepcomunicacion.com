@@ -47,10 +47,10 @@ export interface BlogPostCardProps {
 
 // Category color mapping (hoisted to module scope for performance)
 const CATEGORY_COLORS: Record<string, string> = {
-  'Noticias': 'bg-blue-100 text-blue-800',
-  'Guías': 'bg-green-100 text-green-800',
-  'Consejos': 'bg-yellow-100 text-yellow-800',
-  'Opinión': 'bg-purple-100 text-purple-800',
+  Noticias: 'bg-blue-100 text-blue-800',
+  Guías: 'bg-green-100 text-green-800',
+  Consejos: 'bg-yellow-100 text-yellow-800',
+  Opinión: 'bg-purple-100 text-purple-800',
   'Casos de Éxito': 'bg-pink-100 text-pink-800',
 } as const;
 
@@ -94,7 +94,7 @@ export const BlogPostCard = memo(function BlogPostCard({
         handleClick();
       }
     },
-    [handleClick]
+    [handleClick],
   );
 
   const cardContent = (
@@ -188,9 +188,7 @@ export const BlogPostCard = memo(function BlogPostCard({
 
         {/* Read More Link */}
         <div className="mt-4 pt-4 border-t border-neutral-200">
-          <span className="text-primary font-semibold group-hover:underline">
-            Leer más →
-          </span>
+          <span className="text-primary font-semibold group-hover:underline">Leer más →</span>
         </div>
       </div>
     </>

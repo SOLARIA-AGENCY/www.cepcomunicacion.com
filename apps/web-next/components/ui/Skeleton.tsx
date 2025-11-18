@@ -80,7 +80,9 @@ export const Skeleton = memo(function Skeleton({
         ${roundedClasses[rounded]}
         ${noPulse ? '' : 'animate-pulse'}
         ${className}
-      `.trim().replace(/\s+/g, ' ')}
+      `
+        .trim()
+        .replace(/\s+/g, ' ')}
       style={style}
       aria-busy="true"
       aria-live="polite"
@@ -105,11 +107,7 @@ export const SkeletonText = memo(function SkeletonText({
   return (
     <div className={`space-y-2 ${className}`}>
       {Array.from({ length: lines }).map((_, index) => (
-        <Skeleton
-          key={index}
-          height="16px"
-          width={index === lines - 1 ? '80%' : '100%'}
-        />
+        <Skeleton key={index} height="16px" width={index === lines - 1 ? '80%' : '100%'} />
       ))}
     </div>
   );

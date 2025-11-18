@@ -49,9 +49,9 @@ COPY tsconfig.json ./
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# Build the application (use webpack to avoid Drizzle Kit incompatibility with Turbopack)
+# Build the application
 WORKDIR /app/apps/web-next
-RUN pnpm exec next build --webpack
+RUN pnpm exec next build
 
 # ========================================
 # STAGE 3: Production

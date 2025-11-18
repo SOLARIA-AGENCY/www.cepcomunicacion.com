@@ -48,12 +48,31 @@ vi.mock('next/link', () => ({
   },
 }))
 
+import { cleanupTestContext, createTestContext } from '../src/utils/testHelpers'
+
 // Global test setup
 beforeAll(async () => {
   console.log('🧪 Setting up test environment...')
-  console.log('📦 Database:', process.env.DATABASE_NAME || 'cepcomunicacion')
+  console.log('📦 Database:', process.env.TEST_DATABASE_NAME || 'cepcomunicacion_test')
   console.log('🔌 PostgreSQL Host:', process.env.DATABASE_HOST || 'postgres')
 
-  // Database connection will be established by Payload
-  // when the server starts in each test suite
+  // Initialize Payload test context for all tests
+  try {
+    await createTestContext()
+    console.log('✅ Payload test context initialized')
+  } catch (error) {
+    console.error('❌ Failed to initialize Payload test context:', error)
+    throw error
+  }
+})
+
+// Global test cleanup
+afterAll(async () => {
+  console.log('🧹 Cleaning up test environment...')
+  try {
+    await cleanupTestContext()
+    console.log('✅ Test context cleaned up')
+  } catch (error) {
+    console.error('❌ Error during cleanup:', error)
+  }
 })

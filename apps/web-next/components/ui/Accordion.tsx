@@ -60,7 +60,7 @@ export const Accordion = memo(function Accordion({
         toggle();
       }
     },
-    [toggle]
+    [toggle],
   );
 
   return (
@@ -86,12 +86,7 @@ export const Accordion = memo(function Accordion({
           stroke="currentColor"
           aria-hidden="true"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
@@ -103,9 +98,7 @@ export const Accordion = memo(function Accordion({
         } overflow-hidden`}
         aria-hidden={!isOpen}
       >
-        <div className="p-4 pt-0 text-neutral-700 prose prose-sm max-w-none">
-          {children}
-        </div>
+        <div className="p-4 pt-0 text-neutral-700 prose prose-sm max-w-none">{children}</div>
       </div>
     </div>
   );

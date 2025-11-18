@@ -19,6 +19,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json pnpm-*.yaml ./
 COPY apps/admin/package.json ./apps/admin/
+COPY packages ./packages
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -46,6 +47,7 @@ COPY --from=deps /app/apps/admin/node_modules ./apps/admin/node_modules
 
 # Copy source code
 COPY apps/admin ./apps/admin
+COPY packages ./packages
 COPY package*.json pnpm-*.yaml ./
 COPY tsconfig.json ./
 

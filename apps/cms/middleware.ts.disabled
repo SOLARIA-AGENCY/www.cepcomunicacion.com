@@ -1,39 +1,39 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 // Routes that don't require authentication
-const publicRoutes = ['/auth/login', '/auth/forgot-password', '/auth/reset-password']
+const publicRoutes = ['/auth/login', '/auth/forgot-password', '/auth/reset-password'];
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const { pathname } = request.nextUrl;
 
   // Allow public routes
-  if (publicRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.next()
+  if (publicRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
   }
 
   // Allow API routes (handled separately)
   if (pathname.startsWith('/api')) {
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
   // Check for authentication token (from localStorage in client-side)
   // In production, use httpOnly cookies
-  const authHeader = request.headers.get('authorization')
+  const authHeader = request.headers.get('authorization');
 
   // For demo purposes, allow all dashboard routes
   // TODO: Implement proper JWT validation
   if (pathname.startsWith('/') && !pathname.startsWith('/auth')) {
     // In production, validate token here
     // For now, pass through to allow development
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\.png$|.*\.jpg$|.*\.jpeg$|.*\.svg$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\.png$|.*\.jpg$|.*\.jpeg$|.*\.svg$|api/).*)',
   ],
-}
+};

@@ -33,7 +33,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           id={selectId}
           className={`form-input ${error ? 'border-red-600 focus:border-red-600 focus:ring-red-600' : ''} ${className}`}
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${selectId}-error` : helperText ? `${selectId}-helper` : undefined}
+          aria-describedby={
+            error ? `${selectId}-error` : helperText ? `${selectId}-helper` : undefined
+          }
           {...props}
         >
           {placeholder && (
@@ -59,7 +61,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = 'Select';
