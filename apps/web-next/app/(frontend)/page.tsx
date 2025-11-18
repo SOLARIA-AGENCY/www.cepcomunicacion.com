@@ -5,39 +5,69 @@
  * Features: Hero carousel, Featured Courses, Features, CTA
  */
 
-import { HeroCarousel } from '@/components/ui/HeroCarousel';
-import { CourseCard } from '@/components/ui/CourseCard';
-import { getCourses } from '@/lib/api';
+import { HeroCarouselSimple } from '@/components/ui/HeroCarouselSimple';
 
-// Force dynamic rendering to avoid static generation issues
-export const dynamic = 'force-dynamic';
+// Mock data for static build
+const mockCourses = [
+  {
+    id: '1',
+    name: 'Curso de Formación Profesional',
+    slug: 'curso-formacion-profesional',
+    short_description: 'Curso completo de formación profesional con prácticas garantizadas',
+    description: 'Curso completo de formación profesional con prácticas garantizadas',
+    modality: 'presencial',
+    featured: true,
+    course_type: 'privado',
+    area: 'administracion',
+    image: '/slideshow-1.jpg.webp',
+    duration_hours: 300,
+  },
+  {
+    id: '2',
+    name: 'Curso de Teleformación',
+    slug: 'curso-teleformacion',
+    short_description: 'Aprende desde casa con nuestra plataforma online',
+    description: 'Aprende desde casa con nuestra plataforma online',
+    modality: 'online',
+    featured: true,
+    course_type: 'teleformacion',
+    area: 'tecnologia',
+    image: '/slideshow-2.jpg.webp',
+    duration_hours: 200,
+  },
+  {
+    id: '3',
+    name: 'Curso para Empresas',
+    slug: 'curso-empresas',
+    short_description: 'Formación especializada para profesionales',
+    description: 'Formación especializada para profesionales',
+    modality: 'hibrido',
+    featured: true,
+    course_type: 'ocupados',
+    area: 'marketing',
+    image: '/slideshow-3.jpg.webp',
+    duration_hours: 150,
+  },
+];
 
 export default async function HomePage() {
-  // Fetch featured courses from API
-  const coursesData = await getCourses({ featured: true, limit: 3 });
-  const courses = coursesData?.docs || [];
+  // Simplified homepage without course cards for static build
 
   return (
     <div className="home-page">
       {/* Hero Section with Carousel */}
-      <HeroCarousel />
+      <HeroCarouselSimple />
 
-      {/* Featured Courses Section */}
+      {/* Featured Courses Section - Simplified */}
       <section className="bg-neutral-50" style={{ padding: 'clamp(2.5rem, 6vw, 5rem) 0' }}>
-        <div className="container">
+        <div className="container text-center">
           <div className="mb-6 md:mb-8">
             <h2 className="text-fluid-section-title section-title-uppercase font-bold mb-2">
               Cursos Destacados
             </h2>
-            <p className="text-fluid-body text-neutral-600 text-left">
+            <p className="text-fluid-body text-neutral-600">
               Descubre nuestros cursos más populares y con mayor demanda
             </p>
-          </div>
-
-          <div className="grid-fluid-cards">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
           </div>
 
           <div className="text-center mt-8">

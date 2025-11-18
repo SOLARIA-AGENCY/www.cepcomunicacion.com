@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sobre Nosotros - CEP Formación</title>
+    <meta
+      name="description"
+      content="Conoce la historia y misión de CEP Formación, tu centro de estudios profesionales"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --cep-pink: #ec008c;
+        --cep-pink-dark: #c7006f;
+        --cep-green: #00a651;
+        --cep-blue: #0056b3;
+        --cep-orange: #ff6b35;
+      }
+
+      .cep-pink {
+        background-color: var(--cep-pink);
+      }
+      .cep-pink-dark {
+        background-color: var(--cep-pink-dark);
+      }
+      .text-cep-pink {
+        color: var(--cep-pink);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      * {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Header Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <nav class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" class="text-2xl font-bold text-cep-pink"> CEP Formación </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden lg:flex gap-6 items-center">
+            <a
+              href="/"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Inicio
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/ciclos"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Ciclos
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/sedes"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Sedes
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+
+            <!-- Cursos Dropdown -->
+            <div class="relative group">
+              <button
+                class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide flex items-center gap-1"
+              >
+                Cursos
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
+                  <path d="M6 8L2 4h8z" />
+                </svg>
+              </button>
+              <div
+                class="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg py-2 min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+              >
+                <a
+                  href="/cursos/privados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Privados</a
+                >
+                <a
+                  href="/cursos/ocupados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Ocupados</a
+                >
+                <a
+                  href="/cursos/desempleados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Desempleados</a
+                >
+                <a
+                  href="/cursos/teleformacion"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Teleformación</a
+                >
+              </div>
+            </div>
+
+            <a
+              href="/sobre-nosotros"
+              class="text-cep-pink hover:text-cep-pink-dark font-semibold text-sm uppercase tracking-wide"
+            >
+              Nosotros
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/faq"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              FAQ
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/blog"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Blog
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/contacto"
+              class="bg-cep-pink hover:bg-cep-pink-dark text-white px-4 py-2 rounded-lg font-semibold text-sm uppercase tracking-wide"
+            >
+              Contacto
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/acceso-alumnos"
+              class="border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white px-4 py-2 rounded-lg font-semibold text-sm uppercase tracking-wide"
+            >
+              Acceso Alumnos
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden mt-4 pb-4 border-t pt-4">
+          <div class="flex flex-col gap-4">
+            <a href="/" class="text-gray-700 hover:text-cep-pink font-semibold">Inicio</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="/ciclos" class="text-gray-700 hover:text-cep-pink font-semibold">Ciclos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="/sedes" class="text-gray-700 hover:text-cep-pink font-semibold">Sedes</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <div>
+              <button
+                class="text-gray-700 hover:text-cep-pink font-semibold w-full text-left"
+                onclick="toggleMobileDropdown()"
+              >
+                Cursos ▼
+              </button>
+              <div id="mobileDropdown" class="hidden pl-4 mt-2 space-y-2">
+                <a href="/cursos/privados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Privados</a
+                >
+                <a href="/cursos/ocupados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Ocupados</a
+                >
+                <a href="/cursos/desempleados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Desempleados</a
+                >
+                <a href="/cursos/teleformacion" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Teleformación</a
+                >
+              </div>
+            </div>
+            <a href="/sobre-nosotros" class="text-cep-pink hover:text-cep-pink-dark font-semibold"
+              >Nosotros</a
+            >
+            <a href="/faq" class="text-gray-700 hover:text-cep-pink font-semibold">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="/blog" class="text-gray-700 hover:text-cep-pink font-semibold">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/contacto"
+              class="bg-cep-pink hover:bg-cep-pink-dark text-white px-4 py-2 rounded-lg font-semibold text-center"
+              >Contacto</a
+            >
+            <a
+              href="/acceso-alumnos"
+              class="border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white px-4 py-2 rounded-lg font-semibold text-center"
+              >Acceso Alumnos</a
+            >
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="py-16 md:py-20 bg-gradient-to-r from-cep-pink to-cep-pink-dark text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">SOBRE NOSOTROS</h1>
+        <p class="text-xl opacity-90 max-w-3xl mx-auto">
+          Más de 20 años formando profesionales con éxito en las Islas Canarias
+        </p>
+      </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="py-16 md:py-20">
+      <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Nuestra Historia</h2>
+            <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+              CEP Formación nació en 2003 con una misión clara: ofrecer formación profesional de
+              calidad que realmente preparara a los estudiantes para el mundo laboral. Desde
+              nuestros inicios en Santa Cruz de Tenerife, hemos crecido hasta convertirnos en un
+              referente educativo en las Islas Canarias.
+            </p>
+            <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+              A lo largo de estos más de 20 años, hemos formado a más de 50,000 estudiantes que hoy
+              desempeñan con éxito sus carreras profesionales en empresas de todo el país y más
+              allá. Nuestro compromiso con la excelencia educativa nos ha llevado a expandir
+              nuestras instalaciones y diversificar nuestra oferta formativa.
+            </p>
+            <div class="grid grid-cols-3 gap-6 mt-8">
+              <div class="text-center">
+                <div class="text-3xl font-bold text-cep-pink mb-2">50,000+</div>
+                <div class="text-sm text-gray-600">Estudiantes Formados</div>
+              </div>
+              <div class="text-center">
+                <div class="text-3xl font-bold text-cep-pink mb-2">20+</div>
+                <div class="text-sm text-gray-600">Años de Experiencia</div>
+              </div>
+              <div class="text-center">
+                <div class="text-3xl font-bold text-cep-pink mb-2">95%</div>
+                <div class="text-sm text-gray-600">Tasa de Empleabilidad</div>
+              </div>
+            </div>
+          </div>
+          <div class="relative">
+            <div
+              class="aspect-square bg-gradient-to-br from-cep-pink/20 to-cep-pink-dark/20 rounded-2xl flex items-center justify-center"
+            >
+              <div class="text-center">
+                <svg
+                  class="w-32 h-32 mx-auto mb-4 text-cep-pink"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+                <h3 class="text-2xl font-bold text-cep-pink">CEP Formación</h3>
+                <p class="text-gray-600 mt-2">Centro de Estudios Profesionales</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="py-16 md:py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12">
+          <!-- Mission -->
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <div
+              class="w-16 h-16 bg-cep-pink/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-cep-pink"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-900">Nuestra Misión</h3>
+            <p class="text-gray-700 text-center leading-relaxed">
+              Proporcionar formación profesional de excelencia que capacite a nuestros estudiantes
+              con las competencias y habilidades necesarias para tener éxito en el mercado laboral
+              actual, fomentando el desarrollo personal y profesional continuo.
+            </p>
+          </div>
+
+          <!-- Vision -->
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <div
+              class="w-16 h-16 bg-cep-green/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <svg
+                class="w-8 h-8 text-cep-green"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-900">Nuestra Visión</h3>
+            <p class="text-gray-700 text-center leading-relaxed">
+              Ser el centro de formación profesional líder en las Islas Canarias, reconocido por
+              nuestra innovación educativa, la calidad de nuestros programas y el éxito profesional
+              de nuestros egresados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="py-16 md:py-20">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Nuestros Valores</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Los principios que guían nuestra labor educativa cada día
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Excellence -->
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-cep-pink/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <svg
+                class="w-10 h-10 text-cep-pink"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 01-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 01.806-1.946 3.42 3.42 0 013.138-3.138z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">Excelencia</h3>
+            <p class="text-gray-600">
+              Buscamos la máxima calidad en todo lo que hacemos, desde nuestros programas educativos
+              hasta el servicio que ofrecemos.
+            </p>
+          </div>
+
+          <!-- Innovation -->
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-cep-green/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <svg
+                class="w-10 h-10 text-cep-green"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">Innovación</h3>
+            <p class="text-gray-600">
+              Incorporamos las últimas tecnologías y metodologías educativas para ofrecer una
+              formación actualizada y relevante.
+            </p>
+          </div>
+
+          <!-- Commitment -->
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-cep-blue/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <svg
+                class="w-10 h-10 text-cep-blue"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">Compromiso</h3>
+            <p class="text-gray-600">
+              Estamos comprometidos con el éxito de nuestros estudiantes y su desarrollo profesional
+              y personal.
+            </p>
+          </div>
+
+          <!-- Integrity -->
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-cep-orange/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <svg
+                class="w-10 h-10 text-cep-orange"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900">Integridad</h3>
+            <p class="text-gray-600">
+              Actuamos con honestidad, transparencia y ética en todas nuestras relaciones y
+              decisiones.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="py-16 md:py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Nuestro Equipo</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Profesionales dedicados a tu formación y éxito
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Director -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div
+              class="h-64 bg-gradient-to-br from-cep-pink to-cep-pink-dark flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-20 h-20 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Director/a</h3>
+              </div>
+            </div>
+            <div class="p-6 text-center">
+              <h4 class="text-lg font-semibold mb-2">Dirección General</h4>
+              <p class="text-gray-600 mb-4">
+                Liderazgo estratégico y visión educativa para el crecimiento continuo de CEP
+                Formación.
+              </p>
+              <div class="text-sm text-gray-500">
+                <p>20+ años de experiencia</p>
+                <p>Especialista en gestión educativa</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic Coordinator -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div
+              class="h-64 bg-gradient-to-br from-cep-green to-green-700 flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-20 h-20 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Coordinador/a</h3>
+              </div>
+            </div>
+            <div class="p-6 text-center">
+              <h4 class="text-lg font-semibold mb-2">Coordinación Académica</h4>
+              <p class="text-gray-600 mb-4">
+                Diseño y supervisión de programas educativos adaptados a las necesidades del mercado
+                laboral.
+              </p>
+              <div class="text-sm text-gray-500">
+                <p>15+ años de experiencia</p>
+                <p>Especialista en curriculum educativo</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Services -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div
+              class="h-64 bg-gradient-to-br from-cep-blue to-blue-700 flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-20 h-20 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Orientación</h3>
+              </div>
+            </div>
+            <div class="p-6 text-center">
+              <h4 class="text-lg font-semibold mb-2">Servicios al Estudiante</h4>
+              <p class="text-gray-600 mb-4">
+                Apoyo integral a los estudiantes en su proceso formativo y desarrollo profesional.
+              </p>
+              <div class="text-sm text-gray-500">
+                <p>10+ años de experiencia</p>
+                <p>Especialista en orientación profesional</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 md:py-20 bg-cep-pink text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">¿Quieres formar parte de CEP Formación?</h2>
+        <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          Únete a miles de profesionales que ya han confiado en nosotros para su desarrollo
+          formativo y laboral
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/cursos"
+            class="bg-white text-cep-pink hover:bg-gray-100 px-8 py-4 text-lg font-bold inline-block rounded-lg hover:scale-105 transition-transform"
+          >
+            Ver Nuestros Cursos
+          </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a
+            href="/contacto"
+            class="border-2 border-white text-white hover:bg-white hover:text-cep-pink px-8 py-4 text-lg font-bold inline-block rounded-lg hover:scale-105 transition-transform"
+          >
+            Contactar con Nosotros
+          </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-5 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-cep-pink">CEP Formación</h3>
+            <p class="text-gray-300">
+              Centro de estudios profesionales dedicado a tu desarrollo y crecimiento laboral.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Cursos</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/cursos/privados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Privados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/ocupados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Ocupados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/desempleados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Desempleados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/teleformacion" class="text-gray-300 hover:text-cep-pink"
+                  >Teleformación</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Institución</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/sobre-nosotros" class="text-gray-300 hover:text-cep-pink"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li><a href="/sedes" class="text-gray-300 hover:text-cep-pink">Sedes</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a></li>
+              <li><a href="/faq" class="text-gray-300 hover:text-cep-pink">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a></li>
+              <li><a href="/blog" class="text-gray-300 hover:text-cep-pink">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Legal</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/politica-privacidad" class="text-gray-300 hover:text-cep-pink"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="/aviso-legal" class="text-gray-300 hover:text-cep-pink">Aviso Legal</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              </li>
+              <li>
+                <a href="/politica-cookies" class="text-gray-300 hover:text-cep-pink"
+                  >Política de Cookies</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+            <ul class="space-y-2 text-gray-300">
+              <li>Teléfono: 922 123 456</li>
+              <li>Email: info@cepformacion.com</li>
+              <li>
+                <a href="/contacto" class="text-cep-pink hover:text-cep-pink-dark">
+                  Formulario de contacto →
+                </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+      }
+
+      function toggleMobileDropdown() {
+        const dropdown = document.getElementById('mobileDropdown');
+        dropdown.classList.toggle('hidden');
+      }
+    </script>
+  </body>
+</html>

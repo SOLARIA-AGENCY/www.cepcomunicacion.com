@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso Alumnos - CEP Formación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .cep-blue {
+        color: #0066cc;
+      }
+      .cep-dark-blue {
+        color: #003366;
+      }
+      .cep-light-blue {
+        background-color: #e6f2ff;
+      }
+      .cep-orange {
+        color: #ff6600;
+      }
+      .cep-gray {
+        color: #666666;
+      }
+      .hover-cep-blue:hover {
+        color: #0066cc;
+      }
+      .transition-all {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-graduation-cap text-3xl cep-blue mr-3"></i>
+              <span class="text-xl font-bold cep-dark-blue">CEP Formación</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="ciclos.html" class="hover-cep-blue transition-all">Ciclos Formativos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="blog.html" class="hover-cep-blue transition-all">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="faq.html" class="hover-cep-blue transition-all">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="acceso-alumnos.html"
+              class="bg-cep-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Acceso Alumnos
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          </div>
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="text-gray-700 hover:text-blue-600 focus:outline-none"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Sobre Nosotros</a
+          >
+          <a href="ciclos.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Ciclos Formativos</a
+          >
+          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
+            >Acceso Alumnos</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Portal de Alumnos</h1>
+        <p class="text-xl md:text-2xl mb-8 opacity-90">
+          Accede a tu área personal y gestiona tu formación
+        </p>
+      </div>
+    </section>
+
+    <!-- Login Section -->
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Login Form -->
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">Acceso al Portal</h2>
+            <form id="loginForm">
+              <div class="mb-6">
+                <label for="username" class="block text-gray-700 font-semibold mb-2"
+                  >Usuario o Email</label
+                >
+                <div class="relative">
+                  <i
+                    class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  ></i>
+                  <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Introduce tu usuario o email"
+                  />
+                </div>
+              </div>
+              <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-semibold mb-2"
+                  >Contraseña</label
+                >
+                <div class="relative">
+                  <i
+                    class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  ></i>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Introduce tu contraseña"
+                  />
+                  <button
+                    type="button"
+                    id="togglePassword"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mb-6">
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2" />
+                  <span class="text-gray-700">Recordarme</span>
+                </label>
+                <a href="#" class="text-blue-600 hover:text-blue-800 transition-all"
+                  >¿Olvidaste tu contraseña?</a
+                >
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold"
+              >
+                <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+              </button>
+            </form>
+          </div>
+
+          <!-- Quick Access & Info -->
+          <div class="space-y-6">
+            <!-- Quick Access -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+              <h3 class="text-xl font-bold mb-4 cep-dark-blue">Acceso Rápido</h3>
+              <div class="grid grid-cols-2 gap-4">
+                <a
+                  href="#"
+                  class="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-all text-center"
+                >
+                  <i class="fas fa-book text-2xl text-blue-600 mb-2"></i>
+                  <p class="text-sm font-semibold">Mis Cursos</p>
+                </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+                <a
+                  href="#"
+                  class="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-all text-center"
+                >
+                  <i class="fas fa-graduation-cap text-2xl text-green-600 mb-2"></i>
+                  <p class="text-sm font-semibold">Calificaciones</p>
+                </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+                <a
+                  href="#"
+                  class="bg-purple-50 p-4 rounded-lg hover:bg-purple-100 transition-all text-center"
+                >
+                  <i class="fas fa-calendar text-2xl text-purple-600 mb-2"></i>
+                  <p class="text-sm font-semibold">Horario</p>
+                </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+                <a
+                  href="#"
+                  class="bg-orange-50 p-4 rounded-lg hover:bg-orange-100 transition-all text-center"
+                >
+                  <i class="fas fa-file-alt text-2xl text-orange-600 mb-2"></i>
+                  <p class="text-sm font-semibold">Documentos</p>
+                </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6">
+              <h3 class="text-lg font-bold mb-3 cep-dark-blue">¿Necesitas Ayuda?</h3>
+              <p class="text-gray-700 mb-4">
+                Si tienes problemas para acceder a tu cuenta, contacta con nuestro soporte técnico.
+              </p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-phone text-blue-600 mr-2"></i>
+                  <span>Soporte: 900 123 456</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-envelope text-blue-600 mr-2"></i>
+                  <span>soporte@cepformacion.com</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-blue-600 mr-2"></i>
+                  <span>Lun-Vie: 9:00 - 20:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12 cep-dark-blue">
+          ¿Qué puedes hacer en el Portal?
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div
+              class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-laptop text-3xl text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Acceso a Materiales</h3>
+            <p class="text-gray-600">
+              Consulta apuntes, ejercicios y recursos de tus cursos en cualquier momento.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-chart-line text-3xl text-green-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Seguimiento Académico</h3>
+            <p class="text-gray-600">
+              Revisa tus calificaciones, asistencia y progreso en cada asignatura.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fas fa-comments text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Comunicación</h3>
+            <p class="text-gray-600">
+              Contacta con profesores y compañeros a través del sistema de mensajería.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Important Information -->
+    <section class="py-12 bg-yellow-50">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-yellow-100 border-l-4 border-yellow-600 p-6 rounded-lg">
+          <div class="flex items-start">
+            <i class="fas fa-info-circle text-yellow-600 text-xl mr-3 mt-1"></i>
+            <div>
+              <h3 class="text-lg font-semibold mb-2">Información Importante</h3>
+              <p class="text-gray-700 mb-2">
+                Tu usuario y contraseña son personales e intransferibles. No compartas tus datos de
+                acceso con nadie.
+              </p>
+              <p class="text-gray-700">
+                Si detectas cualquier actividad sospechosa en tu cuenta, contacta inmediatamente con
+                el soporte técnico.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-5 gap-8">
+          <div>
+            <div class="flex items-center mb-4">
+              <i class="fas fa-graduation-cap text-2xl mr-2"></i>
+              <span class="text-xl font-bold">CEP Formación</span>
+            </div>
+            <p class="text-gray-400">
+              Centro de estudios profesionales comprometido con tu futuro académico y laboral.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="index.html" class="text-gray-400 hover:text-white transition-all"
+                  >Inicio</a
+                >
+              </li>
+              <li>
+                <a href="sobre-nosotros.html" class="text-gray-400 hover:text-white transition-all"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li>
+                <a href="ciclos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Ciclos Formativos</a
+                >
+              </li>
+              <li>
+                <a href="cursos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Cursos</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/politica-privacidad" class="text-gray-400 hover:text-white transition-all"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="/aviso-legal" class="text-gray-400 hover:text-white transition-all"
+                  >Aviso Legal</a
+                >
+              </li>
+              <li>
+                <a href="/politica-cookies" class="text-gray-400 hover:text-white transition-all"
+                  >Política de Cookies</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><i class="fas fa-phone mr-2"></i>900 123 456</li>
+              <li><i class="fas fa-envelope mr-2"></i>info@cepformacion.com</li>
+              <li><i class="fas fa-map-marker-alt mr-2"></i>Calle Principal 123, Madrid</li>
+            </ul>
+            <div class="flex space-x-4 mt-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-facebook text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-twitter text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-linkedin text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-button').addEventListener('click', function () {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      });
+
+      // Password visibility toggle
+      document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      });
+
+      // Login form submission
+      document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Simple validation (in real app, this would be server-side)
+        if (username && password) {
+          // Show loading state
+          const submitBtn = this.querySelector('button[type="submit"]');
+          const originalText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Iniciando sesión...';
+          submitBtn.disabled = true;
+
+          // Simulate login process
+          setTimeout(() => {
+            alert(
+              'Esta es una demostración. En el sistema real, serías redirigido a tu portal personal.',
+            );
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+          }, 2000);
+        }
+      });
+    </script>
+  </body>
+</html>

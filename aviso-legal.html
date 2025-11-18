@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aviso Legal - CEP Formación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .cep-blue {
+        color: #0066cc;
+      }
+      .cep-dark-blue {
+        color: #003366;
+      }
+      .cep-light-blue {
+        background-color: #e6f2ff;
+      }
+      .cep-orange {
+        color: #ff6600;
+      }
+      .cep-gray {
+        color: #666666;
+      }
+      .hover-cep-blue:hover {
+        color: #0066cc;
+      }
+      .transition-all {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-graduation-cap text-3xl cep-blue mr-3"></i>
+              <span class="text-xl font-bold cep-dark-blue">CEP Formación</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a>
+            <a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a>
+            <a href="ciclos.html" class="hover-cep-blue transition-all">Ciclos Formativos</a>
+            <a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a>
+            <a href="blog.html" class="hover-cep-blue transition-all">Blog</a>
+            <a href="faq.html" class="hover-cep-blue transition-all">FAQ</a>
+            <a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a>
+            <a
+              href="acceso-alumnos.html"
+              class="bg-cep-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Acceso Alumnos
+            </a>
+          </div>
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="text-gray-700 hover:text-blue-600 focus:outline-none"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a>
+          <a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Sobre Nosotros</a
+          >
+          <a href="ciclos.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Ciclos Formativos</a
+          >
+          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a>
+          <a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a>
+          <a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a>
+          <a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a>
+          <a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
+            >Acceso Alumnos</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <section class="bg-gray-100 py-4">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <a href="index.html" class="text-gray-700 hover:text-blue-600 transition-all">
+                <i class="fas fa-home mr-2"></i>Inicio
+              </a>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                <span class="text-gray-500">Aviso Legal</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Aviso Legal</h1>
+        <p class="text-xl opacity-90">Información legal y condiciones de uso</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <div class="prose prose-lg max-w-none">
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">1. Información General</h2>
+            <p class="mb-6 text-gray-700">
+              El presente aviso legal (en adelante, "Aviso Legal") regula el uso del sitio web
+              www.cepformacion.com (en adelante, "la Web"), propiedad de CEP Formación S.L., con
+              domicilio en Calle Principal 123, 28013 Madrid, CIF: B12345678, inscrita en el
+              Registro Mercantil de Madrid, Tomo 12345, Folio 123, Hoja M-123456.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">2. Objeto y Ámbito de Aplicación</h2>
+            <p class="mb-6 text-gray-700">
+              El objeto de este Aviso Legal es regular el acceso y la utilización de la Web,
+              incluyendo los contenidos y servicios puestos a disposición de los usuarios a través
+              de la misma.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">3. Condiciones de Uso</h2>
+            <p class="mb-4 text-gray-700">
+              El acceso y utilización de la Web atribuye la condición de usuario e implica la
+              aceptación plena y sin reservas de todas y cada una de las disposiciones incluidas en
+              este Aviso Legal.
+            </p>
+            <p class="mb-6 text-gray-700">
+              El usuario se compromete a utilizar la Web y sus contenidos y servicios de conformidad
+              con la ley, la moral y las buenas costumbres, así como a respetar en todo momento los
+              derechos e intereses de CEP Formación S.L. y de terceros.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              4. Propiedad Intelectual e Industrial
+            </h2>
+            <p class="mb-6 text-gray-700">
+              Todos los contenidos de la Web (textos, imágenes, diseños, logos, códigos fuente,
+              etc.) son propiedad de CEP Formación S.L. o de terceros que han autorizado su
+              inclusión, y están protegidos por la legislación en materia de propiedad intelectual e
+              industrial.
+            </p>
+            <p class="mb-6 text-gray-700">
+              Queda prohibida la reproducción, distribución, comunicación pública, transformación o
+              cualquier otra actividad que se realice con los contenidos de la Web sin el
+              consentimiento expreso de CEP Formación S.L.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">5. Exclusión de Responsabilidad</h2>
+            <p class="mb-4 text-gray-700">CEP Formación S.L. no se responsabiliza de:</p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                Los daños y perjuicios que puedan surgir del uso inadecuado de la Web por parte del
+                usuario
+              </li>
+              <li class="mb-2">
+                Las caídas, interrupciones o fallos en el funcionamiento de la Web
+              </li>
+              <li class="mb-2">
+                Los virus o programas maliciosos que puedan afectar al equipo del usuario
+              </li>
+              <li class="mb-2">
+                La veracidad y exactitud de la información proporcionada por terceros
+              </li>
+              <li class="mb-2">Los contenidos y servicios enlazados desde la Web</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">6. Enlaces a Sitios de Terceros</h2>
+            <p class="mb-6 text-gray-700">
+              La Web puede contener enlaces a sitios web de terceros. CEP Formación S.L. no ejerce
+              ningún control sobre dichos sitios y, por tanto, no se responsabiliza de sus
+              contenidos ni de las prácticas de privacidad de los mismos.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">7. Protección de Datos</h2>
+            <p class="mb-6 text-gray-700">
+              CEP Formación S.L. garantiza el cumplimiento de la normativa vigente en materia de
+              protección de datos personales. Para más información, consulte nuestra Política de
+              Privacidad disponible en este sitio web.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">8. Política de Cookies</h2>
+            <p class="mb-6 text-gray-700">
+              La Web utiliza cookies para mejorar la experiencia del usuario. Puede consultar
+              nuestra Política de Cookies para obtener más información sobre el uso de cookies y
+              cómo configurarlas.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              9. Legislación Aplicable y Jurisdicción
+            </h2>
+            <p class="mb-6 text-gray-700">
+              Para la resolución de cualquier controversia o conflicto derivado de la interpretación
+              o ejecución de este Aviso Legal, las partes se someten expresamente a la jurisdicción
+              de los juzgados y tribunales de Madrid, con renuncia expresa a cualquier otra
+              jurisdicción que pudiera corresponderles.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              10. Modificaciones del Aviso Legal
+            </h2>
+            <p class="mb-6 text-gray-700">
+              CEP Formación S.L. se reserva el derecho de modificar en cualquier momento las
+              condiciones aquí recogidas, siendo debidamente publicadas como aquí aparecen.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">11. Datos de Contacto</h2>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+              <p class="text-gray-700"><strong>CEP Formación S.L.</strong></p>
+              <p class="text-gray-700">
+                <strong>Domicilio:</strong> Calle Principal 123, 28013 Madrid
+              </p>
+              <p class="text-gray-700"><strong>CIF:</strong> B12345678</p>
+              <p class="text-gray-700"><strong>Teléfono:</strong> 900 123 456</p>
+              <p class="text-gray-700"><strong>Email:</strong> info@cepformacion.com</p>
+              <p class="text-gray-700">
+                <strong>Registro Mercantil:</strong> Tomo 12345, Folio 123, Hoja M-123456
+              </p>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-lg mt-8">
+              <p class="text-sm text-gray-600 text-center">
+                <strong>Fecha de última actualización:</strong> 18 de noviembre de 2024<br />
+                <strong>Versión:</strong> 1.0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gray-100">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl font-bold mb-4 cep-dark-blue">¿Necesitas más información?</h2>
+        <p class="text-gray-600 mb-8">
+          Si tienes alguna pregunta sobre nuestro aviso legal, no dudes en contactarnos
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="contacto.html"
+            class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold"
+          >
+            <i class="fas fa-envelope mr-2"></i>Contactar
+          </a>
+          <a
+            href="politica-privacidad.html"
+            class="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold"
+          >
+            <i class="fas fa-shield-alt mr-2"></i>Política de Privacidad
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center mb-4">
+              <i class="fas fa-graduation-cap text-2xl mr-2"></i>
+              <span class="text-xl font-bold">CEP Formación</span>
+            </div>
+            <p class="text-gray-400">
+              Centro de estudios profesionales comprometido con tu futuro académico y laboral.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="index.html" class="text-gray-400 hover:text-white transition-all"
+                  >Inicio</a
+                >
+              </li>
+              <li>
+                <a href="sobre-nosotros.html" class="text-gray-400 hover:text-white transition-all"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li>
+                <a href="ciclos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Ciclos Formativos</a
+                >
+              </li>
+              <li>
+                <a href="cursos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Cursos</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="politica-privacidad.html"
+                  class="text-gray-400 hover:text-white transition-all"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="aviso-legal.html" class="text-gray-400 hover:text-white transition-all"
+                  >Aviso Legal</a
+                >
+              </li>
+              <li>
+                <a
+                  href="politica-cookies.html"
+                  class="text-gray-400 hover:text-white transition-all"
+                  >Política de Cookies</a
+                >
+              </li>
+              <li>
+                <a href="contacto.html" class="text-gray-400 hover:text-white transition-all"
+                  >Contacto</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><i class="fas fa-phone mr-2"></i>900 123 456</li>
+              <li><i class="fas fa-envelope mr-2"></i>info@cepformacion.com</li>
+              <li><i class="fas fa-map-marker-alt mr-2"></i>Calle Principal 123, Madrid</li>
+            </ul>
+            <div class="flex space-x-4 mt-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-facebook text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-twitter text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-linkedin text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-button').addEventListener('click', function () {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

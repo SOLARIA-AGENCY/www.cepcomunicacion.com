@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ciclos Formativos - CEP Formación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .cep-blue {
+        color: #0066cc;
+      }
+      .cep-dark-blue {
+        color: #003366;
+      }
+      .cep-light-blue {
+        background-color: #e6f2ff;
+      }
+      .cep-orange {
+        color: #ff6600;
+      }
+      .cep-gray {
+        color: #666666;
+      }
+      .hover-cep-blue:hover {
+        color: #0066cc;
+      }
+      .transition-all {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-graduation-cap text-3xl cep-blue mr-3"></i>
+              <span class="text-xl font-bold cep-dark-blue">CEP Formación</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="ciclos.html" class="cep-blue font-semibold">Ciclos Formativos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="blog.html" class="hover-cep-blue transition-all">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="faq.html" class="hover-cep-blue transition-all">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="acceso-alumnos.html"
+              class="bg-cep-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Acceso Alumnos
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          </div>
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="text-gray-700 hover:text-blue-600 focus:outline-none"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Sobre Nosotros</a
+          >
+          <a
+            href="ciclos.html"
+            class="block px-3 py-2 bg-blue-50 text-blue-600 rounded font-semibold"
+            >Ciclos Formativos</a
+          >
+          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          <a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
+            >Acceso Alumnos</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Ciclos Formativos</h1>
+        <p class="text-xl md:text-2xl mb-8 opacity-90">
+          Formación profesional de calidad para tu futuro
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            class="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition-all font-semibold"
+          >
+            <i class="fas fa-download mr-2"></i>Descargar Guía
+          </button>
+          <button
+            class="border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition-all font-semibold"
+          >
+            <i class="fas fa-phone mr-2"></i>Solicitar Información
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-12 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <button
+            class="filter-btn px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all"
+          >
+            Todos
+          </button>
+          <button
+            class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-all"
+          >
+            Informática
+          </button>
+          <button
+            class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-all"
+          >
+            Administración
+          </button>
+          <button
+            class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-all"
+          >
+            Sanidad
+          </button>
+          <button
+            class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-all"
+          >
+            Electricidad
+          </button>
+          <button
+            class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-all"
+          >
+            Marketing
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cycles Grid -->
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Informática Cycle -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6">
+              <i class="fas fa-laptop-code text-4xl text-white mb-4"></i>
+              <h3 class="text-2xl font-bold text-white">Desarrollo de Aplicaciones Web</h3>
+              <p class="text-blue-100">Grado Superior</p>
+            </div>
+            <div class="p-6">
+              <div class="mb-4">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Informática</span
+                >
+                <span
+                  class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full ml-2"
+                  >Presencial</span
+                >
+              </div>
+              <p class="text-gray-600 mb-6">
+                Aprende a crear aplicaciones web modernas utilizando las últimas tecnologías y
+                metodologías de desarrollo.
+              </p>
+              <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-blue-600 mr-2"></i>
+                  <span>2 años (2000 horas)</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-users text-blue-600 mr-2"></i>
+                  <span>25 plazas disponibles</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-certificate text-blue-600 mr-2"></i>
+                  <span>Título oficial</span>
+                </div>
+              </div>
+              <button
+                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+
+          <!-- Administración Cycle -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+            <div class="bg-gradient-to-r from-green-500 to-green-600 p-6">
+              <i class="fas fa-chart-line text-4xl text-white mb-4"></i>
+              <h3 class="text-2xl font-bold text-white">Administración y Finanzas</h3>
+              <p class="text-green-100">Grado Superior</p>
+            </div>
+            <div class="p-6">
+              <div class="mb-4">
+                <span
+                  class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Administración</span
+                >
+                <span
+                  class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full ml-2"
+                  >Presencial</span
+                >
+              </div>
+              <p class="text-gray-600 mb-6">
+                Formación integral en gestión administrativa, contabilidad y finanzas para empresas
+                y organizaciones.
+              </p>
+              <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-green-600 mr-2"></i>
+                  <span>2 años (2000 horas)</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-users text-green-600 mr-2"></i>
+                  <span>30 plazas disponibles</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-certificate text-green-600 mr-2"></i>
+                  <span>Título oficial</span>
+                </div>
+              </div>
+              <button
+                class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-all font-semibold"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+
+          <!-- Sanidad Cycle -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+            <div class="bg-gradient-to-r from-red-500 to-red-600 p-6">
+              <i class="fas fa-heartbeat text-4xl text-white mb-4"></i>
+              <h3 class="text-2xl font-bold text-white">Cuidados Auxiliares de Enfermería</h3>
+              <p class="text-red-100">Grado Medio</p>
+            </div>
+            <div class="p-6">
+              <div class="mb-4">
+                <span class="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Sanidad</span
+                >
+                <span
+                  class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full ml-2"
+                  >Presencial</span
+                >
+              </div>
+              <p class="text-gray-600 mb-6">
+                Formación para proporcionar cuidados básicos de enfermería y apoyo a pacientes en
+                centros sanitarios.
+              </p>
+              <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-red-600 mr-2"></i>
+                  <span>2 años (1400 horas)</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-users text-red-600 mr-2"></i>
+                  <span>20 plazas disponibles</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-certificate text-red-600 mr-2"></i>
+                  <span>Título oficial</span>
+                </div>
+              </div>
+              <button
+                class="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-all font-semibold"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+
+          <!-- Electricidad Cycle -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+            <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 p-6">
+              <i class="fas fa-bolt text-4xl text-white mb-4"></i>
+              <h3 class="text-2xl font-bold text-white">Instalaciones Eléctricas y Automáticas</h3>
+              <p class="text-yellow-100">Grado Medio</p>
+            </div>
+            <div class="p-6">
+              <div class="mb-4">
+                <span
+                  class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Electricidad</span
+                >
+                <span
+                  class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full ml-2"
+                  >Presencial</span
+                >
+              </div>
+              <p class="text-gray-600 mb-6">
+                Aprende a instalar y mantener sistemas eléctricos en edificios e instalaciones
+                industriales.
+              </p>
+              <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-yellow-600 mr-2"></i>
+                  <span>2 años (1400 horas)</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-users text-yellow-600 mr-2"></i>
+                  <span>15 plazas disponibles</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-certificate text-yellow-600 mr-2"></i>
+                  <span>Título oficial</span>
+                </div>
+              </div>
+              <button
+                class="w-full bg-yellow-600 text-white py-3 rounded-lg hover:bg-yellow-700 transition-all font-semibold"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+
+          <!-- Marketing Cycle -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+            <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6">
+              <i class="fas fa-bullhorn text-4xl text-white mb-4"></i>
+              <h3 class="text-2xl font-bold text-white">Marketing y Publicidad</h3>
+              <p class="text-purple-100">Grado Superior</p>
+            </div>
+            <div class="p-6">
+              <div class="mb-4">
+                <span
+                  class="bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Marketing</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full ml-2"
+                  >Online</span
+                >
+              </div>
+              <p class="text-gray-600 mb-6">
+                Estrategias de marketing digital, publicidad online y análisis de mercados para
+                empresas modernas.
+              </p>
+              <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-purple-600 mr-2"></i>
+                  <span>2 años (2000 horas)</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-users text-purple-600 mr-2"></i>
+                  <span>40 plazas disponibles</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-certificate text-purple-600 mr-2"></i>
+                  <span>Título oficial</span>
+                </div>
+              </div>
+              <button
+                class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all font-semibold"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+
+          <!-- Additional Cycle -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+            <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 p-6">
+              <i class="fas fa-network-wired text-4xl text-white mb-4"></i>
+              <h3 class="text-2xl font-bold text-white">Sistemas Microinformáticos y Redes</h3>
+              <p class="text-indigo-100">Grado Medio</p>
+            </div>
+            <div class="p-6">
+              <div class="mb-4">
+                <span
+                  class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full"
+                  >Informática</span
+                >
+                <span
+                  class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full ml-2"
+                  >Presencial</span
+                >
+              </div>
+              <p class="text-gray-600 mb-6">
+                Montaje y mantenimiento de equipos informáticos, redes locales y sistemas
+                operativos.
+              </p>
+              <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-clock text-indigo-600 mr-2"></i>
+                  <span>2 años (1400 horas)</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-users text-indigo-600 mr-2"></i>
+                  <span>25 plazas disponibles</span>
+                </div>
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-certificate text-indigo-600 mr-2"></i>
+                  <span>Título oficial</span>
+                </div>
+              </div>
+              <button
+                class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-all font-semibold"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admission Process -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12 cep-dark-blue">Proceso de Admisión</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div
+              class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-blue-600">1</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Solicitud</h3>
+            <p class="text-gray-600">Rellena el formulario de admisión online o presencialmente</p>
+          </div>
+          <div class="text-center">
+            <div
+              class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-blue-600">2</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Entrevista</h3>
+            <p class="text-gray-600">Entrevista personal con el departamento de orientación</p>
+          </div>
+          <div class="text-center">
+            <div
+              class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-blue-600">3</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Resolución</h3>
+            <p class="text-gray-600">Notificación de admisión y lista de admitidos</p>
+          </div>
+          <div class="text-center">
+            <div
+              class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl font-bold text-blue-600">4</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Matrícula</h3>
+            <p class="text-gray-600">Formalización de matrícula y entrega de documentación</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-600 to-blue-800">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">¿Necesitas más información?</h2>
+        <p class="text-xl text-blue-100 mb-8">
+          Nuestro equipo de orientación está a tu disposición para resolver todas tus dudas
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            class="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition-all font-semibold"
+          >
+            <i class="fas fa-phone mr-2"></i>900 123 456
+          </button>
+          <button
+            class="border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition-all font-semibold"
+          >
+            <i class="fas fa-envelope mr-2"></i>info@cepformacion.com
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-5 gap-8">
+          <div>
+            <div class="flex items-center mb-4">
+              <i class="fas fa-graduation-cap text-2xl mr-2"></i>
+              <span class="text-xl font-bold">CEP Formación</span>
+            </div>
+            <p class="text-gray-400">
+              Centro de estudios profesionales comprometido con tu futuro académico y laboral.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="index.html" class="text-gray-400 hover:text-white transition-all"
+                  >Inicio</a
+                >
+              </li>
+              <li>
+                <a href="sobre-nosotros.html" class="text-gray-400 hover:text-white transition-all"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li>
+                <a href="ciclos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Ciclos Formativos</a
+                >
+              </li>
+              <li>
+                <a href="cursos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Cursos</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/politica-privacidad" class="text-gray-400 hover:text-white transition-all"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="/aviso-legal" class="text-gray-400 hover:text-white transition-all"
+                  >Aviso Legal</a
+                >
+              </li>
+              <li>
+                <a href="/politica-cookies" class="text-gray-400 hover:text-white transition-all"
+                  >Política de Cookies</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><i class="fas fa-phone mr-2"></i>900 123 456</li>
+              <li><i class="fas fa-envelope mr-2"></i>info@cepformacion.com</li>
+              <li><i class="fas fa-map-marker-alt mr-2"></i>Calle Principal 123, Madrid</li>
+            </ul>
+            <div class="flex space-x-4 mt-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-facebook text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-twitter text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-linkedin text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-button').addEventListener('click', function () {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      });
+
+      // Filter functionality
+      document.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.addEventListener('click', function () {
+          // Remove active state from all buttons
+          document.querySelectorAll('.filter-btn').forEach((b) => {
+            b.classList.remove('bg-blue-600', 'text-white');
+            b.classList.add('bg-gray-200', 'text-gray-700');
+          });
+
+          // Add active state to clicked button
+          this.classList.remove('bg-gray-200', 'text-gray-700');
+          this.classList.add('bg-blue-600', 'text-white');
+        });
+      });
+    </script>
+  </body>
+</html>

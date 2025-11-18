@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Hub - CEP Formación</title>
+    <meta name="description" content="Sistema de diseño interactivo de CEP Formación" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --cep-pink: #ec008c;
+        --cep-pink-dark: #c7006f;
+        --cep-green: #00a651;
+        --cep-blue: #0056b3;
+        --cep-orange: #ff6b35;
+      }
+
+      .cep-pink {
+        background-color: var(--cep-pink);
+      }
+      .cep-pink-dark {
+        background-color: var(--cep-pink-dark);
+      }
+      .text-cep-pink {
+        color: var(--cep-pink);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      * {
+        transition: all 0.3s ease;
+      }
+
+      .color-swatch {
+        width: 120px;
+        height: 120px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .color-swatch:hover {
+        transform: scale(1.05);
+      }
+
+      .typography-sample {
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Header Navigation (Same as homepage) -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <nav class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" class="text-2xl font-bold text-cep-pink"> CEP Formación </a>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden lg:flex gap-6 items-center">
+            <a
+              href="/"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Inicio
+            </a>
+            <a
+              href="/ciclos"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Ciclos
+            </a>
+            <a
+              href="/sedes"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Sedes
+            </a>
+
+            <!-- Cursos Dropdown -->
+            <div class="relative group">
+              <button
+                class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide flex items-center gap-1"
+              >
+                Cursos
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
+                  <path d="M6 8L2 4h8z" />
+                </svg>
+              </button>
+              <div
+                class="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg py-2 min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+              >
+                <a
+                  href="/cursos/privados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Privados</a
+                >
+                <a
+                  href="/cursos/ocupados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Ocupados</a
+                >
+                <a
+                  href="/cursos/desempleados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Desempleados</a
+                >
+                <a
+                  href="/cursos/teleformacion"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Teleformación</a
+                >
+              </div>
+            </div>
+
+            <a
+              href="/sobre-nosotros"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Nosotros
+            </a>
+            <a
+              href="/faq"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              FAQ
+            </a>
+            <a
+              href="/blog"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Blog
+            </a>
+            <a
+              href="/contacto"
+              class="bg-cep-pink hover:bg-cep-pink-dark text-white px-4 py-2 rounded-lg font-semibold text-sm uppercase tracking-wide"
+            >
+              Contacto
+            </a>
+            <a
+              href="/acceso-alumnos"
+              class="border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white px-4 py-2 rounded-lg font-semibold text-sm uppercase tracking-wide"
+            >
+              Acceso Alumnos
+            </a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden mt-4 pb-4 border-t pt-4">
+          <div class="flex flex-col gap-4">
+            <a href="/" class="text-gray-700 hover:text-cep-pink font-semibold">Inicio</a>
+            <a href="/ciclos" class="text-gray-700 hover:text-cep-pink font-semibold">Ciclos</a>
+            <a href="/sedes" class="text-gray-700 hover:text-cep-pink font-semibold">Sedes</a>
+            <div>
+              <button
+                class="text-gray-700 hover:text-cep-pink font-semibold w-full text-left"
+                onclick="toggleMobileDropdown()"
+              >
+                Cursos ▼
+              </button>
+              <div id="mobileDropdown" class="hidden pl-4 mt-2 space-y-2">
+                <a href="/cursos/privados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Privados</a
+                >
+                <a href="/cursos/ocupados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Ocupados</a
+                >
+                <a href="/cursos/desempleados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Desempleados</a
+                >
+                <a href="/cursos/teleformacion" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Teleformación</a
+                >
+              </div>
+            </div>
+            <a href="/sobre-nosotros" class="text-gray-700 hover:text-cep-pink font-semibold"
+              >Nosotros</a
+            >
+            <a href="/faq" class="text-gray-700 hover:text-cep-pink font-semibold">FAQ</a>
+            <a href="/blog" class="text-gray-700 hover:text-cep-pink font-semibold">Blog</a>
+            <a
+              href="/contacto"
+              class="bg-cep-pink hover:bg-cep-pink-dark text-white px-4 py-2 rounded-lg font-semibold text-center"
+              >Contacto</a
+            >
+            <a
+              href="/acceso-alumnos"
+              class="border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white px-4 py-2 rounded-lg font-semibold text-center"
+              >Acceso Alumnos</a
+            >
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="py-16 md:py-20 bg-gradient-to-r from-cep-pink to-cep-pink-dark text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">DESIGN HUB</h1>
+        <p class="text-xl opacity-90 max-w-3xl mx-auto">
+          Sistema de diseño interactivo de CEP Formación - Explora nuestra identidad visual
+        </p>
+      </div>
+    </section>
+
+    <!-- Design System Content -->
+    <section class="py-16 md:py-20">
+      <div class="container mx-auto px-4">
+        <!-- Color Palette -->
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold mb-8 text-center text-gray-900">Paleta de Colores</h2>
+          <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Nuestra paleta de colores está diseñada para transmitir profesionalismo, energía y
+            confianza en cada interacción.
+          </p>
+
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-items-center">
+            <div class="text-center">
+              <div class="color-swatch cep-pink" onclick="copyColor('#ec008c')">CEP Pink</div>
+              <p class="mt-2 font-mono text-sm">#ec008c</p>
+              <p class="text-xs text-gray-500">Principal</p>
+            </div>
+
+            <div class="text-center">
+              <div class="color-swatch cep-pink-dark" onclick="copyColor('#c7006f')">
+                CEP Pink Dark
+              </div>
+              <p class="mt-2 font-mono text-sm">#c7006f</p>
+              <p class="text-xs text-gray-500">Variante</p>
+            </div>
+
+            <div class="text-center">
+              <div
+                class="color-swatch bg-green-600"
+                style="background-color: var(--cep-green)"
+                onclick="copyColor('#00a651')"
+              >
+                CEP Green
+              </div>
+              <p class="mt-2 font-mono text-sm">#00a651</p>
+              <p class="text-xs text-gray-500">Ocupados</p>
+            </div>
+
+            <div class="text-center">
+              <div
+                class="color-swatch bg-blue-600"
+                style="background-color: var(--cep-blue)"
+                onclick="copyColor('#0056b3')"
+              >
+                CEP Blue
+              </div>
+              <p class="mt-2 font-mono text-sm">#0056b3</p>
+              <p class="text-xs text-gray-500">Desempleados</p>
+            </div>
+
+            <div class="text-center">
+              <div
+                class="color-swatch bg-orange-500"
+                style="background-color: var(--cep-orange)"
+                onclick="copyColor('#ff6b35')"
+              >
+                CEP Orange
+              </div>
+              <p class="mt-2 font-mono text-sm">#ff6b35</p>
+              <p class="text-xs text-gray-500">Teleformación</p>
+            </div>
+
+            <div class="text-center">
+              <div class="color-swatch bg-gray-900" onclick="copyColor('#111827')">
+                Neutral Dark
+              </div>
+              <p class="mt-2 font-mono text-sm">#111827</p>
+              <p class="text-xs text-gray-500">Texto</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold mb-8 text-center text-gray-900">Tipografía</h2>
+          <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Utilizamos la tipografía del sistema para garantizar legibilidad y consistencia en todas
+            las plataformas.
+          </p>
+
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <div class="space-y-8 typography-sample">
+              <div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">Título Principal</h1>
+                <p class="text-sm text-gray-500">H1 - 4xl/5xl/6xl - Font Bold</p>
+              </div>
+
+              <div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-2">Título Secundario</h2>
+                <p class="text-sm text-gray-500">H2 - 3xl/4xl - Font Bold</p>
+              </div>
+
+              <div>
+                <h3 class="text-2xl md:text-3xl font-bold mb-2">Título Terciario</h3>
+                <p class="text-sm text-gray-500">H3 - 2xl/3xl - Font Bold</p>
+              </div>
+
+              <div>
+                <h4 class="text-xl md:text-2xl font-semibold mb-2">Subtítulo</h4>
+                <p class="text-sm text-gray-500">H4 - xl/2xl - Font Semibold</p>
+              </div>
+
+              <div>
+                <p class="text-lg mb-2">
+                  Texto grande para párrafos importantes o destacados. Mantiene buena legibilidad y
+                  jerarquía visual.
+                </p>
+                <p class="text-sm text-gray-500">Large - Text Large</p>
+              </div>
+
+              <div>
+                <p class="text-base mb-2">
+                  Texto regular para contenido general. Este es el tamaño estándar para la mayoría
+                  de los párrafos y descripciones en el sitio.
+                </p>
+                <p class="text-sm text-gray-500">Base - Text Base</p>
+              </div>
+
+              <div>
+                <p class="text-sm mb-2">
+                  Texto pequeño para información secundaria, leyendas y notas. Manteniendo
+                  legibilidad óptima incluso en tamaños reducidos.
+                </p>
+                <p class="text-sm text-gray-500">Small - Text Small</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold mb-8 text-center text-gray-900">Botones</h2>
+          <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Nuestro sistema de botones mantiene consistencia visual y proporciona feedback claro en
+            todas las interacciones.
+          </p>
+
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <!-- Primary Buttons -->
+              <div>
+                <h3 class="text-lg font-semibold mb-4">Botones Primarios</h3>
+                <div class="space-y-4">
+                  <button
+                    class="w-full cep-pink hover:cep-pink-dark text-white py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Principal
+                  </button>
+                  <button
+                    class="w-full cep-pink hover:cep-pink-dark text-white py-2 px-4 rounded-lg text-sm font-semibold"
+                  >
+                    Botón Pequeño
+                  </button>
+                  <button
+                    class="w-full cep-pink hover:cep-pink-dark text-white py-4 px-8 rounded-lg text-lg font-semibold"
+                  >
+                    Botón Grande
+                  </button>
+                </div>
+              </div>
+
+              <!-- Secondary Buttons -->
+              <div>
+                <h3 class="text-lg font-semibold mb-4">Botones Secundarios</h3>
+                <div class="space-y-4">
+                  <button
+                    class="w-full border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Secundario
+                  </button>
+                  <button
+                    class="w-full border-2 border-cep-green text-cep-green hover:bg-cep-green hover:text-white py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Verde
+                  </button>
+                  <button
+                    class="w-full border-2 border-cep-blue text-cep-blue hover:bg-cep-blue hover:text-white py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Azul
+                  </button>
+                </div>
+              </div>
+
+              <!-- Special Buttons -->
+              <div>
+                <h3 class="text-lg font-semibold mb-4">Botones Especiales</h3>
+                <div class="space-y-4">
+                  <button
+                    class="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Oscuro
+                  </button>
+                  <button
+                    class="w-full bg-gray-200 hover:bg-gray-300 text-gray-900 py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Claro
+                  </button>
+                  <button
+                    class="w-full bg-gradient-to-r from-cep-pink to-cep-pink-dark text-white py-3 px-6 rounded-lg font-semibold"
+                  >
+                    Botón Gradiente
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Components -->
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold mb-8 text-center text-gray-900">Componentes</h2>
+          <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Componentes reutilizables que mantienen consistencia visual en toda la aplicación.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Cards -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+              <h3 class="text-xl font-bold mb-6">Tarjetas (Cards)</h3>
+              <div class="space-y-4">
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md">
+                  <h4 class="font-semibold mb-2">Título de Tarjeta</h4>
+                  <p class="text-gray-600 text-sm">
+                    Descripción breve del contenido de esta tarjeta.
+                  </p>
+                </div>
+                <div class="border border-cep-pink rounded-lg p-4 hover:shadow-md">
+                  <h4 class="font-semibold text-cep-pink mb-2">Tarjeta Destacada</h4>
+                  <p class="text-gray-600 text-sm">
+                    Tarjeta con borde de color para destacar información importante.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Forms -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+              <h3 class="text-xl font-bold mb-6">Formularios</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Campo de texto</label>
+                  <input
+                    type="text"
+                    placeholder="Escribe aquí..."
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cep-pink focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Selección</label>
+                  <select
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cep-pink focus:border-transparent"
+                  >
+                    <option>Opción 1</option>
+                    <option>Opción 2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div>
+          <h2 class="text-3xl font-bold mb-8 text-center text-gray-900">Demo Interactiva</h2>
+          <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Experimenta con nuestros componentes y estilos en tiempo real.
+          </p>
+
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <div class="text-center">
+              <h3 class="text-2xl font-bold mb-6">Personaliza tu experiencia</h3>
+
+              <div class="mb-8">
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Elige un color de tema:</label
+                >
+                <div class="flex justify-center gap-4">
+                  <button
+                    onclick="changeTheme('cep-pink')"
+                    class="w-12 h-12 cep-pink rounded-full"
+                  ></button>
+                  <button
+                    onclick="changeTheme('cep-green')"
+                    class="w-12 h-12 bg-green-600 rounded-full"
+                    style="background-color: var(--cep-green)"
+                  ></button>
+                  <button
+                    onclick="changeTheme('cep-blue')"
+                    class="w-12 h-12 bg-blue-600 rounded-full"
+                    style="background-color: var(--cep-blue)"
+                  ></button>
+                  <button
+                    onclick="changeTheme('cep-orange')"
+                    class="w-12 h-12 bg-orange-500 rounded-full"
+                    style="background-color: var(--cep-orange)"
+                  ></button>
+                </div>
+              </div>
+
+              <div id="demoComponent" class="p-6 border-2 border-dashed border-gray-300 rounded-lg">
+                <h4 class="text-xl font-bold mb-3">Componente de Ejemplo</h4>
+                <p class="text-gray-600 mb-4">
+                  Este componente cambiará de color según tu selección.
+                </p>
+                <button
+                  id="demoButton"
+                  class="cep-pink text-white py-2 px-6 rounded-lg font-semibold"
+                >
+                  Botón de Ejemplo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer (Same as homepage) -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-cep-pink">CEP Formación</h3>
+            <p class="text-gray-300">
+              Centro de estudios profesionales dedicado a tu desarrollo y crecimiento laboral.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Cursos</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/cursos/privados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Privados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/ocupados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Ocupados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/desempleados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Desempleados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/teleformacion" class="text-gray-300 hover:text-cep-pink"
+                  >Teleformación</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Institución</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/sobre-nosotros" class="text-gray-300 hover:text-cep-pink"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li><a href="/sedes" class="text-gray-300 hover:text-cep-pink">Sedes</a></li>
+              <li><a href="/faq" class="text-gray-300 hover:text-cep-pink">FAQ</a></li>
+              <li><a href="/blog" class="text-gray-300 hover:text-cep-pink">Blog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+            <ul class="space-y-2 text-gray-300">
+              <li>Teléfono: 922 123 456</li>
+              <li>Email: info@cepformacion.com</li>
+              <li>
+                <a href="/contacto" class="text-cep-pink hover:text-cep-pink-dark">
+                  Formulario de contacto →
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+      }
+
+      function toggleMobileDropdown() {
+        const dropdown = document.getElementById('mobileDropdown');
+        dropdown.classList.toggle('hidden');
+      }
+
+      function copyColor(color) {
+        navigator.clipboard.writeText(color);
+
+        // Create temporary notification
+        const notification = document.createElement('div');
+        notification.textContent = `Color ${color} copiado!`;
+        notification.className =
+          'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg z-50';
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.remove();
+        }, 2000);
+      }
+
+      function changeTheme(colorClass) {
+        const button = document.getElementById('demoButton');
+        const component = document.getElementById('demoComponent');
+
+        // Remove all color classes
+        button.className = button.className.replace(/cep-\w+|bg-\w+-\d+/g, '');
+        component.className = component.className.replace(/border-\w+-\d+/g, '');
+
+        // Add new color class
+        button.className += ` ${colorClass} text-white py-2 px-6 rounded-lg font-semibold`;
+        component.className += ` border-2 border-dashed border-${colorClass.replace('cep-', '').replace('-dark', '')}-500 rounded-lg`;
+      }
+    </script>
+  </body>
+</html>

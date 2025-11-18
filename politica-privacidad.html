@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Política de Privacidad - CEP Formación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .cep-blue {
+        color: #0066cc;
+      }
+      .cep-dark-blue {
+        color: #003366;
+      }
+      .cep-light-blue {
+        background-color: #e6f2ff;
+      }
+      .cep-orange {
+        color: #ff6600;
+      }
+      .cep-gray {
+        color: #666666;
+      }
+      .hover-cep-blue:hover {
+        color: #0066cc;
+      }
+      .transition-all {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-graduation-cap text-3xl cep-blue mr-3"></i>
+              <span class="text-xl font-bold cep-dark-blue">CEP Formación</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a>
+            <a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a>
+            <a href="ciclos.html" class="hover-cep-blue transition-all">Ciclos Formativos</a>
+            <a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a>
+            <a href="blog.html" class="hover-cep-blue transition-all">Blog</a>
+            <a href="faq.html" class="hover-cep-blue transition-all">FAQ</a>
+            <a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a>
+            <a
+              href="acceso-alumnos.html"
+              class="bg-cep-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Acceso Alumnos
+            </a>
+          </div>
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="text-gray-700 hover:text-blue-600 focus:outline-none"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a>
+          <a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Sobre Nosotros</a
+          >
+          <a href="ciclos.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Ciclos Formativos</a
+          >
+          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a>
+          <a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a>
+          <a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a>
+          <a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a>
+          <a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
+            >Acceso Alumnos</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <section class="bg-gray-100 py-4">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <a href="index.html" class="text-gray-700 hover:text-blue-600 transition-all">
+                <i class="fas fa-home mr-2"></i>Inicio
+              </a>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                <span class="text-gray-500">Política de Privacidad</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Política de Privacidad</h1>
+        <p class="text-xl opacity-90">Protección y tratamiento de tus datos personales</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <div class="prose prose-lg max-w-none">
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">1. Información General</h2>
+            <p class="mb-6 text-gray-700">
+              En CEP Formación nos comprometemos a proteger y respetar tu privacidad. Esta política
+              de privacidad explica cómo recopilamos, utilizamos y protegemos tu información
+              personal de acuerdo con el Reglamento General de Protección de Datos (RGPD) y la Ley
+              Orgánica de Protección de Datos (LOPDGDD).
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              2. Identidad del Responsable del Tratamiento
+            </h2>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+              <p class="text-gray-700"><strong>Responsable:</strong> CEP Formación S.L.</p>
+              <p class="text-gray-700"><strong>CIF:</strong> B12345678</p>
+              <p class="text-gray-700">
+                <strong>Domicilio:</strong> Calle Principal 123, 28013 Madrid
+              </p>
+              <p class="text-gray-700"><strong>Teléfono:</strong> 900 123 456</p>
+              <p class="text-gray-700"><strong>Email:</strong> info@cepformacion.com</p>
+            </div>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              3. Datos Personales que Recopilamos
+            </h2>
+            <p class="mb-4 text-gray-700">Recopilamos los siguientes tipos de datos personales:</p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                Datos de identificación: nombre, apellidos, DNI/NIE, fecha de nacimiento
+              </li>
+              <li class="mb-2">Datos de contacto: teléfono, email, dirección postal</li>
+              <li class="mb-2">Datos académicos y profesionales: formación, experiencia laboral</li>
+              <li class="mb-2">Datos económicos: información de pago, facturación</li>
+              <li class="mb-2">
+                Datos de navegación: cookies, dirección IP, historial de navegación
+              </li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">4. Finalidad del Tratamiento</h2>
+            <p class="mb-4 text-gray-700">
+              Tus datos personales serán tratados para las siguientes finalidades:
+            </p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">Gestión administrativa de matrículas y inscripciones</li>
+              <li class="mb-2">Gestión académica y seguimiento del progreso formativo</li>
+              <li class="mb-2">Comunicación sobre cursos, actividades y noticias</li>
+              <li class="mb-2">Gestión de facturación y cobros</li>
+              <li class="mb-2">Mejora de nuestros servicios y experiencia de usuario</li>
+              <li class="mb-2">Cumplimiento de obligaciones legales y fiscales</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">5. Base Jurídica del Tratamiento</h2>
+            <p class="mb-4 text-gray-700">El tratamiento de tus datos se basa en:</p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">Consentimiento explícito del interesado</li>
+              <li class="mb-2">Ejecución de un contrato (matrícula en cursos)</li>
+              <li class="mb-2">Cumplimiento de obligaciones legales</li>
+              <li class="mb-2">Interés legítimo del responsable</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">6. Conservación de los Datos</h2>
+            <p class="mb-6 text-gray-700">
+              Los datos personales se conservarán durante el tiempo necesario para cumplir con la
+              finalidad para la que fueron recopilados, y posteriormente se bloquearán o eliminarán
+              de acuerdo con los plazos legales establecidos.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">7. Derechos de los Interesados</h2>
+            <p class="mb-4 text-gray-700">Como titular de los datos, tienes derecho a:</p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                <strong>Acceso:</strong> Solicitar información sobre tus datos tratados
+              </li>
+              <li class="mb-2">
+                <strong>Rectificación:</strong> Corregir datos inexactos o incompletos
+              </li>
+              <li class="mb-2">
+                <strong>Supresión:</strong> Solicitar la eliminación de tus datos
+              </li>
+              <li class="mb-2">
+                <strong>Limitación:</strong> Restringir el tratamiento de tus datos
+              </li>
+              <li class="mb-2">
+                <strong>Portabilidad:</strong> Recibir tus datos en formato electrónico
+              </li>
+              <li class="mb-2"><strong>Oposición:</strong> Oponerte al tratamiento de tus datos</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">8. Medidas de Seguridad</h2>
+            <p class="mb-6 text-gray-700">
+              Hemos implementado medidas técnicas y organizativas adecuadas para garantizar la
+              seguridad de tus datos personales y protegerlos contra acceso no autorizado,
+              alteración, divulgación o destrucción.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              9. Comunicación de Datos a Terceros
+            </h2>
+            <p class="mb-6 text-gray-700">
+              No comunicaremos tus datos personales a terceros sin tu consentimiento, salvo en los
+              casos previstos por la ley o cuando sea necesario para la prestación del servicio.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              10. Transferencias Internacionales
+            </h2>
+            <p class="mb-6 text-gray-700">
+              No realizamos transferencias internacionales de datos personales fuera del Espacio
+              Económico Europeo sin las garantías adecuadas.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">11. Cookies</h2>
+            <p class="mb-6 text-gray-700">
+              Nuestro sitio web utiliza cookies para mejorar la experiencia del usuario. Puedes
+              consultar nuestra Política de Cookies para obtener más información y configurar tus
+              preferencias.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              12. Cambios en la Política de Privacidad
+            </h2>
+            <p class="mb-6 text-gray-700">
+              Nos reservamos el derecho de modificar esta política de privacidad en cualquier
+              momento. Cualquier cambio será notificado a través de nuestro sitio web.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              13. Contacto para Ejercer Derechos
+            </h2>
+            <p class="mb-4 text-gray-700">
+              Para ejercer tus derechos o cualquier consulta relacionada con esta política de
+              privacidad, puedes contactarnos a través de:
+            </p>
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <p class="text-gray-700"><strong>Email:</strong> privacidad@cepformacion.com</p>
+              <p class="text-gray-700"><strong>Teléfono:</strong> 900 123 456</p>
+              <p class="text-gray-700">
+                <strong>Dirección:</strong> Calle Principal 123, 28013 Madrid
+              </p>
+            </div>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">14. Autoridad de Control</h2>
+            <p class="mb-6 text-gray-700">
+              Si consideras que tus derechos han sido vulnerados, puedes presentar una reclamación
+              ante la Agencia Española de Protección de Datos (AEPD).
+            </p>
+
+            <div class="bg-gray-100 p-4 rounded-lg mt-8">
+              <p class="text-sm text-gray-600 text-center">
+                <strong>Última actualización:</strong> 18 de noviembre de 2024<br />
+                <strong>Versión:</strong> 1.0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gray-100">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl font-bold mb-4 cep-dark-blue">¿Tienes alguna pregunta?</h2>
+        <p class="text-gray-600 mb-8">
+          Si tienes dudas sobre nuestra política de privacidad, no dudes en contactarnos
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="contacto.html"
+            class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold"
+          >
+            <i class="fas fa-envelope mr-2"></i>Contactar
+          </a>
+          <a
+            href="faq.html"
+            class="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold"
+          >
+            <i class="fas fa-question-circle mr-2"></i>FAQ
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center mb-4">
+              <i class="fas fa-graduation-cap text-2xl mr-2"></i>
+              <span class="text-xl font-bold">CEP Formación</span>
+            </div>
+            <p class="text-gray-400">
+              Centro de estudios profesionales comprometido con tu futuro académico y laboral.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="index.html" class="text-gray-400 hover:text-white transition-all"
+                  >Inicio</a
+                >
+              </li>
+              <li>
+                <a href="sobre-nosotros.html" class="text-gray-400 hover:text-white transition-all"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li>
+                <a href="ciclos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Ciclos Formativos</a
+                >
+              </li>
+              <li>
+                <a href="cursos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Cursos</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="politica-privacidad.html"
+                  class="text-gray-400 hover:text-white transition-all"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="aviso-legal.html" class="text-gray-400 hover:text-white transition-all"
+                  >Aviso Legal</a
+                >
+              </li>
+              <li>
+                <a
+                  href="politica-cookies.html"
+                  class="text-gray-400 hover:text-white transition-all"
+                  >Política de Cookies</a
+                >
+              </li>
+              <li>
+                <a href="contacto.html" class="text-gray-400 hover:text-white transition-all"
+                  >Contacto</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><i class="fas fa-phone mr-2"></i>900 123 456</li>
+              <li><i class="fas fa-envelope mr-2"></i>info@cepformacion.com</li>
+              <li><i class="fas fa-map-marker-alt mr-2"></i>Calle Principal 123, Madrid</li>
+            </ul>
+            <div class="flex space-x-4 mt-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-facebook text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-twitter text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-linkedin text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-button').addEventListener('click', function () {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

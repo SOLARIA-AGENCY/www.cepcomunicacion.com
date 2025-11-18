@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cursos - CEP Formación</title>
+    <meta name="description" content="Catálogo completo de cursos de CEP Formación" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --cep-pink: #ec008c;
+        --cep-pink-dark: #c7006f;
+        --cep-green: #00a651;
+        --cep-blue: #0056b3;
+        --cep-orange: #ff6b35;
+      }
+
+      .cep-pink {
+        background-color: var(--cep-pink);
+      }
+      .cep-pink-dark {
+        background-color: var(--cep-pink-dark);
+      }
+      .text-cep-pink {
+        color: var(--cep-pink);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      * {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Header Navigation (Same as homepage) -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <nav class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" class="text-2xl font-bold text-cep-pink"> CEP Formación </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden lg:flex gap-6 items-center">
+            <a
+              href="/"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Inicio
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/ciclos"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Ciclos
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/sedes"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Sedes
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+
+            <!-- Cursos Dropdown -->
+            <div class="relative group">
+              <button
+                class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide flex items-center gap-1"
+              >
+                Cursos
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
+                  <path d="M6 8L2 4h8z" />
+                </svg>
+              </button>
+              <div
+                class="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg py-2 min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible"
+              >
+                <a
+                  href="/cursos/privados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Privados</a
+                >
+                <a
+                  href="/cursos/ocupados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Ocupados</a
+                >
+                <a
+                  href="/cursos/desempleados"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Desempleados</a
+                >
+                <a
+                  href="/cursos/teleformacion"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-cep-pink hover:text-white"
+                  >Cursos Teleformación</a
+                >
+              </div>
+            </div>
+
+            <a
+              href="/sobre-nosotros"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Nosotros
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/faq"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              FAQ
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/blog"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              Blog
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/contacto"
+              class="bg-cep-pink hover:bg-cep-pink-dark text-white px-4 py-2 rounded-lg font-semibold text-sm uppercase tracking-wide"
+            >
+              Contacto
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/acceso-alumnos"
+              class="border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white px-4 py-2 rounded-lg font-semibold text-sm uppercase tracking-wide"
+            >
+              Acceso Alumnos
+            </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden mt-4 pb-4 border-t pt-4">
+          <div class="flex flex-col gap-4">
+            <a href="/" class="text-gray-700 hover:text-cep-pink font-semibold">Inicio</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="/ciclos" class="text-gray-700 hover:text-cep-pink font-semibold">Ciclos</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="/sedes" class="text-gray-700 hover:text-cep-pink font-semibold">Sedes</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <div>
+              <button
+                class="text-gray-700 hover:text-cep-pink font-semibold w-full text-left"
+                onclick="toggleMobileDropdown()"
+              >
+                Cursos ▼
+              </button>
+              <div id="mobileDropdown" class="hidden pl-4 mt-2 space-y-2">
+                <a href="/cursos/privados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Privados</a
+                >
+                <a href="/cursos/ocupados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Ocupados</a
+                >
+                <a href="/cursos/desempleados" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Desempleados</a
+                >
+                <a href="/cursos/teleformacion" class="block text-gray-700 hover:text-cep-pink"
+                  >Cursos Teleformación</a
+                >
+              </div>
+            </div>
+            <a href="/sobre-nosotros" class="text-gray-700 hover:text-cep-pink font-semibold"
+              >Nosotros</a
+            >
+            <a href="/faq" class="text-gray-700 hover:text-cep-pink font-semibold">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a href="/blog" class="text-gray-700 hover:text-cep-pink font-semibold">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            <a
+              href="/contacto"
+              class="bg-cep-pink hover:bg-cep-pink-dark text-white px-4 py-2 rounded-lg font-semibold text-center"
+              >Contacto</a
+            >
+            <a
+              href="/acceso-alumnos"
+              class="border-2 border-cep-pink text-cep-pink hover:bg-cep-pink hover:text-white px-4 py-2 rounded-lg font-semibold text-center"
+              >Acceso Alumnos</a
+            >
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="py-16 md:py-20 bg-gradient-to-r from-cep-pink to-cep-pink-dark text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">NUESTROS CURSOS</h1>
+        <p class="text-xl opacity-90 max-w-3xl mx-auto">
+          Descubre nuestra amplia oferta formativa y encuentra el curso perfecto para ti
+        </p>
+      </div>
+    </section>
+
+    <!-- Course Categories -->
+    <section class="py-16 md:py-20">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Cursos Privados -->
+          <div
+            class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-cep-pink to-cep-pink-dark flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-16 h-16 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Cursos Privados</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Formación especializada con certificación propia y garantía de calidad.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 mb-6">
+                <li>• Certificación propia</li>
+                <li>• Flexibilidad de horarios</li>
+                <li>• Prácticas profesionales</li>
+                <li>• Acceso a plataforma online</li>
+              </ul>
+              <a
+                href="/cursos/privados"
+                class="w-full bg-cep-pink hover:bg-cep-pink-dark text-white py-3 rounded-lg font-semibold text-center block"
+              >
+                Ver Cursos Privados
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+
+          <!-- Cursos Ocupados -->
+          <div
+            class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-cep-green to-green-700 flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-16 h-16 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Cursos Ocupados</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Formación para trabajadores ocupados con subvenciones y bonificaciones.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 mb-6">
+                <li>• Bonificados para empresas</li>
+                <li>• Formación continua</li>
+                <li>• Actualización profesional</li>
+                <li>• Certificados oficiales</li>
+              </ul>
+              <a
+                href="/cursos/ocupados"
+                class="w-full bg-cep-green hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-center block"
+              >
+                Ver Cursos Ocupados
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+
+          <!-- Cursos Desempleados -->
+          <div
+            class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-cep-blue to-blue-700 flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-16 h-16 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Cursos Desempleados</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Formación gratuita para desempleados con inserción laboral garantizada.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 mb-6">
+                <li>• Formación gratuita</li>
+                <li>• Inserción laboral</li>
+                <li>• Orientación profesional</li>
+                <li>• Prácticas en empresas</li>
+              </ul>
+              <a
+                href="/cursos/desempleados"
+                class="w-full bg-cep-blue hover:bg-blue-700 text-white py-3 rounded-lg font-semibold text-center block"
+              >
+                Ver Cursos Desempleados
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+
+          <!-- Teleformación -->
+          <div
+            class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105"
+          >
+            <div
+              class="h-48 bg-gradient-to-br from-cep-orange to-orange-700 flex items-center justify-center"
+            >
+              <div class="text-white text-center">
+                <svg
+                  class="w-16 h-16 mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                <h3 class="text-xl font-bold">Teleformación</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">
+                Aprende desde casa con nuestra plataforma de formación online.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 mb-6">
+                <li>• Aprende a tu ritmo</li>
+                <li>• Sin horarios fijos</li>
+                <li>• Tutorías online</li>
+                <li>• Acceso 24/7</li>
+              </ul>
+              <a
+                href="/cursos/teleformacion"
+                class="w-full bg-cep-orange hover:bg-orange-700 text-white py-3 rounded-lg font-semibold text-center block"
+              >
+                Ver Teleformación
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Courses -->
+    <section class="py-16 md:py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Cursos Destacados</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Los cursos más demandados por nuestros estudiantes
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Course 1 -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl">
+            <div class="h-48 bg-gradient-to-br from-cep-pink to-cep-pink-dark"></div>
+            <div class="p-6">
+              <span
+                class="inline-block bg-cep-pink text-white px-3 py-1 rounded-full text-sm font-semibold mb-3"
+              >
+                Privado
+              </span>
+              <h3 class="text-xl font-bold mb-2">Marketing Digital</h3>
+              <p class="text-gray-600 mb-4">
+                Aprende las estrategias de marketing digital más efectivas para empresas.
+              </p>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-gray-500">120 horas</span>
+                <span class="text-sm text-gray-500">Presencial</span>
+              </div>
+              <a
+                href="/contacto"
+                class="w-full bg-cep-pink hover:bg-cep-pink-dark text-white py-2 rounded-lg font-semibold text-center block"
+              >
+                Más Información
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+
+          <!-- Course 2 -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl">
+            <div class="h-48 bg-gradient-to-br from-cep-green to-green-700"></div>
+            <div class="p-6">
+              <span
+                class="inline-block bg-cep-green text-white px-3 py-1 rounded-full text-sm font-semibold mb-3"
+              >
+                Ocupados
+              </span>
+              <h3 class="text-xl font-bold mb-2">Gestión de Recursos Humanos</h3>
+              <p class="text-gray-600 mb-4">
+                Formación especializada para profesionales de RRHH y departamentos de personal.
+              </p>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-gray-500">80 horas</span>
+                <span class="text-sm text-gray-500">Online</span>
+              </div>
+              <a
+                href="/contacto"
+                class="w-full bg-cep-green hover:bg-green-700 text-white py-2 rounded-lg font-semibold text-center block"
+              >
+                Más Información
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+
+          <!-- Course 3 -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl">
+            <div class="h-48 bg-gradient-to-br from-cep-orange to-orange-700"></div>
+            <div class="p-6">
+              <span
+                class="inline-block bg-cep-orange text-white px-3 py-1 rounded-full text-sm font-semibold mb-3"
+              >
+                Teleformación
+              </span>
+              <h3 class="text-xl font-bold mb-2">Programación Web Full Stack</h3>
+              <p class="text-gray-600 mb-4">
+                Conviértete en desarrollador web con nuestro curso completo de programación.
+              </p>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-gray-500">300 horas</span>
+                <span class="text-sm text-gray-500">Online</span>
+              </div>
+              <a
+                href="/contacto"
+                class="w-full bg-cep-orange hover:bg-orange-700 text-white py-2 rounded-lg font-semibold text-center block"
+              >
+                Más Información
+              </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 md:py-20 bg-cep-pink text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">¿Necesitas ayuda para elegir?</h2>
+        <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          Nuestro equipo de orientadores te ayudará a encontrar el curso perfecto para tus objetivos
+          profesionales
+        </p>
+        <a
+          href="/contacto"
+          class="bg-white text-cep-pink hover:bg-gray-100 px-8 py-4 text-lg font-bold inline-block rounded-lg hover:scale-105 transition-transform"
+        >
+          Solicitar Orientación
+        </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+      </div>
+    </section>
+
+    <!-- Footer (Same as homepage) -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-5 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-cep-pink">CEP Formación</h3>
+            <p class="text-gray-300">
+              Centro de estudios profesionales dedicado a tu desarrollo y crecimiento laboral.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Cursos</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/cursos/privados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Privados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/ocupados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Ocupados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/desempleados" class="text-gray-300 hover:text-cep-pink"
+                  >Cursos Desempleados</a
+                >
+              </li>
+              <li>
+                <a href="/cursos/teleformacion" class="text-gray-300 hover:text-cep-pink"
+                  >Teleformación</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Institución</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/sobre-nosotros" class="text-gray-300 hover:text-cep-pink"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li><a href="/sedes" class="text-gray-300 hover:text-cep-pink">Sedes</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a></li>
+              <li><a href="/faq" class="text-gray-300 hover:text-cep-pink">FAQ</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a></li>
+              <li><a href="/blog" class="text-gray-300 hover:text-cep-pink">Blog</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Legal</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="/politica-privacidad" class="text-gray-300 hover:text-cep-pink"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="/aviso-legal" class="text-gray-300 hover:text-cep-pink">Aviso Legal</a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              </li>
+              <li>
+                <a href="/politica-cookies" class="text-gray-300 hover:text-cep-pink"
+                  >Política de Cookies</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+            <ul class="space-y-2 text-gray-300">
+              <li>Teléfono: 922 123 456</li>
+              <li>Email: info@cepformacion.com</li>
+              <li>
+                <a href="/contacto" class="text-cep-pink hover:text-cep-pink-dark">
+                  Formulario de contacto →
+                </a>
+            <a
+              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
+              target="_blank"
+              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
+            >
+              AGENCIA DE COLOCACIÓN
+            </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+      }
+
+      function toggleMobileDropdown() {
+        const dropdown = document.getElementById('mobileDropdown');
+        dropdown.classList.toggle('hidden');
+      }
+    </script>
+  </body>
+</html>

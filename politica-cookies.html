@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Política de Cookies - CEP Formación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .cep-blue {
+        color: #0066cc;
+      }
+      .cep-dark-blue {
+        color: #003366;
+      }
+      .cep-light-blue {
+        background-color: #e6f2ff;
+      }
+      .cep-orange {
+        color: #ff6600;
+      }
+      .cep-gray {
+        color: #666666;
+      }
+      .hover-cep-blue:hover {
+        color: #0066cc;
+      }
+      .transition-all {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-graduation-cap text-3xl cep-blue mr-3"></i>
+              <span class="text-xl font-bold cep-dark-blue">CEP Formación</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a>
+            <a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a>
+            <a href="ciclos.html" class="hover-cep-blue transition-all">Ciclos Formativos</a>
+            <a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a>
+            <a href="blog.html" class="hover-cep-blue transition-all">Blog</a>
+            <a href="faq.html" class="hover-cep-blue transition-all">FAQ</a>
+            <a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a>
+            <a
+              href="acceso-alumnos.html"
+              class="bg-cep-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Acceso Alumnos
+            </a>
+          </div>
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="text-gray-700 hover:text-blue-600 focus:outline-none"
+            >
+              <i class="fas fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a>
+          <a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Sobre Nosotros</a
+          >
+          <a href="ciclos.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+            >Ciclos Formativos</a
+          >
+          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a>
+          <a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a>
+          <a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a>
+          <a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a>
+          <a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
+            >Acceso Alumnos</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <section class="bg-gray-100 py-4">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <a href="index.html" class="text-gray-700 hover:text-blue-600 transition-all">
+                <i class="fas fa-home mr-2"></i>Inicio
+              </a>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                <span class="text-gray-500">Política de Cookies</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Política de Cookies</h1>
+        <p class="text-xl opacity-90">Información sobre el uso de cookies en nuestro sitio web</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <div class="prose prose-lg max-w-none">
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">1. ¿Qué son las Cookies?</h2>
+            <p class="mb-6 text-gray-700">
+              Las cookies son pequeños archivos de texto que los sitios web envían al navegador del
+              usuario y que se almacenan en el dispositivo del mismo. Permiten recordar información
+              sobre las visitas del usuario para facilitar su próxima visita y hacer que el sitio
+              sea más útil.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              2. Tipos de Cookies que Utilizamos
+            </h2>
+
+            <h3 class="text-xl font-semibold mb-4 cep-dark-blue">
+              Según la entidad que las gestiona:
+            </h3>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                <strong>Cookies Propias:</strong> Son aquellas enviadas y gestionadas directamente
+                por CEP Formación
+              </li>
+              <li class="mb-2">
+                <strong>Cookies de Terceros:</strong> Son aquellas gestionadas por servicios
+                externos como Google Analytics, redes sociales, etc.
+              </li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mb-4 cep-dark-blue">
+              Según el tiempo de permanencia:
+            </h3>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                <strong>Cookies de Sesión:</strong> Se eliminan cuando el usuario cierra el
+                navegador
+              </li>
+              <li class="mb-2">
+                <strong>Cookies Persistentes:</strong> Permanecen en el dispositivo del usuario
+                durante un tiempo determinado
+              </li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mb-4 cep-dark-blue">Según su finalidad:</h3>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                <strong>Cookies Técnicas:</strong> Son necesarias para el funcionamiento básico del
+                sitio
+              </li>
+              <li class="mb-2">
+                <strong>Cookies de Personalización:</strong> Permiten recordar las preferencias del
+                usuario
+              </li>
+              <li class="mb-2">
+                <strong>Cookies de Análisis:</strong> Recopilan información sobre el uso del sitio
+                para mejorar nuestros servicios
+              </li>
+              <li class="mb-2">
+                <strong>Cookies Publicitarias:</strong> Se utilizan para mostrar publicidad
+                relevante
+              </li>
+              <li class="mb-2">
+                <strong>Cookies de Afiliados:</strong> Permiten realizar seguimiento de las ventas
+                generadas desde nuestro sitio
+              </li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              3. Cookies Utilizadas en www.cepformacion.com
+            </h2>
+
+            <div class="overflow-x-auto mb-6">
+              <table class="min-w-full bg-white border border-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Nombre
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Tipo
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Finalidad
+                    </th>
+                    <th
+                      class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Duración
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">PHPSESSID</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Técnica</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">Mantener la sesión del usuario</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Sesión</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_ga</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Análisis</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">Distinguir usuarios únicos</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2 años</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_gid</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Análisis</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">Distinguir usuarios únicos</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">24 horas</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      cookie_consent
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Técnica</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      Almacenar consentimiento de cookies
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 año</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">4. ¿Cómo Gestionar las Cookies?</h2>
+            <p class="mb-4 text-gray-700">
+              Puedes gestionar las cookies de las siguientes maneras:
+            </p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700">
+              <li class="mb-2">
+                <strong>Aceptar o Rechazar:</strong> A través del banner de cookies que aparece al
+                acceder al sitio
+              </li>
+              <li class="mb-2">
+                <strong>Configuración del Navegador:</strong> Puedes configurar tu navegador para
+                aceptar, rechazar o eliminar cookies
+              </li>
+              <li class="mb-2">
+                <strong>Plugins de Navegador:</strong> Utilizar herramientas específicas para
+                gestionar cookies
+              </li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              5. Configuración de Cookies en Principales Navegadores
+            </h2>
+
+            <div class="space-y-4 mb-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Google Chrome:</h4>
+                <p class="text-gray-700">
+                  Configuración → Privacidad y seguridad → Cookies y otros datos de sitios
+                </p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Mozilla Firefox:</h4>
+                <p class="text-gray-700">
+                  Opciones → Privacidad y seguridad → Cookies y datos de sitios
+                </p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Safari:</h4>
+                <p class="text-gray-700">Preferencias → Privacidad → Bloquear cookies</p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Microsoft Edge:</h4>
+                <p class="text-gray-700">
+                  Configuración → Privacidad, búsqueda y servicios → Cookies
+                </p>
+              </div>
+            </div>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">
+              6. Actualizaciones de la Política de Cookies
+            </h2>
+            <p class="mb-6 text-gray-700">
+              CEP Formación puede actualizar esta política de cookies para reflejar cambios en las
+              prácticas de uso de cookies o por razones operativas, legales o regulatorias. Le
+              recomendamos revisar periódicamente esta política.
+            </p>
+
+            <h2 class="text-2xl font-bold mb-6 cep-dark-blue">7. Contacto</h2>
+            <p class="mb-4 text-gray-700">
+              Si tiene alguna pregunta sobre esta política de cookies, puede contactarnos a través
+              de:
+            </p>
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <p class="text-gray-700"><strong>Email:</strong> privacidad@cepformacion.com</p>
+              <p class="text-gray-700"><strong>Teléfono:</strong> 900 123 456</p>
+              <p class="text-gray-700">
+                <strong>Dirección:</strong> Calle Principal 123, 28013 Madrid
+              </p>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded-lg mt-8">
+              <p class="text-sm text-gray-600 text-center">
+                <strong>Última actualización:</strong> 18 de noviembre de 2024<br />
+                <strong>Versión:</strong> 1.0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gray-100">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl font-bold mb-4 cep-dark-blue">¿Necesitas ayuda?</h2>
+        <p class="text-gray-600 mb-8">
+          Si tienes dudas sobre nuestra política de cookies, no dudes en contactarnos
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="contacto.html"
+            class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold"
+          >
+            <i class="fas fa-envelope mr-2"></i>Contactar
+          </a>
+          <a
+            href="politica-privacidad.html"
+            class="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold"
+          >
+            <i class="fas fa-shield-alt mr-2"></i>Política de Privacidad
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center mb-4">
+              <i class="fas fa-graduation-cap text-2xl mr-2"></i>
+              <span class="text-xl font-bold">CEP Formación</span>
+            </div>
+            <p class="text-gray-400">
+              Centro de estudios profesionales comprometido con tu futuro académico y laboral.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="index.html" class="text-gray-400 hover:text-white transition-all"
+                  >Inicio</a
+                >
+              </li>
+              <li>
+                <a href="sobre-nosotros.html" class="text-gray-400 hover:text-white transition-all"
+                  >Sobre Nosotros</a
+                >
+              </li>
+              <li>
+                <a href="ciclos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Ciclos Formativos</a
+                >
+              </li>
+              <li>
+                <a href="cursos.html" class="text-gray-400 hover:text-white transition-all"
+                  >Cursos</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="politica-privacidad.html"
+                  class="text-gray-400 hover:text-white transition-all"
+                  >Política de Privacidad</a
+                >
+              </li>
+              <li>
+                <a href="aviso-legal.html" class="text-gray-400 hover:text-white transition-all"
+                  >Aviso Legal</a
+                >
+              </li>
+              <li>
+                <a
+                  href="politica-cookies.html"
+                  class="text-gray-400 hover:text-white transition-all"
+                  >Política de Cookies</a
+                >
+              </li>
+              <li>
+                <a href="contacto.html" class="text-gray-400 hover:text-white transition-all"
+                  >Contacto</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><i class="fas fa-phone mr-2"></i>900 123 456</li>
+              <li><i class="fas fa-envelope mr-2"></i>info@cepformacion.com</li>
+              <li><i class="fas fa-map-marker-alt mr-2"></i>Calle Principal 123, Madrid</li>
+            </ul>
+            <div class="flex space-x-4 mt-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-facebook text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-twitter text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-linkedin text-xl"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-all"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-button').addEventListener('click', function () {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>
