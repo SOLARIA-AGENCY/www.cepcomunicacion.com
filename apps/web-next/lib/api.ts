@@ -5,8 +5,11 @@
 
 import { PayloadClient } from './payloadClient';
 
-// Import the shared Course type instead of redefining
-export type { Course } from '@cepcomunicacion/types';
+// Import Course type from shared package
+import type { Course as CourseType } from '@cepcomunicacion/types';
+
+// Re-export with original name
+export type Course = CourseType;
 
 export interface PaginatedResponse<T> {
   docs: T[];
