@@ -9,29 +9,35 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <style>
-      .cep-blue {
-        color: #0066cc;
+        <style>
+      /* Custom CEP Colors */
+      :root {
+        --cep-pink: #F2014B;
+        --cep-pink-dark: #d01040;
+        --cep-green: #00a651;
+        --cep-blue: #0056b3;
+        --cep-orange: #ff6b35;
       }
-      .cep-dark-blue {
-        color: #003366;
+
+      .cep-pink {
+        background-color: var(--cep-pink);
       }
-      .cep-light-blue {
-        background-color: #e6f2ff;
+      .cep-pink-dark {
+        background-color: var(--cep-pink-dark);
       }
-      .cep-orange {
-        color: #ff6600;
+      .text-cep-pink {
+        color: var(--cep-pink);
       }
-      .cep-gray {
-        color: #666666;
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
-      .hover-cep-blue:hover {
-        color: #0066cc;
-      }
-      .transition-all {
+
+      * {
         transition: all 0.3s ease;
       }
     </style>
+
   </head>
   <body class="bg-gray-50">
     <!-- Navigation -->
@@ -45,76 +51,12 @@
             </div>
           </div>
           <div class="hidden md:flex items-center space-x-8">
-            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a href="ciclos.html" class="cep-blue font-semibold">Ciclos Formativos</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a href="blog.html" class="hover-cep-blue transition-all">Blog</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a href="faq.html" class="hover-cep-blue transition-all">FAQ</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            <a
+            <a href="index.html" class="hover-cep-blue transition-all">Inicio</a><a href="sobre-nosotros.html" class="hover-cep-blue transition-all">Sobre Nosotros</a><a href="ciclos.html" class="cep-blue font-semibold">Ciclos Formativos</a><a href="cursos.html" class="hover-cep-blue transition-all">Cursos</a><a href="blog.html" class="hover-cep-blue transition-all">Blog</a><a href="faq.html" class="hover-cep-blue transition-all">FAQ</a><a href="contacto.html" class="hover-cep-blue transition-all">Contacto</a><a
               href="acceso-alumnos.html"
               class="bg-cep-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
             >
               <i class="fas fa-sign-in-alt mr-2"></i>Acceso Alumnos
-            </a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-          </div>
+            </a></div>
           <div class="md:hidden flex items-center">
             <button
               id="mobile-menu-button"
@@ -128,15 +70,7 @@
       <!-- Mobile menu -->
       <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
         <div class="px-2 pt-2 pb-3 space-y-1">
-          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-          <a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
+          <a href="index.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Inicio</a><a href="sobre-nosotros.html" class="block px-3 py-2 hover:bg-gray-100 rounded"
             >Sobre Nosotros</a
           >
           <a
@@ -144,39 +78,7 @@
             class="block px-3 py-2 bg-blue-50 text-blue-600 rounded font-semibold"
             >Ciclos Formativos</a
           >
-          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-          <a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-          <a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-          <a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-          <a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
+          <a href="cursos.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Cursos</a><a href="blog.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Blog</a><a href="faq.html" class="block px-3 py-2 hover:bg-gray-100 rounded">FAQ</a><a href="contacto.html" class="block px-3 py-2 hover:bg-gray-100 rounded">Contacto</a><a href="acceso-alumnos.html" class="block px-3 py-2 bg-blue-600 text-white rounded"
             >Acceso Alumnos</a
           >
         </div>
@@ -580,7 +482,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
+    <footer class="cep-pink text-white py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-5 gap-8">
           <div>
@@ -596,22 +498,22 @@
             <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
             <ul class="space-y-2">
               <li>
-                <a href="index.html" class="text-gray-400 hover:text-white transition-all"
+                <a href="index.html" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Inicio</a
                 >
               </li>
               <li>
-                <a href="sobre-nosotros.html" class="text-gray-400 hover:text-white transition-all"
+                <a href="sobre-nosotros.html" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Sobre Nosotros</a
                 >
               </li>
               <li>
-                <a href="ciclos.html" class="text-gray-400 hover:text-white transition-all"
+                <a href="ciclos.html" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Ciclos Formativos</a
                 >
               </li>
               <li>
-                <a href="cursos.html" class="text-gray-400 hover:text-white transition-all"
+                <a href="cursos.html" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Cursos</a
                 >
               </li>
@@ -621,17 +523,17 @@
             <h3 class="text-lg font-semibold mb-4">Legal</h3>
             <ul class="space-y-2">
               <li>
-                <a href="/politica-privacidad" class="text-gray-400 hover:text-white transition-all"
+                <a href="/politica-privacidad" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Política de Privacidad</a
                 >
               </li>
               <li>
-                <a href="/aviso-legal" class="text-gray-400 hover:text-white transition-all"
+                <a href="/aviso-legal" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Aviso Legal</a
                 >
               </li>
               <li>
-                <a href="/politica-cookies" class="text-gray-400 hover:text-white transition-all"
+                <a href="/politica-cookies" class="text-white opacity-90 hover:opacity-100 transition-all"
                   >Política de Cookies</a
                 >
               </li>
@@ -645,50 +547,18 @@
               <li><i class="fas fa-map-marker-alt mr-2"></i>Calle Principal 123, Madrid</li>
             </ul>
             <div class="flex space-x-4 mt-4">
-              <a href="#" class="text-gray-400 hover:text-white transition-all"
+              <a href="#" class="text-white opacity-90 hover:opacity-100 transition-all"
                 ><i class="fab fa-facebook text-xl"></i
-              ></a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-              <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ></a><a href="#" class="text-white opacity-90 hover:opacity-100 transition-all"
                 ><i class="fab fa-twitter text-xl"></i
-              ></a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-              <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ></a><a href="#" class="text-white opacity-90 hover:opacity-100 transition-all"
                 ><i class="fab fa-linkedin text-xl"></i
-              ></a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-              <a href="#" class="text-gray-400 hover:text-white transition-all"
+              ></a><a href="#" class="text-white opacity-90 hover:opacity-100 transition-all"
                 ><i class="fab fa-instagram text-xl"></i
-              ></a>
-            <a
-              href="https://cursostenerife.agenciascolocacion.com/candidatos/registro"
-              target="_blank"
-              class="text-gray-700 hover:text-cep-pink font-semibold text-sm uppercase tracking-wide"
-            >
-              AGENCIA DE COLOCACIÓN
-            </a>
-            </div>
+              ></a></div>
           </div>
         </div>
-        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <div class="border-t border-white border-opacity-20 mt-8 pt-8 text-center text-gray-400">
           <p>&copy; 2024 CEP Formación. Todos los derechos reservados.</p>
         </div>
       </div>
