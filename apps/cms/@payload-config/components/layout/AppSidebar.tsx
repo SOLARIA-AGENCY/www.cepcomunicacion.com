@@ -19,7 +19,6 @@ import {
   Newspaper,
   HelpCircle,
   MessageSquareQuote,
-  Handshake,
   Image,
   BarChart3,
   Settings,
@@ -89,27 +88,16 @@ const menuItems: MenuItem[] = [
         title: 'CEP Norte',
         icon: MapPin,
         url: '/sedes/cep-norte',
-        items: [
-          { title: 'Aulas CEP Norte', icon: DoorOpen, url: '/aulas/cep-norte' },
-        ],
       },
       {
         title: 'CEP Santa Cruz',
         icon: MapPin,
         url: '/sedes/cep-santa-cruz',
-        items: [
-          {
-            title: 'Aulas CEP Santa Cruz',
-            icon: DoorOpen,
-            url: '/aulas/cep-santa-cruz',
-          },
-        ],
       },
       {
         title: 'CEP Sur',
         icon: MapPin,
         url: '/sedes/cep-sur',
-        items: [{ title: 'Aulas CEP Sur', icon: DoorOpen, url: '/aulas/cep-sur' }],
       },
     ],
   },
@@ -338,6 +326,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
               width={140}
               height={48}
               className="h-12 w-auto object-contain"
+              style={{ height: "auto" }}
             />
           </div>
         )}
@@ -357,13 +346,13 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                 <li key={item.title}>
                   <Link
                     href={item.url!}
-                    className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                    className={`flex items-center gap-3 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                       isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''
                     } ${isCollapsed ? 'justify-center' : ''}`}
                     title={isCollapsed ? item.title : undefined}
                   >
                     <Icon className="h-5 w-5 shrink-0" />
-                    {!isCollapsed && <span className="font-bold">{item.title}</span>}
+                    {!isCollapsed && <span>{item.title}</span>}
                   </Link>
                 </li>
               )
@@ -373,7 +362,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
               <li key={item.title}>
                 <button
                   onClick={() => toggleSection(item.title)}
-                  className={`w-full flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                  className={`w-full flex items-center gap-3 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                     isCollapsed ? 'justify-center' : ''
                   }`}
                   title={isCollapsed ? item.title : undefined}
@@ -381,7 +370,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                   <Icon className="h-5 w-5 shrink-0" />
                   {!isCollapsed && (
                     <>
-                      <span className="flex-1 text-left font-bold">{item.title}</span>
+                      <span className="flex-1 text-left">{item.title}</span>
                       <ChevronDown
                         className={`h-4 w-4 transition-transform ${
                           isOpen ? 'rotate-180' : ''

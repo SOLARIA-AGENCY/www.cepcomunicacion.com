@@ -78,7 +78,7 @@ export interface CicloDetalleView extends CicloPlantilla {
 // ============================================================================
 
 export type CourseType =
-  | 'telematico'
+  | 'teleformacion'
   | 'ocupados'
   | 'desempleados'
   | 'privados'

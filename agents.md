@@ -251,6 +251,23 @@ Before committing any Tailwind configuration changes:
 
 ---
 
-**Last Updated:** 2025-11-14
-**Issue Occurrences:** 2
+## Project Context (Updated 2025-11-23)
+
+**Current Status:** Phase F1-F2 Complete - Production CMS Deployed
+**Stack:** Next.js 15.2.3 + Payload CMS 3.62.1 + PostgreSQL 16.10 + Redis 7.0.15
+**Production:** http://46.62.222.138 (Hetzner VPS srv943151)
+**Process Manager:** PM2 6.0.13 (app: cepcomunicacion-cms)
+
+**Active Development:**
+- Custom dashboard with Cursos, Ciclos, Convocatorias, Sedes
+- Authentication with RBAC (5 roles)
+- PostgreSQL schema with 27+ tables
+- BullMQ + Redis infrastructure ready
+
+**See CLAUDE.md for complete project documentation.**
+
+---
+
+**Last Updated:** 2025-11-23
+**TailwindCSS Issue Occurrences:** 2
 **Status:** Documented and verified

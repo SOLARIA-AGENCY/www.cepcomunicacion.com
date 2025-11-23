@@ -28,7 +28,7 @@ import {
 // TODO: Fetch from Payload API
 // import { plantillasCursosData } from '@payload-config/data/mockCourseTemplatesData'
 const plantillasCursosData: any[] = []
-import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
+import { COURSE_TYPE_CONFIG, getCourseTypeConfig, type CourseTypeKey } from '@payload-config/lib/courseTypeConfig'
 import { SubvencionItem } from '@payload-config/components/ui/SubvencionItem'
 import { EntidadSelector } from '@payload-config/components/ui/EntidadSelector'
 import { Switch } from '@payload-config/components/ui/switch'
@@ -92,7 +92,7 @@ export default function CourseEditPage({ params }: CourseEditPageProps) {
     )
   }
 
-  const typeConfig = COURSE_TYPE_CONFIG[tipo] || COURSE_TYPE_CONFIG.privados
+  const typeConfig = getCourseTypeConfig((tipo || 'privados') as CourseTypeKey)
 
   // Handlers
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

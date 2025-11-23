@@ -27,7 +27,7 @@ import {
 // import { plantillasCursosData } from '@payload-config/data/mockCourseTemplatesData'
 const instanciasData: any[] = []
 const plantillasCursosData: any[] = []
-import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
+import { COURSE_TYPE_CONFIG, getCourseTypeConfig, type CourseTypeKey } from '@payload-config/lib/courseTypeConfig'
 
 interface ConvocationDetailPageProps {
   params: Promise<{ id: string; convocationId: string }>
@@ -69,7 +69,7 @@ export default function ConvocationDetailPage({ params }: ConvocationDetailPageP
     )
   }
 
-  const typeConfig = COURSE_TYPE_CONFIG[convocation.tipo] || COURSE_TYPE_CONFIG.privados
+  const typeConfig = getCourseTypeConfig((convocation.tipo || 'privados') as CourseTypeKey)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -356,7 +356,7 @@ export default function ConvocationDetailPage({ params }: ConvocationDetailPageP
                     Financiado por:
                   </p>
                   <div className="space-y-2">
-                    {convocation.entidadesFinanciadoras.map((entidad) => (
+                    {convocation.entidadesFinanciadoras.map((entidad: any) => (
                       <div
                         key={entidad.id}
                         className="px-3 py-2 bg-secondary rounded text-sm font-medium text-center"

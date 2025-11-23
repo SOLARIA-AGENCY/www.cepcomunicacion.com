@@ -8,11 +8,13 @@ import type { EntidadFinanciadoraKey } from '@/types'
 
 interface EntidadSelectorProps {
   onSelect: (entidad: EntidadFinanciadoraKey) => void
-  excluidas: EntidadFinanciadoraKey[]
+  excluidas?: EntidadFinanciadoraKey[]
+  entidadesUsadas?: EntidadFinanciadoraKey[] // Alias for excluidas (Visual-First dev)
 }
 
-export function EntidadSelector({ onSelect, excluidas }: EntidadSelectorProps) {
-  const entidadesDisponibles = getEntidadesDisponibles(excluidas)
+export function EntidadSelector({ onSelect, excluidas, entidadesUsadas }: EntidadSelectorProps) {
+  const excludedEntidades = excluidas || entidadesUsadas || []
+  const entidadesDisponibles = getEntidadesDisponibles(excludedEntidades)
 
   if (entidadesDisponibles.length === 0) {
     return (

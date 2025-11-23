@@ -38,12 +38,13 @@ export async function GET(request: NextRequest) {
     let totalStaff = 0;
     let totalTeachers = 0;
     try {
-      const staffCountResponse = await fetch('http://localhost:3000/api/staff?limit=1');
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3002';
+      const staffCountResponse = await fetch(`${baseUrl}/api/staff?limit=1`);
       if (staffCountResponse.ok) {
         const staffCountData = await staffCountResponse.json();
         totalStaff = staffCountData.total || 0;
       }
-      const teachersCountResponse = await fetch('http://localhost:3000/api/staff?type=profesor&limit=1');
+      const teachersCountResponse = await fetch(`${baseUrl}/api/staff?type=profesor&limit=1`);
       if (teachersCountResponse.ok) {
         const teachersCountData = await teachersCountResponse.json();
         totalTeachers = teachersCountData.total || 0;

@@ -20,7 +20,7 @@ import {
   MapPin,
   GraduationCap,
 } from 'lucide-react'
-import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
+import { COURSE_TYPE_CONFIG, getCourseTypeConfig, type CourseTypeKey } from '@payload-config/lib/courseTypeConfig'
 import { ConvocationCard } from '@payload-config/components/ui/ConvocationCard'
 import {
   ConvocationGeneratorModal,
@@ -152,7 +152,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
     )
   }
 
-  const typeConfig = COURSE_TYPE_CONFIG[courseTemplate.tipo] || COURSE_TYPE_CONFIG.privados
+  const typeConfig = getCourseTypeConfig((courseTemplate.tipo || 'privados') as CourseTypeKey)
 
   const handleViewConvocation = (convocationId: string) => {
     router.push(`/cursos/${id}/convocatoria/${convocationId}`)

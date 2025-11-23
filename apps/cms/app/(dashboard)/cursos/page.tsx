@@ -1,6 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+// Force dynamic rendering - bypass static generation for client-side hooks
+export const dynamic = 'force-dynamic'
+
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
@@ -20,7 +23,8 @@ import { useViewPreference } from '@payload-config/hooks/useViewPreference'
 // TODO: Import from Payload API
 // import { plantillasCursosData, plantillasStats } from '@payload-config/data/mockCourseTemplatesData'
 
-export default function CursosPage() {
+// Main component that uses useSearchParams
+function CursosPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const tipo = searchParams.get('tipo')
@@ -432,5 +436,22 @@ export default function CursosPage() {
         </Card>
       )}
     </div>
+  )
+}
+
+// Wrapper with Suspense boundary for useSearchParams
+export default function CursosPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-6 !bg-gray-100/40 p-6 rounded-lg">
+          <div className="flex items-center justify-center py-12">
+            <p className="text-muted-foreground">Cargando cursos...</p>
+          </div>
+        </div>
+      }
+    >
+      <CursosPageContent />
+    </Suspense>
   )
 }

@@ -1,6 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    // Visual-First Development: Allow unused vars/params and implicit any during UI development phase
+    // See: docs/VISUAL_FIRST_DEVELOPMENT.md
+    // Will be re-enabled when connecting to real Payload API (no more mock data)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "bundler",

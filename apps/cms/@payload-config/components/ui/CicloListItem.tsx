@@ -17,8 +17,6 @@ export function CicloListItem({ ciclo, onClick, className }: CicloListItemProps)
       ? 'bg-red-600 hover:bg-red-700'
       : 'bg-red-500 hover:bg-red-600'
 
-  const borderColor = ciclo.tipo === 'superior' ? 'border-l-red-600' : 'border-l-red-500'
-
   return (
     <div
       className={`flex items-center h-20 pr-4 bg-card border-y border-r rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-150 cursor-pointer ${className || ''}`}

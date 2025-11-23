@@ -1,5 +1,8 @@
 'use client'
 
+// Force dynamic rendering for all dashboard pages - bypass static generation for client-side hooks
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Bell, Search, User } from 'lucide-react'
@@ -124,10 +127,16 @@ export default function DashboardLayout({
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                    onClick={async (e: React.MouseEvent<HTMLDivElement>) => {
                       e.preventDefault()
-                      console.log('Cerrar sesión')
-                      // TODO: Implement logout
+                      try {
+                        await fetch('/api/auth/logout', { method: 'POST' })
+                        localStorage.removeItem('cep_user')
+                        router.push('/auth/login')
+                        router.refresh()
+                      } catch (error) {
+                        console.error('Logout error:', error)
+                      }
                     }}
                   >
                     Cerrar sesión

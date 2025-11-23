@@ -25,7 +25,7 @@ import {
   Image as ImageIcon,
   Trash2,
 } from 'lucide-react'
-import { COURSE_TYPE_CONFIG } from '@payload-config/lib/courseTypeConfig'
+import { COURSE_TYPE_CONFIG, getCourseTypeConfig, type CourseTypeKey } from '@payload-config/lib/courseTypeConfig'
 import { SubvencionItem } from '@payload-config/components/ui/SubvencionItem'
 import { EntidadSelector } from '@payload-config/components/ui/EntidadSelector'
 import { Switch } from '@payload-config/components/ui/switch'
@@ -118,7 +118,7 @@ export default function NuevoCursoPage() {
   // Saving state
   const [isSaving, setIsSaving] = React.useState(false)
 
-  const typeConfig = COURSE_TYPE_CONFIG[tipo] || COURSE_TYPE_CONFIG.privados
+  const typeConfig = getCourseTypeConfig((tipo || 'privados') as CourseTypeKey)
 
   // Handlers
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

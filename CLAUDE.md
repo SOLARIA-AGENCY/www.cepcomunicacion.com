@@ -5,11 +5,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 **Project Name:** CEPComunicacion v2
-**Status:** Phase 1 Complete - Production Deployed ✅
+**Status:** ✅ Phase F1-F2 Complete - Production CMS Deployed (2025-11-23)
 **Methodology:** **SOLARIA Methodology** (Spec-Driven Development + Zero Technical Debt)
 **Client:** CEP FORMACIÓN (educational organization)
 **Agency:** SOLARIA AGENCY
 **Purpose:** Complete redesign and rebuild of educational platform to replace existing WordPress site
+
+**Current Progress:**
+- ✅ Next.js 15.2.3 + Payload CMS 3.62.1 deployed and operational
+- ✅ PostgreSQL 16.10 with 27+ collections and full schema
+- ✅ Custom dashboard with Cursos, Ciclos, Convocatorias, Sedes management
+- ✅ Authentication system with role-based access control
+- ✅ Redis + BullMQ infrastructure ready
+- 🔄 Frontend (React + Vite) pending integration
+- 🔄 Background workers implementation in progress
 
 ### SOLARIA Methodology Applied
 
@@ -78,23 +87,23 @@ METODOLOGIA SOLARIA/        # Complete methodology docs
 - Redis: localhost:6379
 - PM2 App: `cepcomunicacion-cms`
 
-## Technology Stack (UPDATED 2025-10-23)
+## Technology Stack (UPDATED 2025-11-23)
 
-### Frontend ✅ IMPLEMENTED
+### Backend ✅ IMPLEMENTED & DEPLOYED
+- **CMS/API:** Payload CMS 3.62.1 (Next.js 15.2.3 + TypeScript)
+- **Database:** PostgreSQL 16.10 (27+ collections with full schema)
+- **Job Queue:** BullMQ + Redis 7.0.15
+- **Authentication:** Payload built-in with RBAC (5 roles: Admin, Gestor, Marketing, Asesor, Lectura)
+- **Status:** Production deployed at http://46.62.222.138
+- **Process Manager:** PM2 6.0.13 (app: cepcomunicacion-cms)
+
+### Frontend 🔄 PENDING INTEGRATION
 - **Framework:** React 19.1.0 with TypeScript 5.9.3
 - **Build Tool:** Vite 7.1.12
 - **Styling:** TailwindCSS 4.0 with Montserrat typography
 - **State Management:** React Context + Hooks
 - **Routing:** React Router 7.9.4
-- **Status:** Week 4 Complete - Production Ready
-
-### Backend 🔄 IN MIGRATION
-- **CMS/API:** **Strapi 4.x** (Node.js + Express + TypeScript) - **CHANGED FROM PAYLOAD**
-- **Database:** PostgreSQL 16+
-- **Job Queue:** BullMQ + Redis
-- **Authentication:** Strapi built-in with RBAC (5 roles)
-- **Migration:** In Progress (ADR-001 approved 2025-10-23)
-- **Reason:** Payload 3.x requires Next.js (not wanted), Payload 2.x EOL soon
+- **Status:** Static build ready, pending CMS integration
 
 ### Infrastructure
 - **Containerization:** Docker + Docker Compose
@@ -308,20 +317,20 @@ cepcomunicacion/
 
 ## Development Phases
 
-**Current Status:** Phase 0 (Analysis & Planning) - ✓ Complete
+**Current Status:** ✅ Phase F1-F2 Complete | 🔄 Phase F3-F4 In Progress
 
-### Planned Implementation Phases
+### Implementation Status
 
-| Phase | Deliverable | Duration |
-|-------|-------------|----------|
-| **F1** | Docker + Payload CMS + PostgreSQL + Redis infrastructure | 1 week |
-| **F2** | React frontend scaffold + routing + static pages | 2 weeks |
-| **F3** | CRUD operations + role-based access control | 2 weeks |
-| **F4** | Lead forms + tracking + RGPD compliance | 1 week |
-| **F5** | BullMQ automation + external integrations | 2 weeks |
-| **F6** | LLM ingestion pipeline + ad generation | 2 weeks |
-| **F7** | Analytics dashboards + data exports | 1 week |
-| **F8** | QA + security hardening + production deployment | 1 week |
+| Phase | Deliverable | Status | Notes |
+|-------|-------------|--------|-------|
+| **F1** | Payload CMS + PostgreSQL + Redis infrastructure | ✅ Complete | Deployed to production |
+| **F2** | Custom CMS dashboard + CRUD operations | ✅ Complete | Cursos, Ciclos, Convocatorias, Sedes |
+| **F3** | Role-based access control + permissions | 🔄 In Progress | Basic RBAC implemented |
+| **F4** | Lead forms + tracking + RGPD compliance | 🔄 In Progress | Schema ready, forms pending |
+| **F5** | BullMQ automation + external integrations | 📋 Planned | Infrastructure ready |
+| **F6** | LLM ingestion pipeline + ad generation | 📋 Planned | - |
+| **F7** | Analytics dashboards + data exports | 📋 Planned | - |
+| **F8** | QA + security hardening + SSL deployment | 📋 Planned | - |
 
 ## Key Domain Concepts
 
@@ -473,21 +482,22 @@ Field-level permissions enforced in Payload CMS collections.
 
 ## Important Notes
 
-### Current Limitations
-- **No package.json exists yet** - No npm/yarn commands available
-- **No Docker configuration** - Infrastructure code not yet written
-- **No database migrations** - Schema exists only in specifications
-- **No API endpoints** - Backend not yet implemented
-- **No React components** - Frontend not yet scaffolded
-- **No tests** - Testing framework not yet configured
+### ✅ Completed Infrastructure
+- ✅ Next.js + Payload CMS monorepo configured
+- ✅ PostgreSQL 16.10 with complete schema (27+ tables)
+- ✅ Redis 7.0.15 + BullMQ job queue infrastructure
+- ✅ Nginx reverse proxy + static file serving
+- ✅ PM2 process management
+- ✅ TypeScript + ESLint configured across workspace
+- ✅ Custom dashboard with CRUD operations
 
-### What to Build First (Phase 1)
-1. Initialize monorepo structure with package.json files
-2. Configure Docker Compose with PostgreSQL, Redis, Nginx
-3. Set up Payload CMS with basic configuration
-4. Create initial database schema and migrations
-5. Configure TypeScript and linting across workspace
-6. Set up Git hooks for pre-commit checks
+### 🔄 Current Work (Phase F3-F4)
+1. **Role-based permissions** - Field-level access control refinement
+2. **Lead capture forms** - Frontend + backend integration
+3. **RGPD compliance** - Consent management + audit trails
+4. **Frontend integration** - Connect React frontend with Payload API
+5. **Testing framework** - Unit + integration test setup
+6. **Background workers** - BullMQ job processors for automation
 
 ### When Implementing Features
 - Always reference the specification documents first
@@ -512,5 +522,8 @@ These patterns can inform the React/TailwindCSS implementation but are not part 
 
 ---
 
-**Last Updated:** 2025-10-20
-**Phase Status:** Specification Complete, Ready for Implementation
+**Last Updated:** 2025-11-23
+**Phase Status:** ✅ F1-F2 Complete - CMS Deployed | 🔄 F3-F4 In Progress
+**Production URL:** http://46.62.222.138
+**CMS Dashboard:** http://46.62.222.138/admin (Payload CMS)
+**API Endpoint:** http://46.62.222.138/api (REST + GraphQL)

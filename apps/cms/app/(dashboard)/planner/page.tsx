@@ -1,7 +1,10 @@
 'use client'
 
+// Force dynamic rendering - bypass static generation for client-side hooks
+export const dynamic = 'force-dynamic'
+
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
@@ -43,7 +46,8 @@ const ANCHO_COLUMNA_AULA = 200 // Ancho de cada columna de aula
 
 type VistaTipo = 'aulas' | 'profesores' | 'cursos'
 
-export default function PlannerVisualPage() {
+// Main component that uses useSearchParams
+function PlannerVisualPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -548,5 +552,22 @@ export default function PlannerVisualPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+// Wrapper with Suspense boundary for useSearchParams
+export default function PlannerVisualPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-6">
+          <div className="flex items-center justify-center py-12">
+            <p className="text-muted-foreground">Cargando planificador...</p>
+          </div>
+        </div>
+      }
+    >
+      <PlannerVisualPageContent />
+    </Suspense>
   )
 }

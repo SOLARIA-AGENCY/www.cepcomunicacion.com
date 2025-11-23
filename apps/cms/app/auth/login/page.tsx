@@ -57,30 +57,40 @@ export default function LoginPage() {
     setError('')
     setIsLoading(true)
 
-    // Simulated authentication - Replace with actual API call
-    setTimeout(() => {
-      if (credentials.email && credentials.password) {
-        // TODO: Implement actual authentication
-        // For now, simulate successful login
-        localStorage.setItem('cep_auth_token', 'demo_token_12345')
-        localStorage.setItem('cep_user', JSON.stringify({
-          id: 1,
-          name: 'Admin User',
+    try {
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           email: credentials.email,
-          role: 'Admin',
-        }))
+          password: credentials.password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.user && data.token) {
+        // Store user data in localStorage for client-side access
+        localStorage.setItem('cep_user', JSON.stringify(data.user))
+
+        // Redirect to dashboard
         router.push('/')
+        router.refresh()
       } else {
-        setError('Por favor completa todos los campos')
+        setError(data.message || 'Email o contraseña incorrectos')
         setIsLoading(false)
       }
-    }, 1500)
+    } catch (err) {
+      console.error('Login error:', err)
+      setError('Error de conexión. Por favor intenta de nuevo.')
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       
       <div className="w-full max-w-md relative z-10">
         {/* Logo/Brand */}
@@ -196,18 +206,6 @@ export default function LoginPage() {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6 pt-6 border-t">
-              <div className="text-center space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Credenciales de demostración
-                </p>
-                <div className="bg-muted p-3 rounded-lg text-xs font-mono space-y-1">
-                  <p>Email: admin@cepcomunicacion.com</p>
-                  <p>Password: (cualquier contraseña)</p>
-                </div>
-              </div>
-            </div>
           </CardContent>
         </Card>
 

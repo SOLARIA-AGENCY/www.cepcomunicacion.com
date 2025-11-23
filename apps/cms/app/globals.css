@@ -1,6 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Define semantic colors using Tailwind v4 @theme */
+@theme {
+  --color-background: oklch(0.97 0 0);
+  --color-foreground: oklch(0.22 0.013 251);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.22 0.013 251);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.22 0.013 251);
+  --color-primary: oklch(0.60 0.23 342);
+  --color-primary-foreground: oklch(1 0 0);
+  --color-secondary: oklch(0.96 0.004 250);
+  --color-secondary-foreground: oklch(0.22 0.013 251);
+  --color-muted: oklch(0.96 0.004 250);
+  --color-muted-foreground: oklch(0.56 0.012 251);
+  --color-accent: oklch(0.60 0.23 342);
+  --color-accent-foreground: oklch(1 0 0);
+  --color-destructive: oklch(0.64 0.21 25);
+  --color-destructive-foreground: oklch(0.98 0.004 250);
+  --color-border: oklch(0.92 0.006 251);
+  --color-input: oklch(0.92 0.006 251);
+  --color-ring: oklch(0.60 0.23 342);
+  --color-sidebar: oklch(0.98 0 0);
+  --color-sidebar-foreground: oklch(0.35 0.011 251);
+  --color-sidebar-primary: oklch(0.60 0.23 342);
+  --color-sidebar-primary-foreground: oklch(1 0 0);
+  --color-sidebar-accent: oklch(0.96 0.01 342);
+  --color-sidebar-accent-foreground: oklch(0.20 0.013 251);
+  --color-sidebar-border: oklch(0.91 0.007 251);
+  --color-sidebar-ring: oklch(0.60 0.23 342);
+}
 
 @layer base {
   :root {
