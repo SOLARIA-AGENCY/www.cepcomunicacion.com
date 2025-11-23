@@ -30,8 +30,16 @@ export default function LoginPage() {
     remember: false,
   })
 
-  // Fetch logo and academy config from API
+  // DEV MODE: Skip config fetch in development
+  const isDev = process.env.NODE_ENV === 'development'
+
+  // Fetch logo and academy config from API (disabled in dev)
   useEffect(() => {
+    if (isDev) {
+      console.log('[DEV MODE] Skipping config fetch - using defaults')
+      return
+    }
+
     const fetchConfig = async () => {
       try {
         const response = await fetch('/api/config?section=logos')
@@ -50,13 +58,36 @@ export default function LoginPage() {
       }
     }
     fetchConfig()
-  }, [])
+  }, [isDev])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
 
+    // DEV MODE: Bypass authentication
+    if (isDev) {
+      console.log('[DEV MODE] Bypassing authentication - direct dashboard access')
+
+      // Create mock user for development
+      const mockUser = {
+        id: 'dev-user-1',
+        email: credentials.email || 'dev@cepcomunicacion.com',
+        name: 'Developer',
+        role: 'admin',
+      }
+
+      localStorage.setItem('cep_user', JSON.stringify(mockUser))
+
+      // Small delay for UX
+      setTimeout(() => {
+        router.push('/')
+        router.refresh()
+      }, 500)
+      return
+    }
+
+    // PRODUCTION: Normal authentication flow
     try {
       const response = await fetch('/api/users/login', {
         method: 'POST',
@@ -143,36 +174,45 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Contraseña</Label>
-                  <a 
-                    href="/auth/forgot-password" 
-                    className="text-sm text-primary hover:underline"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </a>
+              {!isDev && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Contraseña</Label>
+                    <a
+                      href="/auth/forgot-password"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </a>
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={credentials.password}
+                      onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                      className="pl-10 pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
                 </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={credentials.password}
-                    onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
+              )}
+
+              {isDev && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg">
+                  <p className="text-sm font-medium">🔧 Modo Desarrollo</p>
+                  <p className="text-xs mt-1">Ingresa cualquier email para acceder directamente al dashboard</p>
                 </div>
-              </div>
+              )}
 
               <div className="flex items-center gap-2">
                 <input

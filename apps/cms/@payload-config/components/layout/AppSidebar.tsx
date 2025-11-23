@@ -81,25 +81,8 @@ const menuItems: MenuItem[] = [
   },
   {
     title: 'Sedes',
-    icon: MapPin,
-    items: [
-      { title: 'Todas las Sedes', icon: Building2, url: '/sedes' },
-      {
-        title: 'CEP Norte',
-        icon: MapPin,
-        url: '/sedes/cep-norte',
-      },
-      {
-        title: 'CEP Santa Cruz',
-        icon: MapPin,
-        url: '/sedes/cep-santa-cruz',
-      },
-      {
-        title: 'CEP Sur',
-        icon: MapPin,
-        url: '/sedes/cep-sur',
-      },
-    ],
+    icon: Building2,
+    url: '/sedes',
   },
   {
     title: 'Personal',
@@ -209,7 +192,7 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
       <>
         <button
           onClick={() => setNestedOpen(!nestedOpen)}
-          className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
           <SubIcon className="h-4 w-4 shrink-0" />
           <span className="flex-1 text-left">{subItem.title}</span>
@@ -228,7 +211,7 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
                 <li key={nestedItem.title}>
                   <Link
                     href={nestedItem.url!}
-                    className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                    className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                       isNestedActive
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                         : ''
@@ -249,7 +232,7 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
   return (
     <Link
       href={subItem.url!}
-      className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+      className={`flex items-center gap-2 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
         isSubActive
           ? 'bg-sidebar-accent text-sidebar-accent-foreground'
           : ''
@@ -346,7 +329,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                 <li key={item.title}>
                   <Link
                     href={item.url!}
-                    className={`flex items-center gap-3 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                    className={`flex items-center gap-3 rounded-md px-3 py-2 text-lg transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                       isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''
                     } ${isCollapsed ? 'justify-center' : ''}`}
                     title={isCollapsed ? item.title : undefined}
@@ -362,7 +345,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
               <li key={item.title}>
                 <button
                   onClick={() => toggleSection(item.title)}
-                  className={`w-full flex items-center gap-3 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                  className={`w-full flex items-center gap-3 rounded-md px-3 py-2 text-lg transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                     isCollapsed ? 'justify-center' : ''
                   }`}
                   title={isCollapsed ? item.title : undefined}
@@ -411,8 +394,8 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
           >
             <HelpCircle className="h-5 w-5 shrink-0" />
             <div className="flex-1">
-              <p className="text-sm font-medium">Ayuda y Documentación</p>
-              <p className="text-xs opacity-70">Guías y soporte técnico</p>
+              <p className="text-base">Ayuda y Documentación</p>
+              <p className="text-sm opacity-70">Guías y soporte técnico</p>
             </div>
           </Link>
         )}
@@ -420,7 +403,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
         {/* Copyright and Toggle */}
         <div className="p-4 flex items-center justify-between">
           {!isCollapsed && (
-            <p className="text-xs opacity-70">© 2025 CEP Comunicación</p>
+            <p className="text-sm opacity-70">© 2025 CEP Comunicación</p>
           )}
           {/* Toggle Button */}
           {onToggle && (
