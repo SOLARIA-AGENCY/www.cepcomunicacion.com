@@ -4,11 +4,12 @@
 
 ### Connection Details
 - **IP Address:** 46.62.222.138
-- **Hostname:** srv943151
+- **Hostname:** cepcomunicacion-prod
 - **Provider:** Hetzner VPS
-- **SSH Access:** `ssh root@46.62.222.138`
-- **SSH Key:** charlie@solaria.agency (Ed25519)
-- **Fingerprint:** SHA256:AMdmaVhw/6byPohYVugI0TJjsQw531eEYjqS9a+hsPw
+- **SSH Access:** `ssh -i ~/.ssh/cepcomunicacion root@46.62.222.138`
+- **SSH Key:** `~/.ssh/cepcomunicacion` (admin@cepcomunicacion.com)
+- **Key Fingerprint:** MD5:50:87:92:8c:86:3a:c5:92:e9:e6:92:ec:46:99:52:d1
+- **Server Fingerprint:** SHA256:XwmyM1sPXPxfjlS4NhIZQUfvtuZCrf0vg3wVV4nnZ9A
 
 ### System Specifications
 - **OS:** Ubuntu 24.04.3 LTS

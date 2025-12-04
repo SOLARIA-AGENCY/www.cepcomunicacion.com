@@ -74,7 +74,7 @@ METODOLOGIA SOLARIA/        # Complete methodology docs
 **CRITICAL**: This project is designed for **complete automation without user intervention**.
 
 - ✅ **Auto-execution**: Execute all tasks autonomously
-- ✅ **SSH Access**: Use `~/.ssh/solaria-hetzner/id_solaria_hetzner_prod` for Hetzner server
+- ✅ **SSH Access**: Use `~/.ssh/cepcomunicacion` for Hetzner server
 - ✅ **Database Operations**: Execute directly on PostgreSQL via SSH
 - ✅ **Service Management**: Restart/reload services as needed (PM2, Nginx, PostgreSQL)
 - ✅ **Error Handling**: Auto-fix or document errors, never wait for user input
@@ -82,7 +82,7 @@ METODOLOGIA SOLARIA/        # Complete methodology docs
 
 **Connection Details**:
 - Server: `root@46.62.222.138`
-- SSH Key: `~/.ssh/solaria-hetzner/id_solaria_hetzner_prod`
+- SSH Key: `~/.ssh/cepcomunicacion`
 - Database: `cepcomunicacion` (PostgreSQL 16.10)
 - Redis: localhost:6379
 - PM2 App: `cepcomunicacion-cms`
@@ -117,7 +117,53 @@ METODOLOGIA SOLARIA/        # Complete methodology docs
 - **Analytics:** GA4, Meta Pixel, Plausible
 - **AI/LLM:** OpenAI/Claude/Ollama for content generation
 
-## ⚠️ CRITICAL CONFIGURATION: TailwindCSS v4 Setup
+## 🚨 CRITICAL WARNINGS
+
+### ⚠️ Next.js Dev Server Module Cache Corruption (2025-11-23)
+
+**PROBLEM**: Changes to React components may NOT be visible in browser despite being confirmed in source code.
+
+**SYMPTOMS**:
+- Source code shows new changes ✅
+- `git status` shows modifications ✅
+- Server shows "✓ Compiled" ✅
+- **Browser shows OLD version** ❌
+
+**ROOT CAUSE**: Next.js 15.2.3 Fast Refresh module cache locks onto stale bundles when:
+1. Multiple dev servers running simultaneously
+2. Duplicate component files in codebase (old mockups)
+3. Component structure changes (not just props/state)
+
+**IMMEDIATE FIX**:
+```bash
+# Production build bypasses dev cache completely
+cd apps/cms
+pnpm build
+pnpm start --port 3002
+```
+
+**PREVENTION** (Use before every dev session):
+```bash
+# Safe restart script
+./scripts/dev-restart.sh
+
+# OR manually:
+lsof -ti:3002 | xargs kill -9
+rm -rf apps/cms/.next apps/cms/node_modules/.cache
+cd apps/cms && pnpm dev --port 3002
+```
+
+**NEVER**:
+- ❌ Keep multiple dev servers running
+- ❌ Keep old mockups in codebase (archive to `/legacy`)
+- ❌ Trust Fast Refresh for structural component changes
+- ❌ Only delete `.next` (must also delete `node_modules/.cache`)
+
+**Documentation**: See `.memory/INCIDENT_2025-11-23_NextJS_Module_Cache.md` for full analysis.
+
+---
+
+### ⚠️ CRITICAL CONFIGURATION: TailwindCSS v4 Setup
 
 **MEMORIZAR:** Esta configuración se ha perdido 2 veces. **NO OLVIDAR.**
 
