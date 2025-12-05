@@ -80,6 +80,15 @@ export const getPayloadConfig = () => buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL ||
         `postgresql://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
+      // ============================================================================
+      // CONNECTION POOL OPTIMIZATIONS
+      // ============================================================================
+      max: 20,                    // Maximum pool size (default: 10)
+      min: 2,                     // Minimum pool size for warm connections
+      idleTimeoutMillis: 30000,   // Close idle connections after 30s
+      connectionTimeoutMillis: 5000, // Fail fast on connection errors
+      // Enable statement caching for repeated queries
+      statement_timeout: 30000,   // 30s max query time
     },
     push: false, // CRITICAL: Disable Drizzle interactive schema push prompts in dev mode
     migrationDir: path.resolve(__dirname, '../migrations'),
