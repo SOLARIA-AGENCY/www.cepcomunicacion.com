@@ -43,10 +43,9 @@ import { MenuItem } from '@/types'
 import { LogoutButton } from '@payload-config/components/ui/LogoutButton'
 
 // Menu structure
-// FORCED MODULE INVALIDATION - timestamp: 18:20:00
 const menuItems: MenuItem[] = [
   {
-    title: '🔴 DASHBOARD ACTUALIZADO 🔴',
+    title: 'Dashboard',
     icon: LayoutDashboard,
     url: '/',
   },
