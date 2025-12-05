@@ -103,3 +103,6 @@ secrets/
 *.bak2
 *.bak3
 ADMIN_CREDENTIALS.md
+legacy/
+.env.production
+validation_report.txt
