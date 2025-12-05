@@ -17,7 +17,7 @@ export function CourseListItem({ course, onClick, className }: CourseListItemPro
 
   return (
     <div
-      className={`flex items-center h-24 px-6 !bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-150 cursor-pointer ${className || ''}`}
+      className={`flex items-center h-24 px-6 bg-card rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-150 cursor-pointer ${className || ''}`}
       onClick={onClick}
     >
       {/* Thumbnail */}

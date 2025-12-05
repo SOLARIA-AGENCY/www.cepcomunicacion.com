@@ -24,7 +24,7 @@ export function CourseTemplateCard({
 
   return (
     <Card
-      className={`course-template-card cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden !bg-white ${className || ''}`}
+      className={`course-template-card cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden bg-card ${className || ''}`}
       onClick={onClick}
     >
       {/* Course Image */}
@@ -43,7 +43,7 @@ export function CourseTemplateCard({
         </div>
       </div>
 
-      <CardContent className="p-6 space-y-3 flex flex-col !bg-white">
+      <CardContent className="p-6 space-y-3 flex flex-col bg-card">
         {/* Area Badge */}
         <Badge variant="outline" className="w-fit text-xs uppercase">
           {template.area}

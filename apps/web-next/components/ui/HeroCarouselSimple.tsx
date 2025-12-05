@@ -1,59 +1,80 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
 export function HeroCarouselSimple() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1920'
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   return (
-    <div className="relative h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden bg-gradient-to-br from-primary to-primary-dark">
-      <div className="absolute inset-0">
+    <div className="relative h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden">
+      {/* Slides */}
+      {slides.map((slide, index) => (
         <div
-          className="w-full h-full bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              'url(https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1920)',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-      </div>
-
-      <div className="relative h-full flex items-center">
-        <div className="container">
-          <div className="max-w-4xl mx-auto text-center text-white">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 md:mb-6 leading-tight">
-              El momento es ahora
-            </h1>
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-4 md:mb-6 text-cep-rosa">
-              Formación Profesional de Calidad
-            </h2>
-            <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-12 text-neutral-100 max-w-3xl mx-auto leading-relaxed">
-              Impulsa tu carrera profesional con nuestros cursos presenciales, online y
-              semipresenciales con ayudas disponibles.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/cursos"
-                className="btn-cep-rosa px-8 py-4 text-lg font-bold inline-flex items-center justify-center gap-2"
-              >
-                Ver Cursos
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
-                </svg>
-              </Link>
-              <Link
-                href="/contacto"
-                className="btn-outline-white px-8 py-4 text-lg font-bold inline-flex items-center justify-center gap-2"
-              >
-                Solicitar Información
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-              </Link>
-            </div>
-          </div>
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            index === currentSlide ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${slide})` }}
+          />
         </div>
+      ))}
+
+      {/* Navigation Dots */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-3 z-10">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentSlide
+                ? 'bg-white w-8'
+                : 'bg-white/50 hover:bg-white/75'
+            }`}
+            aria-label={`Ir a imagen ${index + 1}`}
+          />
+        ))}
       </div>
+
+      {/* Previous/Next Arrows */}
+      <button
+        onClick={() => goToSlide((currentSlide - 1 + slides.length) % slides.length)}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm z-10"
+        aria-label="Imagen anterior"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button
+        onClick={() => goToSlide((currentSlide + 1) % slides.length)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm z-10"
+        aria-label="Imagen siguiente"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
   );
 }

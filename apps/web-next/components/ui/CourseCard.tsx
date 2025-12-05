@@ -120,9 +120,18 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
       return course.image;
     }
 
-    // If course has featured_image (legacy), use it
+    // If course has featured_image, extract URL (can be string or object)
     if (course.featured_image) {
-      return course.featured_image;
+      // If it's an object with url property, use that
+      if (typeof course.featured_image === 'object' && 'url' in course.featured_image) {
+        // Replace incorrect port 3001 with correct 3002
+        const url = course.featured_image.url.replace(':3001', ':3002');
+        return url;
+      }
+      // Otherwise treat as string (legacy)
+      if (typeof course.featured_image === 'string') {
+        return course.featured_image.replace(':3001', ':3002');
+      }
     }
 
     // Otherwise, select intelligent placeholder based on course name
@@ -355,7 +364,9 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
           {/* Modality + Hours - UPPERCASE + BOLD */}
           <div className="flex items-center gap-2 text-sm font-bold text-neutral-900">
             <span className="uppercase">
-              {course.modality ? MODALITY_LABELS[course.modality].toUpperCase() : 'ONLINE'}
+              {course.modality && MODALITY_LABELS[course.modality as keyof typeof MODALITY_LABELS]
+                ? MODALITY_LABELS[course.modality as keyof typeof MODALITY_LABELS].toUpperCase()
+                : 'ONLINE'}
             </span>
             {course.duration_hours && (
               <>
@@ -385,8 +396,8 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
           </div>
         </div>
 
-        {/* CTA Button - Color by course type */}
-        <div className="mt-auto" data-course-type={course.course_type}>
+        {/* CTA Buttons - Primary and Checkout */}
+        <div className="mt-auto space-y-2" data-course-type={course.course_type}>
           <div
             className={`inline-flex items-center justify-center gap-2 w-full px-6 py-3 text-white font-bold text-sm uppercase tracking-wide rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 ${
               course.course_type
@@ -399,6 +410,21 @@ export const CourseCard = memo(function CourseCard({ course, onClick }: CourseCa
               <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
             </svg>
           </div>
+          <Link
+            href="/checkout"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 border-2 border-current text-current font-bold text-sm uppercase tracking-wide rounded-lg hover:bg-current hover:text-white transition-all duration-300"
+            style={{
+              color: course.course_type
+                ? getCourseTypeConfig(course.course_type).color.replace('bg-', '#')
+                : '#1e40af'
+            }}
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            INSCRIBIRSE AHORA
+          </Link>
         </div>
       </div>
     </>

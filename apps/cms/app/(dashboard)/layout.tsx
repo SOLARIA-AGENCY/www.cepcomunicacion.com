@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@payload-config/components/ui/dropdown-menu'
 import { Avatar, AvatarImage, AvatarFallback } from '@payload-config/components/ui/avatar'
-import { AppSidebar } from '@payload-config/components/layout/AppSidebar'
+import { AppSidebar } from '@payload-config/components/layout/AppSidebar' // FORCED RELOAD
 import { DashboardFooter } from '@payload-config/components/layout/DashboardFooter'
 import { ThemeToggle } from '@payload-config/components/ui/ThemeToggle'
 import { ChatbotWidget } from '@payload-config/components/ui/ChatbotWidget'

@@ -197,7 +197,7 @@ function CursosPageContent() {
   const Icon = config?.icon || List
 
   return (
-    <div className="space-y-6 !bg-gray-100/40 p-6 rounded-lg">
+    <div className="space-y-6 bg-muted/30 p-6 rounded-lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -223,7 +223,7 @@ function CursosPageContent() {
       </div>
 
       {/* Filtros - Estandarizados para todas las vistas */}
-      <Card className="!bg-white">
+      <Card className="bg-card">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             {/* Filtros principales */}
@@ -333,7 +333,7 @@ function CursosPageContent() {
 
       {/* Stats - Estadísticas estandarizadas */}
       {!loading && !error && (
-        <Card className="!bg-white">
+        <Card className="bg-card">
           <CardContent className="py-3">
             {/* VISTA GLOBAL: Todos los cursos - Breakdown por tipo */}
             {(!tipo || tipo === 'all') && (
@@ -384,7 +384,7 @@ function CursosPageContent() {
 
       {/* Loading State */}
       {loading && (
-        <Card className="!bg-white">
+        <Card className="bg-card">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">Cargando cursos...</p>
           </CardContent>
@@ -393,7 +393,7 @@ function CursosPageContent() {
 
       {/* Error State */}
       {error && !loading && (
-        <Card className="!bg-white">
+        <Card className="bg-card">
           <CardContent className="py-12 text-center">
             <p className="text-destructive">❌ {error}</p>
           </CardContent>
@@ -427,7 +427,7 @@ function CursosPageContent() {
 
       {/* Si no hay resultados */}
       {!loading && !error && filteredCourses.length === 0 && (
-        <Card className="!bg-white">
+        <Card className="bg-card">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">
               No se encontraron cursos que coincidan con los filtros seleccionados.
@@ -444,7 +444,7 @@ export default function CursosPage() {
   return (
     <Suspense
       fallback={
-        <div className="space-y-6 !bg-gray-100/40 p-6 rounded-lg">
+        <div className="space-y-6 bg-muted/30 p-6 rounded-lg">
           <div className="flex items-center justify-center py-12">
             <p className="text-muted-foreground">Cargando cursos...</p>
           </div>
