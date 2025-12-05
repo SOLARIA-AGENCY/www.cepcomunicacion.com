@@ -173,28 +173,28 @@ export default function SedesPage() {
             </div>
 
             <CardContent className="p-6 space-y-4">
-              {/* Title */}
-              <div>
-                <h3 className="font-bold text-xl mb-1">{sede.nombre}</h3>
+              {/* Title - Fixed height */}
+              <div className="min-h-[4.5rem]">
+                <h3 className="font-bold text-xl mb-1 line-clamp-1">{sede.nombre}</h3>
                 <div className="flex items-start gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <span className="leading-snug">{sede.direccion}</span>
+                  <span className="leading-snug line-clamp-2 min-h-[2.5rem]">{sede.direccion}</span>
                 </div>
               </div>
 
-              {/* Contact Info */}
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
+              {/* Contact Info - Fixed height container */}
+              <div className="space-y-2 text-sm min-h-[5.5rem]">
+                <div className="flex items-center gap-2 text-muted-foreground h-6">
                   <Phone className="h-4 w-4 flex-shrink-0" />
-                  <span>{sede.telefono}</span>
+                  <span className="truncate">{sede.telefono}</span>
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
+                <div className="flex items-center gap-2 text-muted-foreground h-6">
                   <Mail className="h-4 w-4 flex-shrink-0" />
                   <span className="truncate">{sede.email}</span>
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
+                <div className="flex items-center gap-2 text-muted-foreground h-6">
                   <Clock className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-xs">{sede.horario}</span>
+                  <span className="text-xs truncate">{sede.horario}</span>
                 </div>
               </div>
 

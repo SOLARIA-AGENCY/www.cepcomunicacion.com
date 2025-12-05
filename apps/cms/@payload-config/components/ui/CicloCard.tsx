@@ -36,19 +36,19 @@ export function CicloCard({ ciclo, className }: CicloCardProps) {
         </div>
 
         <div className="p-6 space-y-4">
-          {/* Header */}
-          <div className="space-y-2">
-            <h3 className="font-bold text-2xl leading-tight uppercase">
+          {/* Header - Fixed height */}
+          <div className="space-y-2 min-h-[6rem]">
+            <h3 className="font-bold text-2xl leading-tight uppercase line-clamp-2">
               {ciclo.nombre}
             </h3>
-            <p className="text-sm text-muted-foreground">{ciclo.codigo}</p>
+            <p className="text-sm text-muted-foreground truncate">{ciclo.codigo}</p>
             <Badge variant="outline" className="text-xs">
               {ciclo.familia_profesional}
             </Badge>
           </div>
 
-          {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+          {/* Description - Fixed height for 3 lines */}
+          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed min-h-[4.5rem]">
             {ciclo.descripcion}
           </p>
 

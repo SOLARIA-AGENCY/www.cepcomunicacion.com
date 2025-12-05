@@ -255,21 +255,25 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6 w-full">
-      {/* Header con saludo y fecha */}
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-muted-foreground mb-1">Hola, ADMIN USER</p>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
-            Vista general de la operativa de CEP Comunicación
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
+    <div className="w-full">
+      {/* Header con saludo y fecha - STICKY pegado al header superior */}
+      <div className="sticky top-0 z-20 bg-background px-4 md:px-6 py-4 border-b border-border">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-muted-foreground mb-1">Hola, ADMIN USER</p>
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground mt-1">
+              Vista general de la operativa de CEP Comunicación
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
+          </div>
         </div>
       </div>
 
+      {/* Contenido scrolleable con padding */}
+      <div className="p-4 md:p-6 space-y-6">
       {/* Primera línea de KPIs */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
         {primaryKpis.map((kpi) => {
@@ -548,6 +552,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      </div>{/* Cierre del contenido scrolleable */}
     </div>
   )
 }

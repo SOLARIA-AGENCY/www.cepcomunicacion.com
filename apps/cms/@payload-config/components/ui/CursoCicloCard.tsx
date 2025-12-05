@@ -29,21 +29,21 @@ export function CursoCicloCard({ curso, cicloImagen, cicloColor, className }: Cu
         </div>
 
         <div className="p-4 space-y-3">
-          {/* Header */}
-          <div className="space-y-2">
+          {/* Header - Fixed height */}
+          <div className="space-y-2 min-h-[5rem]">
             <div className="flex items-center gap-2">
               <Badge className={`${cicloColor} text-white text-xs`}>
                 Módulo {curso.orden}
               </Badge>
             </div>
-            <h4 className="font-bold text-sm leading-tight uppercase line-clamp-2">
+            <h4 className="font-bold text-sm leading-tight uppercase line-clamp-2 min-h-[2.5rem]">
               {curso.nombre}
             </h4>
-            <p className="text-xs text-muted-foreground">{curso.codigo}</p>
+            <p className="text-xs text-muted-foreground truncate">{curso.codigo}</p>
           </div>
 
-          {/* Description */}
-          <p className="text-xs text-muted-foreground line-clamp-2">
+          {/* Description - Fixed height for 2 lines */}
+          <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">
             {curso.descripcion}
           </p>
 
