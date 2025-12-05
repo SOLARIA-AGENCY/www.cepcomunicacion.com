@@ -39,7 +39,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground overscroll-none">
         {/* Sidebar */}
         <aside
           className={`fixed left-0 top-0 z-40 h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300 ${
@@ -67,7 +67,7 @@ export default function DashboardLayout({
                 <Input
                   type="search"
                   placeholder="Buscar..."
-                  className="w-full pl-8"
+                  className="w-full pl-8 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
@@ -146,8 +146,8 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          {/* Scrollable Main Content */}
-          <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+          {/* Scrollable Main Content - sin padding aquí, lo maneja cada página */}
+          <main className="flex-1 overflow-y-auto overscroll-contain">{children}</main>
 
           {/* Footer */}
           <DashboardFooter />

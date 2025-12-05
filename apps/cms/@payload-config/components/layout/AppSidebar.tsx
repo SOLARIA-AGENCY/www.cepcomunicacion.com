@@ -40,10 +40,14 @@ import Link from 'next/link'
 import NextImage from 'next/image'
 import { usePathname } from 'next/navigation'
 import { MenuItem } from '@/types'
-import { LogoutButton } from '@payload-config/components/ui/LogoutButton'
 
-// Menu structure
-const menuItems: MenuItem[] = [
+// Menu structure with sections
+// Section: null = no separator, 'CEP FORMACIÓN' or 'CEP COMUNICACIÓN' = show separator before item
+interface MenuItemWithSection extends MenuItem {
+  sectionBefore?: string
+}
+
+const menuItems: MenuItemWithSection[] = [
   {
     title: 'Dashboard',
     icon: LayoutDashboard,
@@ -53,6 +57,7 @@ const menuItems: MenuItem[] = [
     title: 'Programación',
     icon: Calendar,
     url: '/programacion',
+    sectionBefore: 'GESTIÓN ACADÉMICA',
   },
   {
     title: 'Planner Visual',
@@ -82,7 +87,12 @@ const menuItems: MenuItem[] = [
   {
     title: 'Sedes',
     icon: Building2,
-    url: '/sedes',
+    items: [
+      { title: 'Todas las Sedes', icon: List, url: '/sedes' },
+      { title: 'CEP Norte', icon: MapPin, url: '/sedes/cep-norte' },
+      { title: 'CEP Santa Cruz', icon: MapPin, url: '/sedes/cep-santa-cruz' },
+      { title: 'CEP Sur', icon: MapPin, url: '/sedes/cep-sur' },
+    ],
   },
   {
     title: 'Personal',
@@ -105,6 +115,7 @@ const menuItems: MenuItem[] = [
   {
     title: 'Marketing',
     icon: Megaphone,
+    sectionBefore: 'GESTIÓN COMERCIAL',
     items: [
       { title: 'Campañas', icon: Megaphone, url: '/campanas' },
       { title: 'Creatividades', icon: Sparkles, url: '/creatividades' },
@@ -192,9 +203,9 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
       <>
         <button
           onClick={() => setNestedOpen(!nestedOpen)}
-          className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
-          <SubIcon className="h-4 w-4 shrink-0" />
+          <SubIcon className="h-4 w-4 shrink-0" style={{ color: '#F2014B' }} />
           <span className="flex-1 text-left">{subItem.title}</span>
           <ChevronDown
             className={`h-3 w-3 transition-transform ${
@@ -217,7 +228,7 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
                         : ''
                     }`}
                   >
-                    <NestedIcon className="h-3 w-3 shrink-0" />
+                    <NestedIcon className="h-3 w-3 shrink-0" style={{ color: '#F2014B' }} />
                     <span>{nestedItem.title}</span>
                   </Link>
                 </li>
@@ -232,13 +243,13 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
   return (
     <Link
       href={subItem.url!}
-      className={`flex items-center gap-2 rounded-md px-3 py-2 text-base transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+      className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
         isSubActive
           ? 'bg-sidebar-accent text-sidebar-accent-foreground'
           : ''
       }`}
     >
-      <SubIcon className="h-4 w-4 shrink-0" />
+      <SubIcon className="h-4 w-4 shrink-0" style={{ color: '#F2014B' }} />
       <span>{subItem.title}</span>
     </Link>
   )
@@ -288,31 +299,25 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-sidebar text-sidebar-foreground">
-      {/* Header - Logo Only */}
-      <div className="flex h-16 items-center justify-center border-b border-sidebar-border px-4">
-        {isCollapsed ? (
-          <div className="flex items-center justify-center">
-            <NextImage
-              src={logoUrl}
-              alt={academyName}
-              width={40}
-              height={40}
-              className="w-10 h-10 object-contain"
-            />
-          </div>
-        ) : (
-          <div className="flex items-center gap-3 w-full">
-            <NextImage
-              src={logoUrl}
-              alt={academyName}
-              width={140}
-              height={48}
-              className="h-12 w-auto object-contain"
-              style={{ height: "auto" }}
-            />
-          </div>
-        )}
+    <div className="flex h-full flex-col overflow-hidden bg-card text-sidebar-foreground">
+      {/* Header - Logo + Text - Smooth transition */}
+      <div className="flex h-16 items-center border-b border-sidebar-border px-4 overflow-hidden">
+        <div className={`flex items-center w-full transition-all duration-300 ease-in-out ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+          <NextImage
+            src={logoUrl}
+            alt={academyName}
+            width={36}
+            height={36}
+            className="w-9 h-9 object-contain flex-shrink-0"
+          />
+          <span
+            className={`text-lg font-semibold text-sidebar-foreground whitespace-nowrap transition-all duration-300 ease-in-out ${
+              isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
+            }`}
+          >
+            CEP Formación
+          </span>
+        </div>
       </div>
 
       {/* Menu Content */}
@@ -324,104 +329,140 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
             const hasSubItems = item.items && item.items.length > 0
             const isOpen = openSections.includes(item.title)
 
+            // Section separator component - CEP Magenta color (#F2014B) with smooth transition
+            const SectionSeparator = item.sectionBefore ? (
+              <li className="pt-4 pb-2 overflow-hidden">
+                <div className="relative flex items-center justify-center">
+                  {/* Text label - fades out when collapsed */}
+                  <span
+                    className={`px-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 ease-in-out ${
+                      isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                    }`}
+                    style={{ color: '#F2014B' }}
+                  >
+                    {item.sectionBefore}
+                  </span>
+                  {/* Line separator - fades in when collapsed */}
+                  <div
+                    className={`w-8 border-t transition-all duration-300 ease-in-out ${
+                      isCollapsed ? 'opacity-100' : 'opacity-0 w-0'
+                    }`}
+                    style={{ borderColor: '#F2014B' }}
+                  />
+                </div>
+              </li>
+            ) : null
+
             if (!hasSubItems) {
               return (
-                <li key={item.title}>
-                  <Link
-                    href={item.url!}
-                    className={`flex items-center gap-3 rounded-md px-3 py-2 text-lg transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                      isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''
-                    } ${isCollapsed ? 'justify-center' : ''}`}
-                    title={isCollapsed ? item.title : undefined}
-                  >
-                    <Icon className="h-5 w-5 shrink-0" />
-                    {!isCollapsed && <span>{item.title}</span>}
-                  </Link>
-                </li>
+                <React.Fragment key={item.title}>
+                  {SectionSeparator}
+                  <li>
+                    <Link
+                      href={item.url!}
+                      className={`flex items-center rounded-md px-3 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                        isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''
+                      } ${isCollapsed ? 'justify-center' : 'gap-3'}`}
+                      title={isCollapsed ? item.title : undefined}
+                    >
+                      <Icon className="h-5 w-5 shrink-0" style={{ color: '#F2014B' }} />
+                      <span
+                        className={`whitespace-nowrap transition-all duration-300 ease-in-out ${
+                          isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
+                        }`}
+                      >
+                        {item.title}
+                      </span>
+                    </Link>
+                  </li>
+                </React.Fragment>
               )
             }
 
             return (
-              <li key={item.title}>
-                <button
-                  onClick={() => toggleSection(item.title)}
-                  className={`w-full flex items-center gap-3 rounded-md px-3 py-2 text-lg transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                    isCollapsed ? 'justify-center' : ''
-                  }`}
-                  title={isCollapsed ? item.title : undefined}
-                >
-                  <Icon className="h-5 w-5 shrink-0" />
-                  {!isCollapsed && (
-                    <>
-                      <span className="flex-1 text-left">{item.title}</span>
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </>
-                  )}
-                </button>
-                {!isCollapsed && isOpen && (
-                  <ul className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
-                    {item.items?.map((subItem) => (
-                      <li key={subItem.title}>
-                        <SubMenuItem subItem={subItem} pathname={pathname} />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
+              <React.Fragment key={item.title}>
+                {SectionSeparator}
+                <li>
+                  <button
+                    onClick={() => toggleSection(item.title)}
+                    className={`w-full flex items-center rounded-md px-3 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                      isCollapsed ? 'justify-center' : 'gap-3'
+                    }`}
+                    title={isCollapsed ? item.title : undefined}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" style={{ color: '#F2014B' }} />
+                    <span
+                      className={`flex-1 text-left whitespace-nowrap transition-all duration-300 ease-in-out ${
+                        isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
+                      }`}
+                    >
+                      {item.title}
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 shrink-0 transition-all duration-300 ease-in-out ${
+                        isOpen ? 'rotate-180' : ''
+                      } ${isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'opacity-100'}`}
+                    />
+                  </button>
+                  {/* Submenu with smooth height transition */}
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      !isCollapsed && isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <ul className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
+                      {item.items?.map((subItem) => (
+                        <li key={subItem.title}>
+                          <SubMenuItem subItem={subItem} pathname={pathname} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              </React.Fragment>
             )
           })}
         </ul>
       </nav>
 
       {/* Footer - Always Visible */}
-      <div className="border-t border-sidebar-border">
-        {/* Logout Button */}
-        {!isCollapsed && (
-          <div className="px-4 py-2 border-b border-sidebar-border">
-            <LogoutButton />
+      <div className="border-t border-sidebar-border mt-auto">
+        {/* Toggle button row - At top of footer, aligned right, CEP Magenta */}
+        {onToggle && (
+          <div className={`py-2 flex items-center border-b border-sidebar-border ${isCollapsed ? 'justify-center px-2' : 'justify-end px-4'}`}>
+            <button
+              onClick={onToggle}
+              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors"
+              title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
+              style={{ color: '#F2014B' }}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </button>
           </div>
         )}
 
-        {/* Help Section */}
-        {!isCollapsed && (
-          <Link
-            href="/ayuda"
-            className="flex items-center gap-3 px-4 py-3 hover:bg-sidebar-accent transition-colors border-b border-sidebar-border"
+        {/* Help Section - Always visible with smooth transitions */}
+        <Link
+          href="/ayuda"
+          className={`flex items-center hover:bg-sidebar-accent transition-all duration-300 ease-in-out h-[46px] ${
+            isCollapsed ? 'justify-center px-2' : 'gap-3 px-4'
+          }`}
+          title={isCollapsed ? 'Ayuda y Documentación' : undefined}
+        >
+          <HelpCircle className="h-3.5 w-3.5 shrink-0" style={{ color: '#F2014B' }} />
+          <div
+            className={`min-w-0 transition-all duration-300 ease-in-out ${
+              isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'flex-1 opacity-100'
+            }`}
           >
-            <HelpCircle className="h-5 w-5 shrink-0" />
-            <div className="flex-1">
-              <p className="text-base">Ayuda y Documentación</p>
-              <p className="text-sm opacity-70">Guías y soporte técnico</p>
-            </div>
-          </Link>
-        )}
-
-        {/* Copyright and Toggle */}
-        <div className="p-4 flex items-center justify-between">
-          {!isCollapsed && (
-            <p className="text-sm opacity-70">© 2025 CEP Comunicación</p>
-          )}
-          {/* Toggle Button */}
-          {onToggle && (
-            <button
-              onClick={onToggle}
-              className={`flex h-9 w-9 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors ${
-                isCollapsed ? 'mx-auto' : 'ml-auto'
-              }`}
-              title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
-            >
-              {isCollapsed ? (
-                <ChevronRight className="h-5 w-5" />
-              ) : (
-                <ChevronLeft className="h-5 w-5" />
-              )}
-            </button>
-          )}
-        </div>
+            <p className="text-sm text-muted-foreground truncate whitespace-nowrap">Ayuda y Documentación</p>
+            <p className="text-xs text-muted-foreground/70 truncate whitespace-nowrap">Guías y soporte técnico</p>
+          </div>
+        </Link>
       </div>
     </div>
   )

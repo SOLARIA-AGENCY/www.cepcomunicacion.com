@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Prevent iOS/macOS elastic bounce (rubber-banding) on scroll */
+html,
+body {
+  overscroll-behavior: none;
+  overflow: hidden;
+  height: 100%;
+}
+
 @layer base {
   :root {
     /* CSS variables for runtime theming - CEP FORMACIÓN */
