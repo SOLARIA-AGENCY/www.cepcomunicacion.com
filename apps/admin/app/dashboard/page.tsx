@@ -1,197 +1,202 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getCurrentUser, logout, apiClient } from '@/lib/api';
-import type { Course, User as UserType } from '@cepcomunicacion/types';
+import { useState } from 'react';
 
-interface User {
+interface Tenant {
   id: string;
-  email: string;
-  role: string;
+  name: string;
+  slug: string;
+  plan: 'starter' | 'professional' | 'enterprise';
+  status: 'active' | 'trial' | 'suspended' | 'cancelled';
+  usersCount: number;
+  coursesCount: number;
+  createdAt: string;
+  mrr: number;
 }
 
+const mockTenants: Tenant[] = [
+  {
+    id: '1',
+    name: 'CEP Formacion',
+    slug: 'cep-formacion',
+    plan: 'professional',
+    status: 'active',
+    usersCount: 12,
+    coursesCount: 45,
+    createdAt: '2024-01-15',
+    mrr: 299,
+  },
+  {
+    id: '2',
+    name: 'Academia Madrid',
+    slug: 'academia-madrid',
+    plan: 'starter',
+    status: 'trial',
+    usersCount: 3,
+    coursesCount: 8,
+    createdAt: '2025-11-20',
+    mrr: 0,
+  },
+  {
+    id: '3',
+    name: 'Instituto Barcelona',
+    slug: 'instituto-barcelona',
+    plan: 'enterprise',
+    status: 'active',
+    usersCount: 28,
+    coursesCount: 120,
+    createdAt: '2024-06-10',
+    mrr: 599,
+  },
+];
+
 export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [stats, setStats] = useState({
-    courses: 0,
-    users: 0,
-    courseRuns: 0,
-  });
-  const [recentCourses, setRecentCourses] = useState<Course[]>([]);
+  const [tenants] = useState<Tenant[]>(mockTenants);
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const userData = await getCurrentUser();
-        if (userData && userData.user) {
-          setUser(userData.user);
+  const totalMRR = tenants.reduce((sum, t) => sum + t.mrr, 0);
+  const activeTenants = tenants.filter(t => t.status === 'active').length;
+  const trialTenants = tenants.filter(t => t.status === 'trial').length;
 
-          // Load dashboard data
-          await loadDashboardData();
-        } else {
-          // Not authenticated, redirect to login
-          router.push('/login');
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        router.push('/login');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    checkAuth();
-  }, [router]);
-
-  const loadDashboardData = async () => {
-    try {
-      // Get courses count
-      const coursesResponse = await apiClient.getCourses({ limit: 1 });
-      const coursesCount = coursesResponse.total || 0;
-
-      // Get users count (if available)
-      let usersCount = 0;
-      try {
-        const usersResponse = await apiClient.find('users', { limit: 1 });
-        usersCount = usersResponse.total || 0;
-      } catch (error) {
-        console.warn('Users endpoint not available:', error);
-      }
-
-      // Get course runs count
-      let courseRunsCount = 0;
-      try {
-        const courseRunsResponse = await apiClient.getCourseRuns();
-        courseRunsCount = courseRunsResponse.total || 0;
-      } catch (error) {
-        console.warn('Course runs endpoint not available:', error);
-      }
-
-      // Get recent courses
-      const recentCoursesResponse = await apiClient.getCourses({ limit: 5 });
-
-      setStats({
-        courses: coursesCount,
-        users: usersCount,
-        courseRuns: courseRunsCount,
-      });
-      setRecentCourses(recentCoursesResponse.docs || []);
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.push('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-  if (isLoading) {
+  const getPlanBadge = (plan: Tenant['plan']) => {
+    const styles: Record<string, string> = {
+      starter: 'bg-slate-600 text-slate-200',
+      professional: 'bg-indigo-600/20 text-indigo-400',
+      enterprise: 'bg-purple-600/20 text-purple-400',
+    };
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Cargando...</div>
-      </div>
+      <span className={`px-2 py-1 rounded text-xs font-medium ${styles[plan]}`}>
+        {plan.charAt(0).toUpperCase() + plan.slice(1)}
+      </span>
     );
-  }
+  };
 
-  if (!user) {
-    return null; // Will redirect in useEffect
-  }
+  const getStatusBadge = (status: Tenant['status']) => {
+    const styles: Record<string, string> = {
+      active: 'bg-green-600/20 text-green-400',
+      trial: 'bg-yellow-600/20 text-yellow-400',
+      suspended: 'bg-red-600/20 text-red-400',
+      cancelled: 'bg-slate-600/20 text-slate-400',
+    };
+    const labels: Record<string, string> = {
+      active: 'Activo',
+      trial: 'Trial',
+      suspended: 'Suspendido',
+      cancelled: 'Cancelado',
+    };
+    return (
+      <span className={`px-2 py-1 rounded text-xs font-medium ${styles[status]}`}>
+        {labels[status]}
+      </span>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Panel de Administración</h1>
-            <p className="text-sm text-gray-600 mt-1">Bienvenido, {user.email}</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-          >
-            Cerrar Sesión
+    <div className="space-y-6">
+      {/* Mock Data Indicator */}
+      <div className="px-3 py-2 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center gap-2">
+        <svg className="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+        </svg>
+        <span className="text-amber-500 text-sm font-medium">Mock Data - Desarrollo</span>
+      </div>
+
+      {/* Global Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-slate-800/50 backdrop-blur p-4 rounded-xl border border-slate-700/50">
+          <p className="text-slate-400 text-xs font-medium">Total Tenants</p>
+          <p className="text-2xl font-bold text-white mt-1">{tenants.length}</p>
+        </div>
+        <div className="bg-slate-800/50 backdrop-blur p-4 rounded-xl border border-slate-700/50">
+          <p className="text-slate-400 text-xs font-medium">Activos</p>
+          <p className="text-2xl font-bold text-green-400 mt-1">{activeTenants}</p>
+        </div>
+        <div className="bg-slate-800/50 backdrop-blur p-4 rounded-xl border border-slate-700/50">
+          <p className="text-slate-400 text-xs font-medium">En Trial</p>
+          <p className="text-2xl font-bold text-yellow-400 mt-1">{trialTenants}</p>
+        </div>
+        <div className="bg-slate-800/50 backdrop-blur p-4 rounded-xl border border-slate-700/50">
+          <p className="text-slate-400 text-xs font-medium">MRR Total</p>
+          <p className="text-2xl font-bold text-white mt-1">${totalMRR}</p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 p-5 rounded-xl">
+          <h3 className="text-white font-semibold">Onboarding Pendiente</h3>
+          <p className="text-indigo-200 text-sm mt-1">2 tenants necesitan completar setup</p>
+          <button className="mt-4 px-4 py-2 bg-white text-indigo-600 rounded-lg text-sm font-medium hover:bg-indigo-50 transition-colors">
+            Ver pendientes
           </button>
         </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Stats Cards */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm font-medium">Cursos</h3>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{stats.courses}</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm font-medium">Usuarios</h3>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{stats.users}</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm font-medium">Convocatorias</h3>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{stats.courseRuns}</p>
-          </div>
+        <div className="bg-slate-800/50 backdrop-blur p-5 rounded-xl border border-slate-700/50">
+          <h3 className="text-white font-semibold">Tickets de Soporte</h3>
+          <p className="text-slate-400 text-sm mt-1">3 tickets abiertos requieren atencion</p>
+          <button className="mt-4 px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors">
+            Ver tickets
+          </button>
         </div>
-
-        {/* Welcome Message */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-blue-900 mb-2">
-            ¡Dashboard en Construcción! 🚧
-          </h2>
-          <p className="text-blue-700">
-            Este es el panel de administración personalizado para CEP Comunicación. Estamos en la
-            Semana 1 de desarrollo (Setup & Auth).
-          </p>
-          <div className="mt-4 text-sm text-blue-600">
-            <p>
-              <strong>Usuario:</strong> {user.email}
-            </p>
-            <p>
-              <strong>Rol:</strong> {user.role}
-            </p>
-            <p>
-              <strong>ID:</strong> {user.id}
-            </p>
-          </div>
+        <div className="bg-slate-800/50 backdrop-blur p-5 rounded-xl border border-slate-700/50">
+          <h3 className="text-white font-semibold">Pagos Fallidos</h3>
+          <p className="text-slate-400 text-sm mt-1">1 pago rechazado en los ultimos 7 dias</p>
+          <button className="mt-4 px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors">
+            Gestionar
+          </button>
         </div>
+      </div>
 
-        {/* Quick Links */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="font-semibold text-gray-900 mb-2">Cursos</h3>
-            <p className="text-sm text-gray-600 mb-4">Gestionar cursos y convocatorias</p>
-            <button className="text-blue-600 hover:underline text-sm font-medium">
-              Ir a Cursos →
-            </button>
+      {/* Tenants Table */}
+      <div className="bg-slate-800/50 backdrop-blur rounded-xl border border-slate-700/50 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-700/50 flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold text-white">Tenants Recientes</h2>
+            <p className="text-slate-400 text-sm">Gestiona tus academias registradas</p>
           </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="font-semibold text-gray-900 mb-2">Estudiantes</h3>
-            <p className="text-sm text-gray-600 mb-4">Ver y administrar estudiantes</p>
-            <button className="text-blue-600 hover:underline text-sm font-medium">
-              Ir a Estudiantes →
-            </button>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h3 className="font-semibold text-gray-900 mb-2">Leads</h3>
-            <p className="text-sm text-gray-600 mb-4">Gestionar leads y conversiones</p>
-            <button className="text-blue-600 hover:underline text-sm font-medium">
-              Ir a Leads →
-            </button>
-          </div>
+          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors text-sm font-medium">
+            + Nuevo Tenant
+          </button>
         </div>
-      </main>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-800/80">
+              <tr className="border-b border-slate-700/50">
+                <th className="text-left px-6 py-3 text-xs font-medium text-slate-400 uppercase">Tenant</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-slate-400 uppercase">Plan</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-slate-400 uppercase">Estado</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-slate-400 uppercase">Usuarios</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-slate-400 uppercase">Cursos</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-slate-400 uppercase">MRR</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700/50">
+              {tenants.map((tenant) => (
+                <tr key={tenant.id} className="hover:bg-slate-700/20 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">{tenant.name.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{tenant.name}</p>
+                        <p className="text-slate-500 text-sm">{tenant.slug}.academix.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">{getPlanBadge(tenant.plan)}</td>
+                  <td className="px-6 py-4">{getStatusBadge(tenant.status)}</td>
+                  <td className="px-6 py-4 text-slate-300">{tenant.usersCount}</td>
+                  <td className="px-6 py-4 text-slate-300">{tenant.coursesCount}</td>
+                  <td className="px-6 py-4">
+                    <span className={`font-medium ${tenant.mrr > 0 ? 'text-green-400' : 'text-slate-500'}`}>
+                      {tenant.mrr > 0 ? `$${tenant.mrr}/mo` : 'Trial'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

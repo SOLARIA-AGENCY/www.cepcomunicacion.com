@@ -5,7 +5,8 @@
 
 import { PayloadClient } from '@cepcomunicacion/api-client';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+// CRITICAL: Do NOT include /api - PayloadClient adds it automatically
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 
 // Create shared API client instance
 export const apiClient = new PayloadClient(API_URL);
@@ -88,8 +89,9 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
  * POST /api/users/logout
  */
 export async function logout(): Promise<void> {
-  // Clear dev session if exists
+  // Clear all session types
   if (typeof window !== 'undefined') {
+    localStorage.removeItem('academix-user');
     localStorage.removeItem('dev_session');
   }
 
@@ -110,11 +112,23 @@ export async function logout(): Promise<void> {
  */
 export async function getCurrentUser() {
   // DEVELOPMENT BYPASS: Check for dev session in localStorage
+  // Supports both 'academix-user' (ACADEMIX Portal login) and 'dev_session' (legacy)
   if (
     (process.env.NODE_ENV === 'development' ||
       process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true') &&
     typeof window !== 'undefined'
   ) {
+    // Check ACADEMIX Portal login first
+    const academixUser = localStorage.getItem('academix-user');
+    if (academixUser) {
+      try {
+        const user = JSON.parse(academixUser);
+        return { user }; // Match Payload CMS response format
+      } catch {
+        localStorage.removeItem('academix-user');
+      }
+    }
+    // Fallback to legacy dev_session
     const devSession = localStorage.getItem('dev_session');
     if (devSession) {
       try {
