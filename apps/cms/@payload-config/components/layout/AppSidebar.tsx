@@ -102,16 +102,6 @@ const menuItems: MenuItemWithSection[] = [
     items: [
       { title: 'Profesores', icon: UserCircle, url: '/profesores' },
       { title: 'Administrativos', icon: UserPlus, url: '/administrativo' },
-      { title: 'Alumnos', icon: Users, url: '/alumnos' },
-    ],
-  },
-  {
-    title: 'Leads e Inscripciones',
-    icon: FileText,
-    items: [
-      { title: 'Leads', icon: FileText, url: '/leads' },
-      { title: 'Matrículas', icon: UserPlus, url: '/matriculas' },
-      { title: 'Lista de Espera', icon: ListTodo, url: '/lista-espera' },
     ],
   },
   {
@@ -121,6 +111,15 @@ const menuItems: MenuItemWithSection[] = [
     items: [
       { title: 'Campañas', icon: Megaphone, url: '/campanas' },
       { title: 'Creatividades', icon: Sparkles, url: '/creatividades' },
+    ],
+  },
+  {
+    title: 'Leads e Inscripciones',
+    icon: FileText,
+    items: [
+      { title: 'Leads', icon: FileText, url: '/leads' },
+      { title: 'Matrículas', icon: UserPlus, url: '/matriculas' },
+      { title: 'Lista de Espera', icon: ListTodo, url: '/lista-espera' },
     ],
   },
   {
@@ -209,10 +208,10 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
           onClick={() => setNestedOpen(!nestedOpen)}
           className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
-          <SubIcon className="h-4 w-4 shrink-0" style={{ color: '#F2014B' }} />
+          <SubIcon className="h-4 w-4 shrink-0 text-foreground/70" />
           <span className="flex-1 text-left">{subItem.title}</span>
           <ChevronDown
-            className={`h-3 w-3 transition-transform ${
+            className={`h-3 w-3 transition-transform text-foreground/50 ${
               nestedOpen ? 'rotate-180' : ''
             }`}
           />
@@ -232,7 +231,7 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
                         : ''
                     }`}
                   >
-                    <NestedIcon className="h-3 w-3 shrink-0" style={{ color: '#F2014B' }} />
+                    <NestedIcon className="h-3 w-3 shrink-0 text-foreground/60" />
                     <span>{nestedItem.title}</span>
                   </Link>
                 </li>
@@ -253,7 +252,7 @@ function SubMenuItem({ subItem, pathname }: SubMenuItemProps) {
           : ''
       }`}
     >
-      <SubIcon className="h-4 w-4 shrink-0" style={{ color: '#F2014B' }} />
+      <SubIcon className="h-4 w-4 shrink-0 text-foreground/70" />
       <span>{subItem.title}</span>
     </Link>
   )
@@ -268,7 +267,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
   const pathname = usePathname()
   const [openSections, setOpenSections] = React.useState<string[]>([])
   const [logoUrl, setLogoUrl] = React.useState('/logos/cep-logo-alpha.png')
-  const [academyName, setAcademyName] = React.useState('CEP Formación')
+  const [academyName, setAcademyName] = React.useState('ACADEMIX')
 
   // Fetch logo config from API
   React.useEffect(() => {
@@ -283,7 +282,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
         const academyResponse = await fetch('/api/config?section=academia')
         if (academyResponse.ok) {
           const { data } = await academyResponse.json()
-          setAcademyName(data.nombre || 'CEP Formación')
+          setAcademyName(data.nombre || 'ACADEMIX')
         }
       } catch (error) {
         console.error('Error fetching sidebar config:', error)
@@ -322,7 +321,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
               isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
             }`}
           >
-            CEP Formación
+            {academyName}
           </span>
         </div>
       </div>
@@ -369,10 +368,10 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                       href={item.url!}
                       className={`flex items-center rounded-md py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                         isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''
-                      } ${isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'}`}
+                      } ${isCollapsed ? 'justify-center w-full' : 'gap-3 px-3'}`}
                       title={isCollapsed ? item.title : undefined}
                     >
-                      <Icon className="h-5 w-5 shrink-0" style={{ color: '#F2014B' }} />
+                      <Icon className="h-5 w-5 shrink-0 text-foreground/80" />
                       <span
                         className={`whitespace-nowrap transition-all duration-300 ease-in-out ${
                           isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
@@ -393,11 +392,11 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                   <button
                     onClick={() => toggleSection(item.title)}
                     className={`w-full flex items-center rounded-md py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                      isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'
+                      isCollapsed ? 'justify-center' : 'gap-3 px-3'
                     }`}
                     title={isCollapsed ? item.title : undefined}
                   >
-                    <Icon className="h-5 w-5 shrink-0" style={{ color: '#F2014B' }} />
+                    <Icon className="h-5 w-5 shrink-0 text-foreground/80" />
                     <span
                       className={`flex-1 text-left whitespace-nowrap transition-all duration-300 ease-in-out ${
                         isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
@@ -434,14 +433,13 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
 
       {/* Footer - Always Visible */}
       <div className="border-t border-sidebar-border mt-auto">
-        {/* Toggle button row - At top of footer, aligned right, CEP Magenta */}
+        {/* Toggle button row - At top of footer, centered when collapsed */}
         {onToggle && (
-          <div className={`py-2 flex items-center border-b border-sidebar-border ${isCollapsed ? 'justify-center px-2' : 'justify-end px-4'}`}>
+          <div className={`py-2 flex items-center border-b border-sidebar-border ${isCollapsed ? 'justify-center' : 'justify-end px-4'}`}>
             <button
               onClick={onToggle}
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-sidebar-accent transition-colors text-foreground/70"
               title={isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
-              style={{ color: '#F2014B' }}
             >
               {isCollapsed ? (
                 <ChevronRight className="h-4 w-4" />
@@ -456,11 +454,11 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
         <Link
           href="/ayuda"
           className={`flex items-center hover:bg-sidebar-accent transition-all duration-300 ease-in-out h-[46px] ${
-            isCollapsed ? 'justify-center px-2' : 'gap-3 px-4'
+            isCollapsed ? 'justify-center' : 'gap-3 px-4'
           }`}
           title={isCollapsed ? 'Ayuda y Documentación' : undefined}
         >
-          <HelpCircle className="h-3.5 w-3.5 shrink-0" style={{ color: '#F2014B' }} />
+          <HelpCircle className="h-3.5 w-3.5 shrink-0 text-foreground/70" />
           <div
             className={`min-w-0 transition-all duration-300 ease-in-out ${
               isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'flex-1 opacity-100'
