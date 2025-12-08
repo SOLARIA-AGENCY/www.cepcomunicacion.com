@@ -37,6 +37,15 @@ import {
   Eye,
   UserCog,
   CreditCard,
+  // Campus Virtual icons
+  Play,
+  Video,
+  ClipboardCheck,
+  FileUp,
+  Award,
+  Bell,
+  Layers,
+  Folder,
 } from 'lucide-react'
 import Link from 'next/link'
 import NextImage from 'next/image'
@@ -167,6 +176,51 @@ const menuItems: MenuItemWithSection[] = [
     icon: BarChart3,
     url: '/analiticas',
   },
+  // ===== CAMPUS VIRTUAL (Addon Module) =====
+  {
+    title: 'Panel Campus',
+    icon: Play,
+    url: '/campus',
+    sectionBefore: 'CAMPUS VIRTUAL',
+    // TODO: Check feature flag hasModule('campusVirtual')
+  },
+  {
+    title: 'Estructura de Cursos',
+    icon: Layers,
+    items: [
+      { title: 'Módulos y Lecciones', icon: Folder, url: '/campus/cursos' },
+      { title: 'Materiales', icon: FileUp, url: '/campus/materiales' },
+    ],
+  },
+  {
+    title: 'Alumnos Matriculados',
+    icon: Users,
+    url: '/campus/alumnos',
+  },
+  {
+    title: 'Clases en Vivo',
+    icon: Video,
+    items: [
+      { title: 'Sesiones Programadas', icon: Calendar, url: '/campus/sesiones' },
+      { title: 'Grabaciones', icon: Play, url: '/campus/grabaciones' },
+    ],
+  },
+  {
+    title: 'Tareas y Entregas',
+    icon: ClipboardCheck,
+    url: '/campus/tareas',
+  },
+  {
+    title: 'Anuncios',
+    icon: Bell,
+    url: '/campus/anuncios',
+  },
+  {
+    title: 'Certificados',
+    icon: Award,
+    url: '/campus/certificados',
+  },
+  // ===== END CAMPUS VIRTUAL =====
   {
     title: 'Administración',
     icon: Shield,
