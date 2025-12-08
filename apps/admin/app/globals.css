@@ -2,16 +2,16 @@
 
 @theme inline {
   /* Custom Properties */
-  --color-background: #f9fafb;
-  --color-foreground: #111827;
+  --color-background: #0a0f1a;
+  --color-foreground: #f9fafb;
 
-  /* Typography - Montserrat font family */
-  --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography - System fonts (same as CEP Formación) */
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  /* CEP Formación Brand Colors */
-  --color-primary: #1e40af;
-  --color-primary-dark: #1e3a8a;
-  --color-primary-light: #3b82f6;
+  /* ACADEMIX Brand Colors - Professional Purple/Blue */
+  --color-primary: #8b5cf6;
+  --color-primary-dark: #7c3aed;
+  --color-primary-light: #a78bfa;
 }
 
 :root {
@@ -22,7 +22,8 @@
 html, body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography - System fonts (matches CEP Formación) */
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Disable elastic/bounce scroll effect */
@@ -37,4 +38,25 @@ html {
 /* Prevent pull-to-refresh on mobile */
 body {
   overscroll-behavior-y: none;
+}
+
+/* Typography scale - matching CEP Formación */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+h1 { font-size: 2.25rem; line-height: 2.5rem; }
+h2 { font-size: 1.875rem; line-height: 2.25rem; }
+h3 { font-size: 1.5rem; line-height: 2rem; }
+h4 { font-size: 1.25rem; line-height: 1.75rem; }
+
+/* Body text */
+p, span, div {
+  font-weight: 400;
+}
+
+/* Labels and small text */
+label, .text-sm {
+  font-weight: 500;
 }

@@ -75,7 +75,11 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
 
     return {
       message: 'Login successful',
-      user: result.user,
+      user: {
+        id: String(result.user.id),
+        email: result.user.email,
+        role: result.user.role || 'user',
+      },
       token: result.token,
       exp: Date.now() + 86400000, // 24 hours
     };

@@ -2,6 +2,18 @@
 
 import { useState } from 'react';
 
+interface TenantApiKey {
+  id: string;
+  name: string;
+  key: string;
+  permissions: string[];
+  status: 'active' | 'revoked';
+  requestsToday: number;
+  requestsMonth: number;
+  createdAt: string;
+  lastUsed: string | null;
+}
+
 interface Tenant {
   id: string;
   name: string;
@@ -19,6 +31,13 @@ interface Tenant {
   mrr: number;
   lastActivity: string;
   logoUrl: string | null;
+  apiKeys: TenantApiKey[];
+  apiUsage: {
+    requestsToday: number;
+    requestsMonth: number;
+    webhooksConfigured: number;
+    integrationsActive: string[];
+  };
 }
 
 const mockTenants: Tenant[] = [
@@ -39,6 +58,11 @@ const mockTenants: Tenant[] = [
     mrr: 299,
     lastActivity: '2025-12-07T10:30:00',
     logoUrl: '/tenants/cep-logo.png',
+    apiKeys: [
+      { id: 'k1', name: 'Production Key', key: 'ak_cep_live_xxxxxxxxxxxx', permissions: ['read', 'write'], status: 'active', requestsToday: 89, requestsMonth: 2456, createdAt: '2024-06-15', lastUsed: '2025-12-07T10:30:00' },
+      { id: 'k2', name: 'Meta Ads Webhook', key: 'ak_cep_meta_xxxxxxxxxxxx', permissions: ['write'], status: 'active', requestsToday: 12, requestsMonth: 345, createdAt: '2024-08-20', lastUsed: '2025-12-07T08:15:00' },
+    ],
+    apiUsage: { requestsToday: 101, requestsMonth: 2801, webhooksConfigured: 2, integrationsActive: ['Meta Ads', 'Mailchimp', 'WhatsApp'] },
   },
   {
     id: '2',
@@ -57,6 +81,10 @@ const mockTenants: Tenant[] = [
     mrr: 0,
     lastActivity: '2025-12-06T14:22:00',
     logoUrl: null,
+    apiKeys: [
+      { id: 'k3', name: 'Test Key', key: 'ak_madrid_test_xxxxxxxxx', permissions: ['read'], status: 'active', requestsToday: 5, requestsMonth: 45, createdAt: '2025-11-25', lastUsed: '2025-12-06T14:22:00' },
+    ],
+    apiUsage: { requestsToday: 5, requestsMonth: 45, webhooksConfigured: 0, integrationsActive: [] },
   },
   {
     id: '3',
@@ -75,6 +103,12 @@ const mockTenants: Tenant[] = [
     mrr: 599,
     lastActivity: '2025-12-07T09:15:00',
     logoUrl: '/tenants/barcelona-logo.png',
+    apiKeys: [
+      { id: 'k4', name: 'Main Production', key: 'ak_bcn_prod_xxxxxxxxxxxxx', permissions: ['read', 'write', 'delete'], status: 'active', requestsToday: 234, requestsMonth: 8765, createdAt: '2024-06-15', lastUsed: '2025-12-07T09:15:00' },
+      { id: 'k5', name: 'Analytics Export', key: 'ak_bcn_analytics_xxxxxxx', permissions: ['read'], status: 'active', requestsToday: 45, requestsMonth: 1234, createdAt: '2024-09-10', lastUsed: '2025-12-07T06:00:00' },
+      { id: 'k6', name: 'CRM Integration', key: 'ak_bcn_crm_xxxxxxxxxxxx', permissions: ['read', 'write'], status: 'active', requestsToday: 78, requestsMonth: 2345, createdAt: '2024-11-20', lastUsed: '2025-12-07T09:00:00' },
+    ],
+    apiUsage: { requestsToday: 357, requestsMonth: 12344, webhooksConfigured: 5, integrationsActive: ['Meta Ads', 'Google Ads', 'Mailchimp', 'HubSpot CRM', 'WhatsApp', 'Zapier'] },
   },
   {
     id: '4',
@@ -93,6 +127,10 @@ const mockTenants: Tenant[] = [
     mrr: 299,
     lastActivity: '2025-11-15T16:45:00',
     logoUrl: null,
+    apiKeys: [
+      { id: 'k7', name: 'Production Key', key: 'ak_vlc_prod_xxxxxxxxxxxxx', permissions: ['read', 'write'], status: 'revoked', requestsToday: 0, requestsMonth: 0, createdAt: '2024-09-05', lastUsed: '2025-11-15T16:45:00' },
+    ],
+    apiUsage: { requestsToday: 0, requestsMonth: 0, webhooksConfigured: 1, integrationsActive: [] },
   },
   {
     id: '5',
@@ -111,6 +149,8 @@ const mockTenants: Tenant[] = [
     mrr: 0,
     lastActivity: '2025-10-30T11:00:00',
     logoUrl: null,
+    apiKeys: [],
+    apiUsage: { requestsToday: 0, requestsMonth: 0, webhooksConfigured: 0, integrationsActive: [] },
   },
 ];
 
@@ -475,6 +515,74 @@ export default function TenantsPage() {
                     {selectedTenant.mrr > 0 ? `€${selectedTenant.mrr}/mes` : 'Trial Gratuito'}
                   </span>
                 </div>
+              </div>
+
+              {/* API Usage Section */}
+              <div className="bg-slate-900 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-white font-medium flex items-center gap-2">
+                    <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    Uso de API
+                  </h3>
+                  <span className="text-xs text-slate-500">{selectedTenant.apiKeys.length} API Keys</span>
+                </div>
+
+                {/* API Stats */}
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="bg-slate-800 rounded p-3 text-center">
+                    <p className="text-lg font-bold text-blue-400">{selectedTenant.apiUsage.requestsToday.toLocaleString()}</p>
+                    <p className="text-xs text-slate-500">Requests Hoy</p>
+                  </div>
+                  <div className="bg-slate-800 rounded p-3 text-center">
+                    <p className="text-lg font-bold text-green-400">{selectedTenant.apiUsage.requestsMonth.toLocaleString()}</p>
+                    <p className="text-xs text-slate-500">Requests/Mes</p>
+                  </div>
+                  <div className="bg-slate-800 rounded p-3 text-center">
+                    <p className="text-lg font-bold text-purple-400">{selectedTenant.apiUsage.webhooksConfigured}</p>
+                    <p className="text-xs text-slate-500">Webhooks</p>
+                  </div>
+                </div>
+
+                {/* Integrations */}
+                {selectedTenant.apiUsage.integrationsActive.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs text-slate-500 mb-2">Integraciones Activas</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedTenant.apiUsage.integrationsActive.map((integration) => (
+                        <span key={integration} className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-xs">
+                          {integration}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* API Keys List */}
+                {selectedTenant.apiKeys.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-500 mb-2">API Keys</p>
+                    <div className="space-y-2">
+                      {selectedTenant.apiKeys.map((apiKey) => (
+                        <div key={apiKey.id} className="flex items-center justify-between bg-slate-800 rounded p-2">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${apiKey.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
+                            <span className="text-sm text-white">{apiKey.name}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs text-slate-500 font-mono">{apiKey.key.substring(0, 20)}...</span>
+                            <span className="text-xs text-slate-400">{apiKey.requestsToday} req/día</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedTenant.apiKeys.length === 0 && (
+                  <p className="text-center text-slate-500 text-sm py-2">Sin API Keys configuradas</p>
+                )}
               </div>
 
               <div className="flex gap-3">

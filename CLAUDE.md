@@ -77,6 +77,14 @@ METODOLOGIA SOLARIA/        # Complete methodology docs
 - ✅ **SSH Access**: Use `~/.ssh/cepcomunicacion` for Hetzner server
 - ✅ **Database Operations**: Execute directly on PostgreSQL via SSH
 - ✅ **Service Management**: Restart/reload services as needed (PM2, Nginx, PostgreSQL)
+
+#### CTO Preferences (MEMORIZED)
+- ✅ **URL Access on Changes**: After any visual/UI modification, automatically open the browser with the URL for direct verification
+- ✅ **Direct Verification**: Don't just show screenshots - provide live access via `open http://...`
+- ✅ **Local Dev URLs**:
+  - ACADEMIX Admin: http://localhost:3001
+  - CEP CMS: http://localhost:3002
+  - Production: http://46.62.222.138
 - ✅ **Error Handling**: Auto-fix or document errors, never wait for user input
 - ✅ **Verification**: Auto-verify all operations (tests, builds, deployments)
 
@@ -573,3 +581,6 @@ These patterns can inform the React/TailwindCSS implementation but are not part 
 **Production URL:** http://46.62.222.138
 **CMS Dashboard:** http://46.62.222.138/admin (Payload CMS)
 **API Endpoint:** http://46.62.222.138/api (REST + GraphQL)
+- la clave ssh es cepcomunicacion que ya existe y la hemos utilizado atneriromente
+- docuementa estas d
+- docuemnta estas versiones y compatibiliades para no cambiarlas
