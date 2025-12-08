@@ -37,24 +37,71 @@ import {
   Eye,
   UserCog,
   CreditCard,
+  // Campus Virtual icons
+  Play,
+  Video,
+  ClipboardCheck,
+  FileUp,
+  Award,
+  Bell,
+  Layers,
+  Folder,
+  // Section icons
+  TrendingUp,
+  Wallet,
+  CheckCircle,
+  ClipboardList,
 } from 'lucide-react'
 import Link from 'next/link'
 import NextImage from 'next/image'
 import { usePathname } from 'next/navigation'
 import { MenuItem } from '@/types'
 
+// Section definition with icon
+interface SectionConfig {
+  title: string
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+  color: string
+}
+
 // Menu structure with sections
-// Section: null = no separator, 'CEP FORMACIÓN' or 'CEP COMUNICACIÓN' = show separator before item
 interface MenuItemWithSection extends MenuItem {
   sectionBefore?: string
 }
 
+// Section configurations with unique icons
+const sectionConfigs: Record<string, SectionConfig> = {
+  'GESTIÓN ACADÉMICA': {
+    title: 'GESTIÓN ACADÉMICA',
+    icon: GraduationCap,
+    color: '#F2014B',
+  },
+  'GESTIÓN COMERCIAL': {
+    title: 'GESTIÓN COMERCIAL',
+    icon: TrendingUp,
+    color: '#F2014B',
+  },
+  'CAMPUS VIRTUAL': {
+    title: 'CAMPUS VIRTUAL',
+    icon: Monitor,
+    color: '#F2014B',
+  },
+  'GESTIÓN ADMINISTRATIVA': {
+    title: 'GESTIÓN ADMINISTRATIVA',
+    icon: Shield,
+    color: '#F2014B',
+  },
+}
+
 const menuItems: MenuItemWithSection[] = [
+  // ===== DASHBOARD (Sin sección) =====
   {
     title: 'Dashboard',
     icon: LayoutDashboard,
     url: '/',
   },
+
+  // ===== GESTIÓN ACADÉMICA =====
   {
     title: 'Programación',
     icon: Calendar,
@@ -105,6 +152,18 @@ const menuItems: MenuItemWithSection[] = [
     ],
   },
   {
+    title: 'Alumnos Matriculados',
+    icon: ClipboardList,
+    items: [
+      { title: 'Lista de Alumnos', icon: Users, url: '/academico/alumnos' },
+      { title: 'Calificaciones', icon: CheckCircle, url: '/academico/calificaciones' },
+      { title: 'Asistencias', icon: ClipboardCheck, url: '/academico/asistencias' },
+      { title: 'Permisos', icon: FileText, url: '/academico/permisos' },
+    ],
+  },
+
+  // ===== GESTIÓN COMERCIAL =====
+  {
     title: 'Marketing',
     icon: Megaphone,
     sectionBefore: 'GESTIÓN COMERCIAL',
@@ -133,11 +192,7 @@ const menuItems: MenuItemWithSection[] = [
           { title: 'Todos los Cursos Web', icon: Globe, url: '/web/cursos' },
           { title: 'Privados Web', icon: Lock, url: '/web/cursos?tipo=privados' },
           { title: 'Ocupados Web', icon: Briefcase, url: '/web/cursos?tipo=ocupados' },
-          {
-            title: 'Desempleados Web',
-            icon: Building2,
-            url: '/web/cursos?tipo=desempleados',
-          },
+          { title: 'Desempleados Web', icon: Building2, url: '/web/cursos?tipo=desempleados' },
           { title: 'Teleformación Web', icon: Monitor, url: '/web/cursos?tipo=teleformacion' },
         ],
       },
@@ -152,11 +207,7 @@ const menuItems: MenuItemWithSection[] = [
       { title: 'Noticias/Blog', icon: Newspaper, url: '/contenido/blog' },
       { title: 'Páginas', icon: FileEdit, url: '/contenido/paginas' },
       { title: 'FAQs', icon: HelpCircle, url: '/contenido/faqs' },
-      {
-        title: 'Testimonios',
-        icon: MessageSquareQuote,
-        url: '/contenido/testimonios',
-      },
+      { title: 'Testimonios', icon: MessageSquareQuote, url: '/contenido/testimonios' },
       { title: 'Formularios', icon: FileInput, url: '/contenido/formularios' },
       { title: 'Medios', icon: Image, url: '/contenido/medios' },
       { title: 'Visitantes', icon: Eye, url: '/contenido/visitantes' },
@@ -166,6 +217,67 @@ const menuItems: MenuItemWithSection[] = [
     title: 'Analíticas',
     icon: BarChart3,
     url: '/analiticas',
+  },
+
+  // ===== CAMPUS VIRTUAL =====
+  {
+    title: 'Panel Campus',
+    icon: Play,
+    url: '/campus',
+    sectionBefore: 'CAMPUS VIRTUAL',
+  },
+  {
+    title: 'Estructura de Cursos',
+    icon: Layers,
+    items: [
+      { title: 'Módulos y Lecciones', icon: Folder, url: '/campus/cursos' },
+      { title: 'Materiales', icon: FileUp, url: '/campus/materiales' },
+    ],
+  },
+  {
+    title: 'Alumnos Inscritos',
+    icon: Users,
+    items: [
+      { title: 'Mis Alumnos', icon: Users, url: '/campus/alumnos' },
+      { title: 'Progreso', icon: BarChart3, url: '/campus/alumnos/progreso' },
+      { title: 'Participación', icon: MessageSquareQuote, url: '/campus/alumnos/participacion' },
+    ],
+  },
+  {
+    title: 'Clases en Vivo',
+    icon: Video,
+    items: [
+      { title: 'Sesiones Programadas', icon: Calendar, url: '/campus/sesiones' },
+      { title: 'Grabaciones', icon: Play, url: '/campus/grabaciones' },
+    ],
+  },
+  {
+    title: 'Tareas y Entregas',
+    icon: ClipboardCheck,
+    url: '/campus/tareas',
+  },
+  {
+    title: 'Anuncios',
+    icon: Bell,
+    url: '/campus/anuncios',
+  },
+  {
+    title: 'Certificados',
+    icon: Award,
+    url: '/campus/certificados',
+  },
+
+  // ===== GESTIÓN ADMINISTRATIVA =====
+  {
+    title: 'Alumnos - Facturación',
+    icon: Wallet,
+    sectionBefore: 'GESTIÓN ADMINISTRATIVA',
+    items: [
+      { title: 'Cobros Pendientes', icon: CreditCard, url: '/admin/alumnos/cobros' },
+      { title: 'Historial de Pagos', icon: FileText, url: '/admin/alumnos/pagos' },
+      { title: 'Facturas', icon: FileEdit, url: '/admin/alumnos/facturas' },
+      { title: 'Descuentos y Becas', icon: Award, url: '/admin/alumnos/descuentos' },
+    ],
   },
   {
     title: 'Administración',
@@ -301,6 +413,41 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
     )
   }
 
+  // Section separator component with icon
+  const renderSectionSeparator = (sectionName: string) => {
+    const config = sectionConfigs[sectionName]
+    if (!config) return null
+
+    const SectionIcon = config.icon
+
+    return (
+      <li className="pt-4 pb-2 overflow-hidden">
+        <div className={`relative flex items-center ${isCollapsed ? 'justify-center' : 'justify-start px-3'}`}>
+          {/* Section Icon - always visible and centered when collapsed */}
+          <div
+            className={`flex items-center transition-all duration-300 ease-in-out ${
+              isCollapsed ? 'justify-center w-full' : 'gap-2'
+            }`}
+          >
+            <SectionIcon
+              className="h-4 w-4 shrink-0"
+              style={{ color: config.color }}
+            />
+            {/* Text label - fades out when collapsed */}
+            <span
+              className={`text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 ease-in-out ${
+                isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+              }`}
+              style={{ color: config.color }}
+            >
+              {sectionName}
+            </span>
+          </div>
+        </div>
+      </li>
+    )
+  }
+
   return (
     <div className="flex h-full flex-col overflow-hidden bg-card text-sidebar-foreground">
       {/* Header - Logo + Text - Smooth transition */}
@@ -335,29 +482,10 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
             const hasSubItems = item.items && item.items.length > 0
             const isOpen = openSections.includes(item.title)
 
-            // Section separator component - CEP Magenta color (#F2014B) with smooth transition
-            const SectionSeparator = item.sectionBefore ? (
-              <li className="pt-4 pb-2 overflow-hidden">
-                <div className="relative flex items-center justify-center">
-                  {/* Text label - fades out when collapsed */}
-                  <span
-                    className={`px-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 ease-in-out ${
-                      isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
-                    }`}
-                    style={{ color: '#F2014B' }}
-                  >
-                    {item.sectionBefore}
-                  </span>
-                  {/* Line separator - fades in when collapsed */}
-                  <div
-                    className={`w-8 border-t transition-all duration-300 ease-in-out ${
-                      isCollapsed ? 'opacity-100' : 'opacity-0 w-0'
-                    }`}
-                    style={{ borderColor: '#F2014B' }}
-                  />
-                </div>
-              </li>
-            ) : null
+            // Section separator
+            const SectionSeparator = item.sectionBefore
+              ? renderSectionSeparator(item.sectionBefore)
+              : null
 
             if (!hasSubItems) {
               return (

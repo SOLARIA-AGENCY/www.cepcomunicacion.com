@@ -34,6 +34,9 @@ const payloadAdminPaths = [
   '/admin',  // Native Payload CMS admin panel
 ]
 
+// DEV_AUTH_BYPASS: Skip all authentication in development
+const DEV_AUTH_BYPASS = true
+
 function getCorsHeaders(origin: string | null) {
   const headers: Record<string, string> = {
     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
@@ -54,6 +57,11 @@ function getCorsHeaders(origin: string | null) {
 }
 
 export function middleware(request: NextRequest) {
+  // Bypass all auth when DEV_AUTH_BYPASS is enabled
+  if (DEV_AUTH_BYPASS) {
+    return NextResponse.next()
+  }
+
   const { pathname } = request.nextUrl
   const origin = request.headers.get('origin')
 

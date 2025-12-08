@@ -145,6 +145,45 @@ export const Tenants: CollectionConfig = {
       ],
     },
 
+    // ===== MODULES (Feature Flags) =====
+    {
+      name: 'modules',
+      type: 'group',
+      label: 'Módulos Contratados',
+      admin: {
+        description: 'Módulos principales habilitados para este tenant. Campus Virtual es un addon facturable.',
+      },
+      fields: [
+        {
+          name: 'gestionAcademica',
+          type: 'checkbox',
+          label: 'Gestión Académica',
+          defaultValue: true,
+          admin: {
+            description: 'Cursos, Ciclos, Convocatorias, Matrículas, Alumnos',
+          },
+        },
+        {
+          name: 'marketing',
+          type: 'checkbox',
+          label: 'Marketing',
+          defaultValue: true,
+          admin: {
+            description: 'Leads, Campañas, Analíticas, Creatividades',
+          },
+        },
+        {
+          name: 'campusVirtual',
+          type: 'checkbox',
+          label: 'Campus Virtual (Addon)',
+          defaultValue: false,
+          admin: {
+            description: '⭐ Portal alumno: cursos, materiales, clases en vivo, tareas, certificados',
+          },
+        },
+      ],
+    },
+
     // ===== SETTINGS =====
     {
       name: 'settings',
@@ -178,7 +217,10 @@ export const Tenants: CollectionConfig = {
         {
           name: 'features',
           type: 'group',
-          label: 'Funcionalidades',
+          label: 'Funcionalidades Detalladas',
+          admin: {
+            description: 'Control granular de funcionalidades dentro de los módulos',
+          },
           fields: [
             {
               name: 'enableLeads',
