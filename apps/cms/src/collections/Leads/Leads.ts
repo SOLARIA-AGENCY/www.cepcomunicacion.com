@@ -13,6 +13,7 @@ import {
   triggerLeadCreatedJob,
 } from './hooks';
 import { spanishPhoneRegex } from './Leads.validation';
+import { tenantField, isSuperAdmin, getUserTenantId } from '../../access/tenantAccess';
 
 /**
  * Leads Collection - GDPR Compliant Lead Management
@@ -570,6 +571,46 @@ export const Leads: CollectionConfig = {
       access: {
         read: () => true,
         update: () => false, // Only hooks can set this automatically
+      },
+    },
+
+    /**
+     * Tenant - Multi-tenant support
+     * Associates lead with a specific academy/organization
+     * Auto-assigned based on campaign or form source
+     */
+    {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      required: false, // Public submissions may not have tenant initially
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Academia/Organización propietaria',
+        condition: (data: any, siblingData: any, { user }: { user: any }) => {
+          return isSuperAdmin(user);
+        },
+      },
+      access: {
+        read: () => true,
+        update: ({ req }) => isSuperAdmin(req.user),
+      },
+      hooks: {
+        beforeChange: [
+          ({ req, value }: { req: any; value: any }) => {
+            // If value is set (by SuperAdmin), use it
+            if (value) return value;
+
+            // Otherwise, use user's tenant if authenticated
+            if (req.user) {
+              const tenantId = getUserTenantId(req.user);
+              return tenantId || value;
+            }
+
+            return value;
+          },
+        ],
       },
     },
   ],

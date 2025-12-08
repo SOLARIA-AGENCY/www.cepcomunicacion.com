@@ -11,6 +11,7 @@ import {
   DollarSign,
   Target
 } from 'lucide-react'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 
 export default function AnaliticasPage() {
   // Datos mockup de KPIs
@@ -93,6 +94,12 @@ export default function AnaliticasPage() {
 
   return (
     <div className="space-y-6 p-8">
+      {/* Mock Data Banner */}
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente integración con GA4, Meta Pixel y APIs de analytics."
+      />
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Analíticas y Métricas</h1>
@@ -101,13 +108,13 @@ export default function AnaliticasPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <select className="px-4 py-2 border border-gray-200 rounded-lg text-sm bg-white">
+          <select className="px-4 py-2 border border-border rounded-lg text-sm bg-card text-foreground">
             <option>Últimos 7 días</option>
             <option>Últimos 30 días</option>
             <option>Últimos 90 días</option>
             <option>Este año</option>
           </select>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
+          <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-sm font-medium">
             Exportar Datos
           </button>
         </div>
@@ -159,7 +166,7 @@ export default function AnaliticasPage() {
                     {source.visits.toLocaleString()} visitas ({source.percentage}%)
                   </span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div
                     className={`${source.color} h-2 rounded-full transition-all`}
                     style={{ width: `${source.percentage}%` }}
@@ -190,12 +197,12 @@ export default function AnaliticasPage() {
               </thead>
               <tbody>
                 {topCourses.map((course, idx) => (
-                  <tr key={idx} className="border-b last:border-0 hover:bg-gray-50">
+                  <tr key={idx} className="border-b border-border last:border-0 hover:bg-muted/50">
                     <td className="py-3 px-4 text-sm">{course.name}</td>
                     <td className="py-3 px-4 text-sm text-right">{course.visits.toLocaleString()}</td>
                     <td className="py-3 px-4 text-sm text-right">{course.conversions}</td>
                     <td className="py-3 px-4 text-sm text-right">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-600 dark:text-green-400">
                         {course.rate}
                       </span>
                     </td>
@@ -228,7 +235,7 @@ export default function AnaliticasPage() {
               </thead>
               <tbody>
                 {campaigns.map((campaign, idx) => (
-                  <tr key={idx} className="border-b last:border-0 hover:bg-gray-50">
+                  <tr key={idx} className="border-b border-border last:border-0 hover:bg-muted/50">
                     <td className="py-3 px-4 text-sm font-medium">{campaign.name}</td>
                     <td className="py-3 px-4 text-sm text-right">{campaign.clicks.toLocaleString()}</td>
                     <td className="py-3 px-4 text-sm text-right">{campaign.conversions}</td>
@@ -237,8 +244,8 @@ export default function AnaliticasPage() {
                     <td className="py-3 px-4 text-sm text-right">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         campaign.status === 'Activa'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-green-500/20 text-green-600 dark:text-green-400'
+                          : 'bg-muted text-muted-foreground'
                       }`}>
                         {campaign.status}
                       </span>

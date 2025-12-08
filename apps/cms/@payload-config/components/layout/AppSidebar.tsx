@@ -35,6 +35,8 @@ import {
   Globe,
   FileInput,
   Eye,
+  UserCog,
+  CreditCard,
 } from 'lucide-react'
 import Link from 'next/link'
 import NextImage from 'next/image'
@@ -172,6 +174,8 @@ const menuItems: MenuItemWithSection[] = [
     items: [
       { title: 'Usuarios', icon: Users, url: '/administracion/usuarios' },
       { title: 'Roles y Permisos', icon: Shield, url: '/administracion/roles' },
+      { title: 'Impersonar Usuario', icon: UserCog, url: '/administracion/impersonar' },
+      { title: 'Suscripción', icon: CreditCard, url: '/administracion/suscripcion' },
       { title: 'Registro de Actividad', icon: FileText, url: '/administracion/actividad' },
     ],
   },
@@ -303,13 +307,16 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
       {/* Header - Logo + Text - Smooth transition */}
       <div className="flex h-16 items-center border-b border-sidebar-border px-4 overflow-hidden">
         <div className={`flex items-center w-full transition-all duration-300 ease-in-out ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <NextImage
-            src={logoUrl}
-            alt={academyName}
-            width={36}
-            height={36}
-            className="w-9 h-9 object-contain flex-shrink-0"
-          />
+          {/* White background wrapper for dark mode logo visibility */}
+          <div className="w-9 h-9 rounded-md bg-white flex items-center justify-center flex-shrink-0 p-0.5">
+            <NextImage
+              src={logoUrl}
+              alt={academyName}
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain"
+            />
+          </div>
           <span
             className={`text-lg font-semibold text-sidebar-foreground whitespace-nowrap transition-all duration-300 ease-in-out ${
               isCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'w-auto opacity-100'
@@ -360,9 +367,9 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                   <li>
                     <Link
                       href={item.url!}
-                      className={`flex items-center rounded-md px-3 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                      className={`flex items-center rounded-md py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
                         isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''
-                      } ${isCollapsed ? 'justify-center' : 'gap-3'}`}
+                      } ${isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'}`}
                       title={isCollapsed ? item.title : undefined}
                     >
                       <Icon className="h-5 w-5 shrink-0" style={{ color: '#F2014B' }} />
@@ -385,8 +392,8 @@ export function AppSidebar({ isCollapsed = false, onToggle }: AppSidebarProps) {
                 <li>
                   <button
                     onClick={() => toggleSection(item.title)}
-                    className={`w-full flex items-center rounded-md px-3 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                      isCollapsed ? 'justify-center' : 'gap-3'
+                    className={`w-full flex items-center rounded-md py-2 text-sm transition-all duration-300 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                      isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'
                     }`}
                     title={isCollapsed ? item.title : undefined}
                   >

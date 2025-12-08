@@ -14,6 +14,7 @@ import {
   captureCompletionSnapshot,
 } from './hooks';
 import { VALID_WEEKDAYS, VALID_STATUSES } from './CourseRuns.validation';
+import { tenantField } from '../../access/tenantAccess';
 
 /**
  * CourseRuns Collection - Course Instance Management
@@ -532,6 +533,12 @@ export const CourseRuns: CollectionConfig = {
         update: () => false, // Immutable after creation
       },
     },
+
+    /**
+     * Tenant - Multi-tenant support
+     * Associates course run with a specific academy/organization
+     */
+    tenantField,
   ],
 
   /**

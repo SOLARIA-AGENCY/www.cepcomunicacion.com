@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 import { Button } from '@payload-config/components/ui/button'
 import { Input } from '@payload-config/components/ui/input'
 import { Badge } from '@payload-config/components/ui/badge'
@@ -201,6 +202,12 @@ export default function AlumnosPage() {
 
   return (
     <div className="space-y-6">
+      {/* Mock Data Banner */}
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente conexión con API de Alumnos."
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">

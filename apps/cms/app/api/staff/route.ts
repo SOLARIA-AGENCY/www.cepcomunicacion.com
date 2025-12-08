@@ -3,8 +3,8 @@ import postgres from 'postgres';
 import { getPayloadHMR } from '@payloadcms/next/utilities';
 import configPromise from '@payload-config';
 
-// PostgreSQL connection
-const sql = postgres(process.env.DATABASE_URI || 'postgres://cepcomunicacion:wGWxjMYsUWSBvlqw2K9KU2BKUI=@localhost:5432/cepcomunicacion');
+// PostgreSQL connection - MUST use environment variable
+const sql = postgres(process.env.DATABASE_URI!);
 
 /**
  * GET /api/staff?type=instructor|administrative&campus=X&status=active

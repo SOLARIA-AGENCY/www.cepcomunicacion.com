@@ -1,3 +1,9 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Visual-First Development: Bypass TypeScript build errors during UI development phase
@@ -86,30 +92,17 @@ const nextConfig = {
     // ppr: true,
   },
 
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize bundle splitting
-    if (!isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        minSize: 20000,
-        maxSize: 244000,
-        cacheGroups: {
-          // Separate vendor chunks
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-            priority: 10,
-          },
-          // Common components
-          common: {
-            minChunks: 2,
-            priority: 5,
-            reuseExistingChunk: true,
-          },
-        },
-      }
+  // Webpack adjustments
+  webpack: (config) => {
+    // Add path alias resolution matching tsconfig.json paths
+    // @payload-config (exact) -> ./src/payload.config.ts (Payload CMS config)
+    // @payload-config/* -> ./@payload-config/* (UI components, lib, etc.)
+    // @/* -> ./* (root-level imports)
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@payload-config$': path.resolve(__dirname, './src/payload.config.ts'),
+      '@payload-config': path.resolve(__dirname, './@payload-config'),
+      '@': path.resolve(__dirname, '.'),
     }
     return config
   },

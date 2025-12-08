@@ -1,10 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@payload-config/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
+import { PageHeader } from '@payload-config/components/ui/PageHeader'
 import { Button } from '@payload-config/components/ui/button'
 import { Badge } from '@payload-config/components/ui/badge'
-import { MapPin, Plus, DoorOpen, Users, BookOpen, Phone, Mail, Clock } from 'lucide-react'
+import { MapPin, DoorOpen, Users, BookOpen, Phone, Mail, Clock } from 'lucide-react'
 import { SedeListItem } from '@payload-config/components/ui/SedeListItem'
 import { ViewToggle } from '@payload-config/components/ui/ViewToggle'
 import { useViewPreference } from '@payload-config/hooks/useViewPreference'
@@ -78,22 +80,29 @@ export default function SedesPage() {
 
   return (
     <div className="space-y-6">
+      {/* Mock Data Banner */}
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente conexión con API de Sedes."
+      />
+
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-            <MapPin className="h-6 w-6 text-primary" />
+      <PageHeader
+        title="Sedes"
+        description={`${sedesData.length} centros educativos`}
+        icon={MapPin}
+        showAddButton
+        addButtonText="Nueva Sede"
+        onAdd={handleAdd}
+        filters={
+          <div className="flex items-center justify-between w-full">
+            <p className="text-sm text-muted-foreground">
+              {sedesData.length} {sedesData.length === 1 ? 'sede' : 'sedes'}
+            </p>
+            <ViewToggle view={view} onViewChange={setView} />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Sedes</h1>
-            <p className="text-muted-foreground mt-1">{sedesData.length} centros educativos</p>
-          </div>
-        </div>
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nueva Sede
-        </Button>
-      </div>
+        }
+      />
 
       {/* Global Stats */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -137,16 +146,6 @@ export default function SedesPage() {
             <div className="text-2xl font-bold">{totalStats.profesores}</div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* View Toggle */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {sedesData.length} {sedesData.length === 1 ? 'sede' : 'sedes'}
-        </p>
-        <div className="hidden lg:block">
-          <ViewToggle view={view} onViewChange={setView} />
-        </div>
       </div>
 
       {/* Sedes Grid o Lista */}

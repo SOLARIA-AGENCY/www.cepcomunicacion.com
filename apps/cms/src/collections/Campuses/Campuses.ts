@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload';
 import { canManageCampuses } from './access/canManageCampuses';
 import { campusSchema, formatValidationErrors } from './Campuses.validation';
+import { tenantField, tenantFilteredAccess, isSuperAdmin } from '../../access/tenantAccess';
 
 /**
  * Campuses Collection
@@ -209,6 +210,13 @@ export const Campuses: CollectionConfig = {
         };
       },
     },
+
+    /**
+     * Tenant - Multi-tenant support
+     * Associates campus with a specific academy/organization
+     * Auto-assigned based on user's tenant on creation
+     */
+    tenantField,
   ],
   hooks: {
     beforeValidate: [

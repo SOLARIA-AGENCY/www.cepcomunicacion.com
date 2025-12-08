@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
 import { Button } from '@payload-config/components/ui/button'
 import { Plus, TrendingUp, Users, MousePointer, DollarSign } from 'lucide-react'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 
 export default function CampanasPage() {
   const campaigns = [
@@ -56,6 +57,12 @@ export default function CampanasPage() {
 
   return (
     <div className="p-6 space-y-6">
+      {/* Mock Data Banner */}
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente integración con Meta Ads API y Google Ads."
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -137,10 +144,10 @@ export default function CampanasPage() {
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                         campaign.status === 'Activa'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-500/20 text-green-600 dark:text-green-400'
                           : campaign.status === 'Pausada'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-purple-100 text-purple-800'
+                          ? 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400'
+                          : 'bg-purple-500/20 text-purple-600 dark:text-purple-400'
                       }`}
                     >
                       {campaign.status}

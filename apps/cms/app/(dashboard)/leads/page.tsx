@@ -3,6 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { MockupTable } from '@payload-config/components/mockup/MockupTable'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 
 export default function LeadsPage() {
   const columns = ['Nombre', 'Email', 'Teléfono', 'Estado', 'Origen', 'Fecha Registro']
@@ -59,7 +60,11 @@ export default function LeadsPage() {
   ]
 
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-6">
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente integración con formularios web y Meta Ads."
+      />
       <MockupTable
         title="Gestión de Leads"
         description="Control y seguimiento de leads capturados desde formularios, campañas y canales digitales"

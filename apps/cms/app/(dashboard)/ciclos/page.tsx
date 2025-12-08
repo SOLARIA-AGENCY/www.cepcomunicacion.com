@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import { Card } from '@/components/ui/card'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
+import { PageHeader } from '@payload-config/components/ui/PageHeader'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,7 +16,6 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { useRouter } from 'next/navigation'
 import {
-  Plus,
   Search,
   GraduationCap,
   Users,
@@ -364,19 +365,21 @@ export default function TodosLosCiclosPage() {
 
   return (
     <div className="space-y-8 p-8">
+      {/* Mock Data Banner */}
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente conexión con API de Ciclos Formativos."
+      />
+
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Todos los Ciclos Formativos</h1>
-          <p className="text-muted-foreground mt-2">
-            Gestión completa de ciclos de Grado Medio y Grado Superior
-          </p>
-        </div>
-        <Button className="bg-[#ff2014] hover:bg-[#ff2014]/90">
-          <Plus className="mr-2 h-4 w-4" />
-          Nuevo Ciclo Formativo
-        </Button>
-      </div>
+      <PageHeader
+        title="Ciclos Formativos"
+        description="Gestión completa de ciclos de Grado Medio y Grado Superior"
+        icon={GraduationCap}
+        showAddButton
+        addButtonText="Nuevo Ciclo"
+        onAdd={() => router.push('/ciclos/nuevo')}
+      />
 
       {/* Stats Cards */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">

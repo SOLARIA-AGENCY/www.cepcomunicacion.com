@@ -27,12 +27,13 @@ import { FAQs } from './collections/FAQs/FAQs';
 import { Media } from './collections/Media';
 import { AuditLogs } from './collections/AuditLogs/AuditLogs';
 import { Staff } from './collections/Staff/Staff';
+import { Tenants } from './collections/Tenants/Tenants';
 // import { SEOMetadata } from './collections/SEOMetadata/SEOMetadata';
 
 // Export factory function for lazy evaluation (ESM + --env-file compatibility)
 // Ensures process.env is read AFTER environment variables are loaded
 export const getPayloadConfig = () => buildConfig({
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3002',
   admin: {
     user: Users.slug, // CRITICAL: Specify auth collection
     meta: {
@@ -41,8 +42,11 @@ export const getPayloadConfig = () => buildConfig({
   },
   collections: [
     // Collections will be added here as they are implemented following TDD methodology
-    // Core entities
+    // ===== SYSTEM (Multi-tenant) =====
+    Tenants, // Multi-tenant support - Academies/Organizations
     Users, // IMPORTANT: Users collection MUST be first for auth to work properly
+
+    // ===== Core entities =====
     Cycles,
     Campuses,
     AreasFormativas, // ✅ Knowledge areas for course categorization
@@ -90,7 +94,7 @@ export const getPayloadConfig = () => buildConfig({
       // Enable statement caching for repeated queries
       statement_timeout: 30000,   // 30s max query time
     },
-    push: false, // CRITICAL: Disable Drizzle interactive schema push prompts in dev mode
+    push: false, // DISABLED: Schema already created
     migrationDir: path.resolve(__dirname, '../migrations'),
   }),
   plugins: [
@@ -112,11 +116,15 @@ export const getPayloadConfig = () => buildConfig({
   ],
   cors: [
     'http://localhost:3000', // React frontend
-    process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
+    'http://localhost:3002', // CMS dashboard
+    'http://localhost:3003', // ACADEMIX admin portal
+    process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3002',
   ],
   csrf: [
     'http://localhost:3000',
-    process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
+    process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3002',
   ],
 });
 

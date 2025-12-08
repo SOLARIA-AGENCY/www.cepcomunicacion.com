@@ -1,356 +1,493 @@
 'use client'
+
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@payload-config/components/ui/card'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 import { Button } from '@payload-config/components/ui/button'
-import { Shield, ChevronDown, ChevronUp, Users, CheckCircle, XCircle, Eye } from 'lucide-react'
+import { Badge } from '@payload-config/components/ui/badge'
+import { Switch } from '@payload-config/components/ui/switch'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@payload-config/components/ui/table'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@payload-config/components/ui/tabs'
+import {
+  Shield,
+  Users,
+  Eye,
+  Edit,
+  Trash2,
+  Plus,
+  Check,
+  X,
+  BookOpen,
+  GraduationCap,
+  Building2,
+  FileText,
+  Megaphone,
+  BarChart3,
+  Settings,
+  User,
+  Lock,
+  Unlock,
+  Info,
+} from 'lucide-react'
 
-interface Permission {
-  id: string
-  name: string
-  description: string
-  category: string
-}
-
-interface Role {
-  name: string
-  permissions: string[]
-  icon: typeof Shield
-  users: Array<{ id: number; name: string; email: string; active: boolean }>
-  color: string
-  description: string
-}
-
-const ALL_PERMISSIONS: Permission[] = [
-  // Cursos
-  { id: 'courses.view', name: 'Ver Cursos', description: 'Acceso de lectura a cursos', category: 'Cursos' },
-  { id: 'courses.create', name: 'Crear Cursos', description: 'Crear nuevos cursos', category: 'Cursos' },
-  { id: 'courses.edit', name: 'Editar Cursos', description: 'Modificar cursos existentes', category: 'Cursos' },
-  { id: 'courses.delete', name: 'Eliminar Cursos', description: 'Eliminar cursos', category: 'Cursos' },
-  { id: 'courses.publish', name: 'Publicar Cursos', description: 'Publicar/despublicar cursos', category: 'Cursos' },
-  
-  // Staff
-  { id: 'staff.view', name: 'Ver Staff', description: 'Acceso de lectura al personal', category: 'Staff' },
-  { id: 'staff.create', name: 'Crear Staff', description: 'Añadir nuevo personal', category: 'Staff' },
-  { id: 'staff.edit', name: 'Editar Staff', description: 'Modificar datos del personal', category: 'Staff' },
-  { id: 'staff.delete', name: 'Eliminar Staff', description: 'Eliminar personal', category: 'Staff' },
-  
-  // Leads
-  { id: 'leads.view', name: 'Ver Leads', description: 'Acceso a contactos y leads', category: 'Leads' },
-  { id: 'leads.create', name: 'Crear Leads', description: 'Añadir nuevos leads', category: 'Leads' },
-  { id: 'leads.edit', name: 'Editar Leads', description: 'Modificar leads', category: 'Leads' },
-  { id: 'leads.export', name: 'Exportar Leads', description: 'Exportar datos de leads', category: 'Leads' },
-  
-  // Campañas
-  { id: 'campaigns.view', name: 'Ver Campañas', description: 'Acceso a campañas de marketing', category: 'Campañas' },
-  { id: 'campaigns.create', name: 'Crear Campañas', description: 'Crear nuevas campañas', category: 'Campañas' },
-  { id: 'campaigns.edit', name: 'Editar Campañas', description: 'Modificar campañas', category: 'Campañas' },
-  { id: 'campaigns.analytics', name: 'Analytics', description: 'Ver análisis de campañas', category: 'Campañas' },
-  
-  // Configuración
-  { id: 'config.view', name: 'Ver Configuración', description: 'Acceso a configuración', category: 'Configuración' },
-  { id: 'config.edit', name: 'Editar Configuración', description: 'Modificar configuración', category: 'Configuración' },
-  { id: 'config.apis', name: 'Gestionar APIs', description: 'Configurar APIs e integraciones', category: 'Configuración' },
-  
-  // Usuarios
-  { id: 'users.view', name: 'Ver Usuarios', description: 'Acceso a lista de usuarios', category: 'Usuarios' },
-  { id: 'users.create', name: 'Crear Usuarios', description: 'Añadir nuevos usuarios', category: 'Usuarios' },
-  { id: 'users.edit', name: 'Editar Usuarios', description: 'Modificar usuarios', category: 'Usuarios' },
-  { id: 'users.delete', name: 'Eliminar Usuarios', description: 'Eliminar usuarios', category: 'Usuarios' },
-  { id: 'users.roles', name: 'Gestionar Roles', description: 'Asignar y modificar roles', category: 'Usuarios' },
-  
-  // Sistema
-  { id: 'system.audit', name: 'Registro de Auditoría', description: 'Ver logs del sistema', category: 'Sistema' },
-  { id: 'system.backup', name: 'Backups', description: 'Gestionar copias de seguridad', category: 'Sistema' },
+// Definición de roles del sistema
+const rolesData = [
+  {
+    id: 'admin',
+    nombre: 'Admin',
+    descripcion: 'Acceso total al sistema. Puede gestionar todos los aspectos incluyendo usuarios, configuración y facturación.',
+    usuarios: 2,
+    color: 'bg-red-100 text-red-800',
+    icon: Shield,
+    editable: false,
+  },
+  {
+    id: 'gestor',
+    nombre: 'Gestor',
+    descripcion: 'Gestiona contenido académico, cursos, ciclos y convocatorias. No accede a facturación ni configuración avanzada.',
+    usuarios: 3,
+    color: 'bg-blue-100 text-blue-800',
+    icon: Users,
+    editable: true,
+  },
+  {
+    id: 'marketing',
+    nombre: 'Marketing',
+    descripcion: 'Acceso a campañas, leads, creatividades y analíticas. No puede modificar contenido académico.',
+    usuarios: 2,
+    color: 'bg-purple-100 text-purple-800',
+    icon: Megaphone,
+    editable: true,
+  },
+  {
+    id: 'asesor',
+    nombre: 'Asesor',
+    descripcion: 'Gestiona leads asignados, matrículas y seguimiento de alumnos potenciales.',
+    usuarios: 2,
+    color: 'bg-amber-100 text-amber-800',
+    icon: User,
+    editable: true,
+  },
+  {
+    id: 'lectura',
+    nombre: 'Lectura',
+    descripcion: 'Solo puede visualizar información. No puede crear, editar ni eliminar ningún registro.',
+    usuarios: 1,
+    color: 'bg-gray-100 text-gray-800',
+    icon: Eye,
+    editable: true,
+  },
 ]
 
+// Matriz de permisos
+const permisosMatrix = {
+  modulos: [
+    { id: 'dashboard', nombre: 'Dashboard', icon: BarChart3 },
+    { id: 'cursos', nombre: 'Cursos', icon: BookOpen },
+    { id: 'ciclos', nombre: 'Ciclos', icon: GraduationCap },
+    { id: 'sedes', nombre: 'Sedes', icon: Building2 },
+    { id: 'leads', nombre: 'Leads', icon: FileText },
+    { id: 'campanas', nombre: 'Campañas', icon: Megaphone },
+    { id: 'analiticas', nombre: 'Analíticas', icon: BarChart3 },
+    { id: 'usuarios', nombre: 'Usuarios', icon: Users },
+    { id: 'configuracion', nombre: 'Configuración', icon: Settings },
+  ],
+  acciones: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+  permisos: {
+    admin: {
+      dashboard: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      cursos: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      ciclos: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      sedes: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      leads: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      campanas: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      analiticas: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      usuarios: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      configuracion: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+    },
+    gestor: {
+      dashboard: ['Ver'],
+      cursos: ['Ver', 'Crear', 'Editar'],
+      ciclos: ['Ver', 'Crear', 'Editar'],
+      sedes: ['Ver'],
+      leads: ['Ver'],
+      campanas: [],
+      analiticas: ['Ver'],
+      usuarios: [],
+      configuracion: [],
+    },
+    marketing: {
+      dashboard: ['Ver'],
+      cursos: ['Ver'],
+      ciclos: ['Ver'],
+      sedes: ['Ver'],
+      leads: ['Ver', 'Crear', 'Editar'],
+      campanas: ['Ver', 'Crear', 'Editar', 'Eliminar'],
+      analiticas: ['Ver'],
+      usuarios: [],
+      configuracion: [],
+    },
+    asesor: {
+      dashboard: ['Ver'],
+      cursos: ['Ver'],
+      ciclos: ['Ver'],
+      sedes: ['Ver'],
+      leads: ['Ver', 'Editar'],
+      campanas: [],
+      analiticas: [],
+      usuarios: [],
+      configuracion: [],
+    },
+    lectura: {
+      dashboard: ['Ver'],
+      cursos: ['Ver'],
+      ciclos: ['Ver'],
+      sedes: ['Ver'],
+      leads: ['Ver'],
+      campanas: ['Ver'],
+      analiticas: ['Ver'],
+      usuarios: [],
+      configuracion: [],
+    },
+  } as Record<string, Record<string, string[]>>,
+}
+
 export default function RolesPage() {
-  const [expandedRole, setExpandedRole] = useState<string | null>(null)
-  const [showUsersModal, setShowUsersModal] = useState(false)
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null)
+  const [selectedRole, setSelectedRole] = useState('admin')
 
-  const roles: Role[] = [
-    {
-      name: 'Admin',
-      permissions: ALL_PERMISSIONS.map(p => p.id),
-      icon: Shield,
-      color: 'bg-red-500',
-      description: 'Acceso total al sistema sin restricciones',
-      users: [
-        { id: 1, name: 'Admin User', email: 'admin@cepcomunicacion.com', active: true },
-      ],
-    },
-    {
-      name: 'Gestor',
-      permissions: [
-        'courses.view', 'courses.create', 'courses.edit', 'courses.publish',
-        'staff.view', 'staff.create', 'staff.edit',
-        'leads.view', 'leads.create', 'leads.edit',
-        'config.view',
-      ],
-      icon: Shield,
-      color: 'bg-blue-500',
-      description: 'Gestión de cursos, personal y contenido',
-      users: [
-        { id: 2, name: 'Juan García', email: 'juan@cepcomunicacion.com', active: true },
-        { id: 4, name: 'Carlos Ruiz', email: 'carlos@cepcomunicacion.com', active: true },
-      ],
-    },
-    {
-      name: 'Marketing',
-      permissions: [
-        'campaigns.view', 'campaigns.create', 'campaigns.edit', 'campaigns.analytics',
-        'leads.view', 'leads.create', 'leads.edit', 'leads.export',
-        'courses.view',
-      ],
-      icon: Shield,
-      color: 'bg-purple-500',
-      description: 'Gestión de campañas, leads y análisis',
-      users: [
-        { id: 3, name: 'María López', email: 'maria@cepcomunicacion.com', active: true },
-      ],
-    },
-    {
-      name: 'Asesor',
-      permissions: [
-        'leads.view', 'leads.create', 'leads.edit',
-        'courses.view',
-        'staff.view',
-      ],
-      icon: Shield,
-      color: 'bg-green-500',
-      description: 'Gestión de leads y consulta de información',
-      users: [
-        { id: 5, name: 'Ana Martínez', email: 'ana@cepcomunicacion.com', active: true },
-        { id: 6, name: 'Pedro Sánchez', email: 'pedro@cepcomunicacion.com', active: false },
-      ],
-    },
-    {
-      name: 'Lectura',
-      permissions: [
-        'courses.view',
-        'staff.view',
-        'leads.view',
-        'campaigns.view',
-      ],
-      icon: Shield,
-      color: 'bg-gray-500',
-      description: 'Solo lectura en todas las secciones',
-      users: [],
-    },
-  ]
-
-  const toggleRole = (roleName: string) => {
-    setExpandedRole(expandedRole === roleName ? null : roleName)
-  }
-
-  const groupPermissionsByCategory = (permissionIds: string[]) => {
-    const grouped: Record<string, Permission[]> = {}
-    permissionIds.forEach(id => {
-      const permission = ALL_PERMISSIONS.find(p => p.id === id)
-      if (permission) {
-        if (!grouped[permission.category]) {
-          grouped[permission.category] = []
-        }
-        grouped[permission.category].push(permission)
-      }
-    })
-    return grouped
-  }
-
-  const handleViewUsers = (role: Role) => {
-    setSelectedRole(role)
-    setShowUsersModal(true)
-  }
+  const selectedRoleData = rolesData.find((r) => r.id === selectedRole)
+  const selectedPermisos = permisosMatrix.permisos[selectedRole] || {}
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      <div>
-        <h1 className="text-3xl font-bold">Roles y Permisos</h1>
-        <p className="text-muted-foreground">Sistema de control de acceso basado en roles (RBAC)</p>
+    <div className="space-y-6">
+      <MockDataIndicator />
+
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Roles y Permisos</h1>
+          <p className="text-muted-foreground">
+            Sistema de control de acceso basado en roles (RBAC)
+          </p>
+        </div>
+        <Button style={{ backgroundColor: '#F2014B' }}>
+          <Plus className="mr-2 h-4 w-4" />
+          Crear Rol Personalizado
+        </Button>
       </div>
 
-      {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-5">
-        {roles.map((role) => (
-          <Card key={role.name}>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-2 mb-2">
-                <div className={`h-3 w-3 rounded-full ${role.color}`} />
-                <p className="font-medium">{role.name}</p>
+      {/* Info Card */}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <h4 className="font-medium text-blue-900">Sistema de Permisos Granular</h4>
+              <p className="text-sm text-blue-800">
+                Los permisos se heredan jerárquicamente: Admin {'>'} Gestor {'>'} Marketing {'>'} Asesor {'>'} Lectura.
+                Los roles del sistema no pueden eliminarse, pero puedes crear roles personalizados con permisos específicos.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Lista de Roles */}
+        <Card className="lg:col-span-1">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" style={{ color: '#F2014B' }} />
+              Roles del Sistema
+            </CardTitle>
+            <CardDescription>Selecciona un rol para ver sus permisos</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {rolesData.map((rol) => {
+              const Icon = rol.icon
+              return (
+                <button
+                  key={rol.id}
+                  onClick={() => setSelectedRole(rol.id)}
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
+                    selectedRole === rol.id
+                      ? 'bg-primary/10 border-2'
+                      : 'bg-muted/50 hover:bg-muted border-2 border-transparent'
+                  }`}
+                  style={selectedRole === rol.id ? { borderColor: '#F2014B' } : undefined}
+                >
+                  <div className={`h-10 w-10 rounded-full ${rol.color} flex items-center justify-center`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{rol.nombre}</p>
+                      {!rol.editable && (
+                        <Lock className="h-3 w-3 text-muted-foreground" />
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">{rol.usuarios} usuarios</p>
+                  </div>
+                </button>
+              )
+            })}
+          </CardContent>
+        </Card>
+
+        {/* Detalles del Rol */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {selectedRoleData && (
+                  <>
+                    <div className={`h-12 w-12 rounded-full ${selectedRoleData.color} flex items-center justify-center`}>
+                      <selectedRoleData.icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <CardTitle>{selectedRoleData.nombre}</CardTitle>
+                      <CardDescription>{selectedRoleData.descripcion}</CardDescription>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="text-2xl font-bold">{role.users.length}</div>
-              <p className="text-xs text-muted-foreground">usuarios</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              {selectedRoleData?.editable && (
+                <Button variant="outline" size="sm">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Editar Rol
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="matriz" className="space-y-4">
+              <TabsList>
+                <TabsTrigger value="matriz">Matriz de Permisos</TabsTrigger>
+                <TabsTrigger value="usuarios">Usuarios con este Rol</TabsTrigger>
+              </TabsList>
 
-      {/* Roles List */}
-      <div className="space-y-4">
-        {roles.map((role) => {
-          const isExpanded = expandedRole === role.name
-          const groupedPermissions = groupPermissionsByCategory(role.permissions)
-
-          return (
-            <Card key={role.name} className="overflow-hidden">
-              <CardHeader className="cursor-pointer" onClick={() => toggleRole(role.name)}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className={`h-10 w-10 rounded-lg ${role.color} flex items-center justify-center`}>
-                      <role.icon className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="flex items-center gap-2">
-                        {role.name}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          ({role.permissions.length} permisos)
-                        </span>
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{role.description}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {role.users.length > 0 && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleViewUsers(role)
-                        }}
-                      >
-                        <Users className="mr-2 h-4 w-4" />
-                        {role.users.length} {role.users.length === 1 ? 'usuario' : 'usuarios'}
-                      </Button>
-                    )}
-                    {isExpanded ? (
-                      <ChevronUp className="h-5 w-5 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-
-              {isExpanded && (
-                <CardContent className="border-t pt-6">
-                  <div className="space-y-6">
-                    {Object.entries(groupedPermissions).map(([category, permissions]) => (
-                      <div key={category}>
-                        <h4 className="font-medium mb-3 text-sm text-muted-foreground uppercase tracking-wider">
-                          {category}
-                        </h4>
-                        <div className="grid gap-2 md:grid-cols-2">
-                          {permissions.map((permission) => (
-                            <div
-                              key={permission.id}
-                              className="flex items-start gap-3 p-3 border rounded-lg bg-card hover:bg-accent/5 transition-colors"
-                            >
-                              <CheckCircle className="h-5 w-5 text-success shrink-0 mt-0.5" />
-                              <div className="flex-1">
-                                <p className="font-medium text-sm">{permission.name}</p>
-                                <p className="text-xs text-muted-foreground">{permission.description}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-
-                    {role.users.length > 0 && (
-                      <div className="pt-4 border-t">
-                        <h4 className="font-medium mb-3 text-sm">Usuarios con este Rol</h4>
-                        <div className="space-y-2">
-                          {role.users.slice(0, 3).map((user) => (
-                            <div key={user.id} className="flex items-center justify-between p-2 bg-muted/50 rounded">
+              <TabsContent value="matriz" className="space-y-4">
+                <div className="rounded-lg border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/50">
+                        <TableHead className="w-[200px]">Módulo</TableHead>
+                        {permisosMatrix.acciones.map((accion) => (
+                          <TableHead key={accion} className="text-center w-[100px]">
+                            {accion}
+                          </TableHead>
+                        ))}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {permisosMatrix.modulos.map((modulo) => {
+                        const Icon = modulo.icon
+                        const moduloPermisos = selectedPermisos[modulo.id] || []
+                        return (
+                          <TableRow key={modulo.id}>
+                            <TableCell>
                               <div className="flex items-center gap-2">
-                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                  <span className="text-xs font-medium">{user.name.charAt(0)}</span>
+                                <Icon className="h-4 w-4 text-muted-foreground" />
+                                <span className="font-medium">{modulo.nombre}</span>
+                              </div>
+                            </TableCell>
+                            {permisosMatrix.acciones.map((accion) => {
+                              const tienePermiso = moduloPermisos.includes(accion)
+                              return (
+                                <TableCell key={accion} className="text-center">
+                                  {selectedRoleData?.editable ? (
+                                    <Switch
+                                      checked={tienePermiso}
+                                      className="data-[state=checked]:bg-green-500"
+                                    />
+                                  ) : tienePermiso ? (
+                                    <div className="flex justify-center">
+                                      <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
+                                        <Check className="h-4 w-4 text-green-600" />
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="flex justify-center">
+                                      <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center">
+                                        <X className="h-4 w-4 text-gray-400" />
+                                      </div>
+                                    </div>
+                                  )}
+                                </TableCell>
+                              )
+                            })}
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {selectedRoleData?.editable && (
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline">Cancelar Cambios</Button>
+                    <Button style={{ backgroundColor: '#F2014B' }}>
+                      Guardar Permisos
+                    </Button>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="usuarios" className="space-y-4">
+                <div className="rounded-lg border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Usuario</TableHead>
+                        <TableHead>Sede</TableHead>
+                        <TableHead>Último Acceso</TableHead>
+                        <TableHead className="text-right">Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedRole === 'admin' && (
+                        <>
+                          <TableRow>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                                  <User className="h-4 w-4" />
                                 </div>
                                 <div>
-                                  <p className="text-sm font-medium">{user.name}</p>
-                                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                                  <p className="font-medium">Carlos Pérez</p>
+                                  <p className="text-sm text-muted-foreground">admin@cepformacion.com</p>
                                 </div>
                               </div>
-                              {user.active ? (
-                                <CheckCircle className="h-4 w-4 text-success" />
-                              ) : (
-                                <XCircle className="h-4 w-4 text-muted-foreground" />
-                              )}
-                            </div>
-                          ))}
-                          {role.users.length > 3 && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full"
-                              onClick={() => handleViewUsers(role)}
-                            >
-                              Ver todos ({role.users.length})
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              )}
-            </Card>
-          )
-        })}
+                            </TableCell>
+                            <TableCell>Todas</TableCell>
+                            <TableCell className="text-muted-foreground">Hoy 10:30</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        </>
+                      )}
+                      {selectedRole === 'gestor' && (
+                        <>
+                          <TableRow>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                                  <User className="h-4 w-4" />
+                                </div>
+                                <div>
+                                  <p className="font-medium">María García López</p>
+                                  <p className="text-sm text-muted-foreground">maria.garcia@cepformacion.com</p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>CEP Norte</TableCell>
+                            <TableCell className="text-muted-foreground">Hoy 09:15</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                                  <User className="h-4 w-4" />
+                                </div>
+                                <div>
+                                  <p className="font-medium">Pedro Sánchez López</p>
+                                  <p className="text-sm text-muted-foreground">pedro.sanchez@cepformacion.com</p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>CEP Norte</TableCell>
+                            <TableCell className="text-muted-foreground">Hoy 08:30</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        </>
+                      )}
+                      {(selectedRole !== 'admin' && selectedRole !== 'gestor') && (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                            {selectedRoleData?.usuarios} usuarios tienen este rol asignado
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Users Modal */}
-      {showUsersModal && selectedRole && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className={`h-8 w-8 rounded-lg ${selectedRole.color} flex items-center justify-center`}>
-                  <selectedRole.icon className="h-4 w-4 text-white" />
-                </div>
-                Usuarios con rol {selectedRole.name}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">{selectedRole.description}</p>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {selectedRole.users.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No hay usuarios con este rol</p>
-                </div>
-              ) : (
-                selectedRole.users.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="font-medium">{user.name.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">{user.name}</p>
-                        <p className="text-sm text-muted-foreground">{user.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {user.active ? (
-                        <span className="text-xs px-2 py-1 bg-success/10 text-success rounded">Activo</span>
-                      ) : (
-                        <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded">Inactivo</span>
-                      )}
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))
-              )}
-              <div className="flex justify-end pt-4">
-                <Button onClick={() => setShowUsersModal(false)}>Cerrar</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* Comparativa de Roles */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Comparativa Rápida de Roles</CardTitle>
+          <CardDescription>Resumen de accesos por rol</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Capacidad</TableHead>
+                  {rolesData.map((rol) => (
+                    <TableHead key={rol.id} className="text-center">
+                      <Badge className={rol.color}>{rol.nombre}</Badge>
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  { cap: 'Gestionar cursos y ciclos', perms: [true, true, false, false, false] },
+                  { cap: 'Gestionar leads', perms: [true, false, true, true, false] },
+                  { cap: 'Crear campañas', perms: [true, false, true, false, false] },
+                  { cap: 'Ver analíticas', perms: [true, true, true, false, true] },
+                  { cap: 'Gestionar usuarios', perms: [true, false, false, false, false] },
+                  { cap: 'Configuración del sistema', perms: [true, false, false, false, false] },
+                  { cap: 'Acceso multi-sede', perms: [true, false, false, false, false] },
+                ].map((row, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell className="font-medium">{row.cap}</TableCell>
+                    {row.perms.map((perm, i) => (
+                      <TableCell key={i} className="text-center">
+                        {perm ? (
+                          <Check className="h-5 w-5 text-green-500 mx-auto" />
+                        ) : (
+                          <X className="h-5 w-5 text-gray-300 mx-auto" />
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

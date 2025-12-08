@@ -39,7 +39,9 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground overscroll-none">
+    <html lang="es">
+      <body>
+        <div className="flex h-screen overflow-hidden bg-background text-foreground overscroll-none">
         {/* Sidebar */}
         <aside
           className={`fixed left-0 top-0 z-40 h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300 ${
@@ -146,8 +148,8 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          {/* Scrollable Main Content - sin padding aquí, lo maneja cada página */}
-          <main className="flex-1 overflow-y-auto overscroll-contain">{children}</main>
+          {/* Scrollable Main Content */}
+          <main className="flex-1 overflow-y-auto overscroll-contain p-4 md:p-6">{children}</main>
 
           {/* Footer */}
           <DashboardFooter />
@@ -155,6 +157,8 @@ export default function DashboardLayout({
 
         {/* Chatbot Widget - Fixed Position */}
         <ChatbotWidget />
-      </div>
+        </div>
+      </body>
+    </html>
   )
 }

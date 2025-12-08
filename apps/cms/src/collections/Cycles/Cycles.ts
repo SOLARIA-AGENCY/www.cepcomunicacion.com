@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload';
 import { canManageCycles } from './access/canManageCycles';
 import { cycleSchema, formatValidationErrors } from './Cycles.validation';
+import { tenantField, tenantFilteredAccess } from '../../access/tenantAccess';
 
 /**
  * Cycles Collection
@@ -115,6 +116,12 @@ export const Cycles: CollectionConfig = {
         return true;
       },
     },
+
+    /**
+     * Tenant - Multi-tenant support
+     * Associates cycle with a specific academy/organization
+     */
+    tenantField,
   ],
   hooks: {
     beforeValidate: [

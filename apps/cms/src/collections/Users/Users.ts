@@ -169,12 +169,13 @@ export const Users: CollectionConfig = {
     {
       name: 'password',
       type: 'text',
-      required: true,
+      required: ({ operation }) => operation === 'create',
       admin: {
         description: 'Password (min 8 chars, must include uppercase, lowercase, number, special char)',
       },
-      validate: (val: unknown): true | string => {
-        if (!val) return 'Password is required';
+      validate: (val: unknown, { operation }): true | string => {
+        // On create, password is mandatory; on update, allow empty (e.g., login stats updates)
+        if (!val) return operation === 'create' ? 'Password is required' : true;
 
         try {
           passwordSchema.parse(val);
@@ -207,15 +208,27 @@ export const Users: CollectionConfig = {
     /**
      * Role - Determines access level and permissions
      * Field-level access control prevents non-admins from changing roles
+     *
+     * MULTI-TENANT HIERARCHY:
+     * - superadmin (Level 6): Access ALL tenants, system configuration
+     * - admin (Level 5): Full access WITHIN assigned tenant
+     * - gestor (Level 4): Manage content & users within tenant
+     * - marketing (Level 3): Create marketing content within tenant
+     * - asesor (Level 2): Read client data within tenant
+     * - lectura (Level 1): Read-only access within tenant
      */
     {
       name: 'role',
       type: 'select',
-      required: true,
+      required: ({ operation }) => operation === 'create',
       defaultValue: 'lectura',
       options: [
         {
-          label: 'Admin (Level 5) - Full system access',
+          label: 'SuperAdmin (Level 6) - Multi-tenant system access',
+          value: 'superadmin'
+        },
+        {
+          label: 'Admin (Level 5) - Full tenant access',
           value: 'admin'
         },
         {
@@ -241,11 +254,49 @@ export const Users: CollectionConfig = {
       },
       /**
        * Field-level access control for role changes
-       * Only admin can change roles
+       * Only superadmin/admin can change roles
        */
       access: {
         read: () => true, // Everyone can see roles
-        update: ({ req }) => !!req.user && req.user.role === 'admin', // Only admin can change roles
+        update: ({ req }) => !!req.user && (req.user.role === 'superadmin' || req.user.role === 'admin'),
+      },
+    },
+
+    /**
+     * Tenant - Multi-tenant association
+     * Links user to a specific academy/organization
+     * SuperAdmin users do NOT have a tenant (they access all)
+     */
+    {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      required: false, // SuperAdmin doesn't have tenant
+      index: true,
+      admin: {
+        description: 'Academia/Organización asignada',
+        position: 'sidebar',
+        // Only show for non-superadmin users
+        condition: (data) => data?.role !== 'superadmin',
+      },
+      /**
+       * Field-level access control for tenant assignment
+       * Only superadmin can assign/change tenants
+       */
+      access: {
+        read: () => true,
+        update: ({ req }) => !!req.user && req.user.role === 'superadmin',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, siblingData }) => {
+            // SuperAdmin should NOT have a tenant
+            if (siblingData?.role === 'superadmin') {
+              return null;
+            }
+            return value;
+          },
+        ],
       },
     },
 

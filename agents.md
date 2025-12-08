@@ -247,7 +247,11 @@ Before committing any Tailwind configuration changes:
 
 ## Additional Agent Patterns
 
-(To be added as patterns are discovered)
+- Branching for Campus Virtual (2025-12-08):
+  - Use dedicated branch `feature/campus-virtual` in a separate worktree to avoid the dirty state on `main`.
+  - Worktree path: `../www.cepcomunicacion.com-campus-virtual` (relative to repo root).
+  - Do development, commits, and push from that worktree/branch only; leave `main` untouched until ready to merge.
+  - If you need a change from the dirty worktree, cherry-pick or copy selectively into the clean worktree—do not mix untracked files into the new branch.
 
 ---
 

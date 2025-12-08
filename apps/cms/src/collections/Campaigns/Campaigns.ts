@@ -18,6 +18,7 @@ import {
   validateStatusWorkflow,
   validateBudget,
 } from './Campaigns.validation';
+import { tenantField } from '../../access/tenantAccess';
 
 /**
  * Campaigns Collection - Marketing Campaign Tracking & Analytics
@@ -556,6 +557,12 @@ export const Campaigns: CollectionConfig = {
       },
       // SECURITY Layer 3 (Business Logic): trackCampaignCreator hook enforces immutability
     },
+
+    /**
+     * Tenant - Multi-tenant support
+     * Associates campaign with a specific academy/organization
+     */
+    tenantField,
   ],
 
   /**

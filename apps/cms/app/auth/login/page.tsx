@@ -94,6 +94,7 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Required for cookies to be set
         body: JSON.stringify({
           email: credentials.email,
           password: credentials.password,

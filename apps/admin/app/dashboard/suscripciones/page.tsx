@@ -8,6 +8,17 @@ interface Plan {
   slug: 'starter' | 'professional' | 'enterprise';
   price: number;
   billingCycle: 'monthly' | 'yearly';
+  modules: {
+    gestionAcademica: boolean;
+    marketing: boolean;
+    campusVirtual: boolean;
+    isAddonCampus?: boolean;
+  };
+  addons?: {
+    extraCoursePrice?: number; // €/curso extra/mes
+    extraUserPrice?: number;   // €/usuario extra/mes
+    extraSitePrice?: number;   // €/sede extra/mes
+  };
   features: {
     users: number | 'unlimited';
     sites: number | 'unlimited';
@@ -20,9 +31,9 @@ interface Plan {
     customBranding: boolean;
     sso: boolean;
   };
-  isPopular: boolean;
-  activeSubscriptions: number;
-  revenue: number;
+    isPopular: boolean;
+    activeSubscriptions: number;
+    revenue: number;
 }
 
 interface Subscription {
@@ -42,38 +53,58 @@ interface Subscription {
 const mockPlans: Plan[] = [
   {
     id: '1',
-    name: 'Starter',
+    name: 'Starter (Gestión + Marketing)',
     slug: 'starter',
-    price: 99,
+    price: 199,
     billingCycle: 'monthly',
+    modules: {
+      gestionAcademica: true,
+      marketing: true,
+      campusVirtual: false,
+    },
+    addons: {
+      extraCoursePrice: 5,
+      extraUserPrice: 9,
+      extraSitePrice: 29,
+    },
     features: {
       users: 5,
-      sites: 1,
-      storage: '5 GB',
+      sites: 1, // sedes
+      storage: '10 GB',
       courses: 20,
-      leads: 500,
+      leads: 2000,
       support: 'Email',
-      analytics: false,
-      api: false,
+      analytics: true,
+      api: true,
       customBranding: false,
       sso: false,
     },
     isPopular: false,
     activeSubscriptions: 8,
-    revenue: 792,
+    revenue: 1592,
   },
   {
     id: '2',
-    name: 'Professional',
+    name: 'Pro Campus (incluye Campus Virtual)',
     slug: 'professional',
-    price: 299,
+    price: 299, // Campus Virtual mínimo 299
     billingCycle: 'monthly',
+    modules: {
+      gestionAcademica: true,
+      marketing: true,
+      campusVirtual: true,
+    },
+    addons: {
+      extraCoursePrice: 3,
+      extraUserPrice: 7,
+      extraSitePrice: 39,
+    },
     features: {
-      users: 15,
-      sites: 3,
-      storage: '25 GB',
+      users: 10,
+      sites: 3, // sedes
+      storage: '50 GB',
       courses: 100,
-      leads: 2500,
+      leads: 7500,
       support: 'Priority',
       analytics: true,
       api: true,
@@ -86,14 +117,24 @@ const mockPlans: Plan[] = [
   },
   {
     id: '3',
-    name: 'Enterprise',
+    name: 'Enterprise Full (Gestión + Marketing + Campus)',
     slug: 'enterprise',
     price: 599,
     billingCycle: 'monthly',
+    modules: {
+      gestionAcademica: true,
+      marketing: true,
+      campusVirtual: true,
+    },
+    addons: {
+      extraCoursePrice: 0,
+      extraUserPrice: 0,
+      extraSitePrice: 0,
+    },
     features: {
       users: 'unlimited',
-      sites: 'unlimited',
-      storage: '100 GB',
+      sites: 'unlimited', // sedes ilimitadas
+      storage: '200 GB',
       courses: 'unlimited',
       leads: 'unlimited',
       support: 'Dedicado 24/7',
@@ -103,8 +144,8 @@ const mockPlans: Plan[] = [
       sso: true,
     },
     isPopular: false,
-    activeSubscriptions: 3,
-    revenue: 1797,
+    activeSubscriptions: 2,
+    revenue: 1198,
   },
 ];
 
@@ -114,7 +155,7 @@ const mockSubscriptions: Subscription[] = [
     tenantId: '1',
     tenantName: 'CEP Formación',
     planId: '2',
-    planName: 'Professional',
+    planName: 'Pro Campus',
     status: 'active',
     currentPeriodStart: '2025-12-01',
     currentPeriodEnd: '2026-01-01',
@@ -140,7 +181,7 @@ const mockSubscriptions: Subscription[] = [
     tenantId: '3',
     tenantName: 'Instituto Barcelona',
     planId: '3',
-    planName: 'Enterprise',
+    planName: 'Enterprise Full',
     status: 'active',
     currentPeriodStart: '2025-12-01',
     currentPeriodEnd: '2026-01-01',
@@ -188,6 +229,31 @@ export default function SuscripcionesPage() {
   const trialCount = subscriptions.filter(s => s.status === 'trial').length;
   const churnRisk = subscriptions.filter(s => s.status === 'past_due' || s.cancelAtPeriodEnd).length;
 
+  const renderModules = (plan: Plan) => {
+    const chip = (label: string, active: boolean) => (
+      <span
+        key={label}
+        className={`px-2 py-1 rounded-full text-xs font-semibold ${
+          active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
+        }`}
+      >
+        {label}
+      </span>
+    );
+    return (
+      <div className="flex flex-wrap gap-2 mt-2">
+        {chip('Gestión Académica', plan.modules.gestionAcademica)}
+        {chip('Marketing', plan.modules.marketing)}
+        {chip('Campus Virtual', plan.modules.campusVirtual)}
+        {plan.modules.isAddonCampus && (
+          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+            Add-on
+          </span>
+        )}
+      </div>
+    );
+  };
+
   const getStatusBadge = (status: Subscription['status']) => {
     const styles = {
       active: 'bg-green-100 text-green-800',
@@ -219,6 +285,30 @@ export default function SuscripcionesPage() {
   const formatFeatureValue = (value: number | string | 'unlimited') => {
     if (value === 'unlimited') return '∞';
     return value.toString();
+  };
+
+  const renderAddons = (plan: Plan) => {
+    if (!plan.addons) return null;
+    const { extraCoursePrice, extraUserPrice, extraSitePrice } = plan.addons;
+    const rows = [
+      extraCoursePrice !== undefined && `Cursos extra: €${extraCoursePrice}/curso`,
+      extraUserPrice !== undefined && `Usuarios extra: €${extraUserPrice}/usuario`,
+      extraSitePrice !== undefined && `Sedes extra: €${extraSitePrice}/sede`,
+    ].filter(Boolean) as string[];
+    if (!rows.length) return null;
+    return (
+      <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800/80 p-3 text-xs text-slate-200">
+        <p className="font-semibold text-slate-100 mb-1">Módulos de expansión</p>
+        <ul className="space-y-1">
+          {rows.map((r, idx) => (
+            <li key={idx} className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+              {r}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   };
 
   return (
@@ -343,6 +433,8 @@ export default function SuscripcionesPage() {
                       <span className="text-slate-400 ml-1">/mes</span>
                     </div>
 
+                    {renderModules(plan)}
+
                     <div className="mt-6 space-y-3">
                       <div className="flex items-center gap-2 text-sm">
                         <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -398,6 +490,7 @@ export default function SuscripcionesPage() {
                         </svg>
                         <span className={plan.features.sso ? 'text-slate-300' : 'text-slate-500'}>SSO / SAML</span>
                       </div>
+                      {renderAddons(plan)}
                     </div>
 
                     <div className="mt-6 pt-6 border-t border-slate-600">

@@ -166,6 +166,65 @@ Before committing Tailwind configuration changes:
 
 ---
 
+## 🔴 ISSUE-002: Payload Admin CSS Served as `<script>` Tags (CRITICAL)
+
+**Status:** Resolved (2025-12-07)  
+**Occurrences:** 1 (P0)  
+**Severity:** HIGH – Payload admin rendered unstyled due to blocked CSS
+
+### Problem Description
+
+When loading `apps/cms` Payload admin (`/admin`), the browser console showed `Refused to execute script from ".../_next/static/css/*.css" because its MIME type ('text/css') is not executable`.  
+The Payload UI rendered without styles (white background, invisible forms) even though CSS files were emitted and reachable.
+
+### Root Cause
+
+`apps/cms/next.config.js` overrode `config.optimization.splitChunks` on the client build.  
+This custom Webpack config forced CSS assets into the `rootMainFiles` JS bundle list. Next.js blindly emitted every entry in that array as `<script src="...">`, so `.css` files shipped twice: once as `<link>` and once as `<script>`. Browsers rejected executing CSS as JS, which stalled Payload's CSS hydration and produced a race condition where styles frequently failed to attach.
+
+### Resolution
+
+1. Removed the manual `config.optimization.splitChunks` override so Next.js can manage chunking/CSS manifests.  
+   File: `apps/cms/next.config.js` (commit: remove custom splitChunks).
+2. Rebuilt the CMS (`pnpm build` in `apps/cms`) to regenerate manifests.
+3. Verified that `.next/build-manifest.json` now lists only JS files under `rootMainFiles`, while CSS assets live under the `css` arrays for each route.
+
+### Verification Commands
+
+```bash
+cd apps/cms
+pnpm build
+cat .next/build-manifest.json | jq '.rootMainFiles'
+# ✅ should list only *.js entries (no *.css)
+```
+
+Optional runtime check (requires server port access):
+
+```bash
+PORT=3002 pnpm start --port 3002 &
+curl -s http://localhost:3002/admin | grep '<script[^>]*css'
+# ✅ should output nothing
+```
+
+### Prevention
+
+- Avoid overriding `config.optimization.splitChunks` unless mirroring Next.js defaults plus required tweaks.
+- If custom Webpack optimizations are needed, snapshot the emitted manifests and ensure `.css` files stay inside the `css` arrays, not JS lists.
+- Add a CI lint/check that fails if any entry in `.next/build-manifest.json.rootMainFiles` matches `*.css`.
+
+### Related Files
+
+- `apps/cms/next.config.js`
+- `apps/cms/.next/build-manifest.json` (verification artifact)
+- `apps/cms/.next/app-build-manifest.json`
+
+### Follow-up Tasks
+
+- [ ] Add automated test/CI script to ensure no `.css` entries appear inside `rootMainFiles`.
+- [ ] Document this constraint inside `CLAUDE.md` / `agents.md` for future agents touching Webpack config.
+
+---
+
 ## Issue Template (For Future Critical Issues)
 
 ```markdown

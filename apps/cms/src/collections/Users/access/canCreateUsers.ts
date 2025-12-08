@@ -6,13 +6,15 @@ import type { Access } from 'payload';
  * Determines who can create new user records.
  *
  * Rules:
- * - Admin: Can create any user (including other admins)
- * - Gestor: Can create non-admin users only
+ * - SuperAdmin: Can create ANY user in ANY tenant (including other superadmins)
+ * - Admin: Can create any user within their tenant (including other admins, NOT superadmin)
+ * - Gestor: Can create non-admin users within their tenant only
  * - Marketing/Asesor/Lectura: Cannot create users
  *
  * Security Notes:
- * - Prevents privilege escalation by limiting who can create admins
- * - Only admins can create other admin accounts
+ * - Only SuperAdmin can create other SuperAdmin accounts
+ * - Prevents privilege escalation by limiting who can create higher roles
+ * - Tenant-aware: Users can only create within their tenant
  *
  * @param req - Payload request object containing authenticated user
  * @param data - User data being created (contains role)
@@ -24,16 +26,25 @@ export const canCreateUsers: Access = ({ req: { user }, data }) => {
     return false;
   }
 
-  // Admin can create any user
-  if (user.role === 'admin') {
+  // SuperAdmin can create ANY user across ALL tenants
+  if (user.role === 'superadmin') {
     return true;
   }
 
-  // Gestor can create non-admin users
+  // Admin can create any user within their tenant (but NOT superadmin)
+  if (user.role === 'admin') {
+    // Admin cannot create superadmin
+    if (data?.role === 'superadmin') {
+      return false;
+    }
+    return true;
+  }
+
+  // Gestor can create non-admin, non-superadmin users within their tenant
   if (user.role === 'gestor') {
-    // Check if trying to create an admin user
-    if (data?.role === 'admin') {
-      return false; // Gestor cannot create admins
+    // Check if trying to create an admin or superadmin user
+    if (data?.role === 'admin' || data?.role === 'superadmin') {
+      return false; // Gestor cannot create admins or superadmins
     }
     return true;
   }

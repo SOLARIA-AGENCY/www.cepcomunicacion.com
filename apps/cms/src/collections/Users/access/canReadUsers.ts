@@ -6,12 +6,14 @@ import type { Access } from 'payload';
  * Determines who can read user records.
  *
  * Rules:
- * - Admin: Can read all users
- * - Gestor: Can read all users
+ * - SuperAdmin: Can read ALL users across ALL tenants
+ * - Admin: Can read all users within their tenant
+ * - Gestor: Can read all users within their tenant
  * - Marketing/Asesor/Lectura: Can only read themselves
  *
  * Implementation:
- * - Returns `true` for admin/gestor (full access)
+ * - Returns `true` for superadmin (global access)
+ * - Returns tenant filter for admin/gestor
  * - Returns query constraint for others (filter to self only)
  *
  * @param req - Payload request object containing authenticated user
@@ -23,9 +25,23 @@ export const canReadUsers: Access = ({ req: { user } }) => {
     return false;
   }
 
-  // Admin and Gestor can read all users
-  if (user.role === 'admin' || user.role === 'gestor') {
+  // SuperAdmin can read ALL users across ALL tenants
+  if (user.role === 'superadmin') {
     return true;
+  }
+
+  // Admin and Gestor can read all users within their tenant
+  if (user.role === 'admin' || user.role === 'gestor') {
+    // If user has a tenant, filter by tenant
+    if (user.tenant) {
+      return {
+        or: [
+          { tenant: { equals: typeof user.tenant === 'object' ? user.tenant.id : user.tenant } },
+          { id: { equals: user.id } }, // Can always see themselves
+        ],
+      };
+    }
+    return true; // Fallback for users without tenant (shouldn't happen)
   }
 
   // Other roles can only read themselves

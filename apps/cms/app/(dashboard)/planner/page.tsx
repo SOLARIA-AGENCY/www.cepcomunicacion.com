@@ -31,6 +31,7 @@ import {
   Printer,
   CheckCircle2,
 } from 'lucide-react'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 // TODO: Fetch from Payload API
 // import { aulasMockData, horariosDetalladosMock, type HorarioDetallado, type Aula } from '@payload-config/data/mockAulas'
 const aulasMockData: any[] = []
@@ -237,9 +238,16 @@ function PlannerVisualPageContent() {
   }
 
   return (
-    <div className="h-screen flex flex-col p-4 bg-gray-50">
+    <div className="h-screen flex flex-col p-4 bg-background">
+      {/* Mock Data Banner */}
+      <MockDataIndicator
+        variant="banner"
+        label="Este módulo usa datos de demostración. Pendiente conexión con API de Programación."
+        className="mb-4"
+      />
+
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+      <div className="bg-card rounded-lg shadow-sm p-4 mb-4 border border-border">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold">Planner Visual - {sedeSeleccionada}</h1>
@@ -268,7 +276,7 @@ function PlannerVisualPageContent() {
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <div className="px-4 py-2 bg-gray-100 rounded-md min-w-[200px] text-center">
+            <div className="px-4 py-2 bg-muted rounded-md min-w-[200px] text-center">
               <div className="flex items-center justify-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="font-semibold">
@@ -417,17 +425,17 @@ function PlannerVisualPageContent() {
           <div className="flex-1 overflow-auto">
             <div className="min-w-max">
               {/* Header con nombres de aulas */}
-              <div className="sticky top-0 z-20 bg-white border-b">
+              <div className="sticky top-0 z-20 bg-card border-b border-border">
                 <div className="flex">
                   {/* Columna de horas */}
-                  <div className="w-16 bg-gray-50 border-r flex-shrink-0 font-semibold text-center py-3">
+                  <div className="w-16 bg-muted border-r border-border flex-shrink-0 font-semibold text-center py-3">
                     Hora
                   </div>
                   {/* Columnas de aulas */}
                   {aulasFiltradas.map((aula) => (
                     <div
                       key={aula.id}
-                      className="border-r flex-shrink-0 p-3 bg-gray-50"
+                      className="border-r border-border flex-shrink-0 p-3 bg-muted"
                       style={{ width: `${ANCHO_COLUMNA_AULA}px` }}
                     >
                       <div className="font-semibold text-sm">{aula.nombre}</div>
@@ -446,9 +454,9 @@ function PlannerVisualPageContent() {
                   const horaNum = parseInt(hora.split(':')[0])
 
                   return (
-                    <div key={hora} className="flex border-b" style={{ height: `${PIXELS_POR_HORA}px` }}>
+                    <div key={hora} className="flex border-b border-border" style={{ height: `${PIXELS_POR_HORA}px` }}>
                       {/* Columna de hora */}
-                      <div className="w-16 bg-gray-50 border-r flex-shrink-0 text-sm font-medium text-center py-2">
+                      <div className="w-16 bg-muted border-r border-border flex-shrink-0 text-sm font-medium text-center py-2">
                         {hora}
                       </div>
                       {/* Columnas de aulas */}
@@ -459,12 +467,12 @@ function PlannerVisualPageContent() {
                         return (
                           <div
                             key={`${hora}-${aula.id}`}
-                            className={`border-r flex-shrink-0 relative transition-colors ${
+                            className={`border-r border-border flex-shrink-0 relative transition-colors ${
                               isDragOver
                                 ? dragValid
-                                  ? 'bg-green-100 border-2 border-green-500'
-                                  : 'bg-red-100 border-2 border-red-500'
-                                : 'bg-white'
+                                  ? 'bg-green-500/20 border-2 border-green-500'
+                                  : 'bg-red-500/20 border-2 border-red-500'
+                                : 'bg-card'
                             }`}
                             style={{ width: `${ANCHO_COLUMNA_AULA}px` }}
                             onDragOver={(e) => handleDragOver(aula.id, horaNum, e)}
@@ -473,7 +481,7 @@ function PlannerVisualPageContent() {
                           >
                             {/* Líneas de 30 minutos */}
                             <div
-                              className="absolute inset-x-0 border-t border-dashed border-gray-200"
+                              className="absolute inset-x-0 border-t border-dashed border-border/50"
                               style={{ top: `${PIXELS_POR_HORA / 2}px` }}
                             />
                             {isDragOver && (

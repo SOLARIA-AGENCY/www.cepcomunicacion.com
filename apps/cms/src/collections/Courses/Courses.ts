@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload';
 import { canManageCourses, canReadCourses, canUpdateCourse } from './access';
 import { validateCourseRelationships, generateSlug } from './hooks';
 import { formatValidationErrors, CourseUpdateSchema } from './Courses.validation';
+import { tenantField, tenantFilteredAccess } from '../../access/tenantAccess';
 
 /**
  * Courses Collection
@@ -455,6 +456,13 @@ export const Courses: CollectionConfig = {
         update: () => false, // SECURITY: Prevent ownership manipulation attacks
       },
     },
+
+    /**
+     * Tenant - Multi-tenant support
+     * Associates course with a specific academy/organization
+     * Auto-assigned based on user's tenant on creation
+     */
+    tenantField,
   ],
 
   /**

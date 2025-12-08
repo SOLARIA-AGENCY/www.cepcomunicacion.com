@@ -1,583 +1,559 @@
 'use client'
+
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@payload-config/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@payload-config/components/ui/card'
+import { MockDataIndicator } from '@payload-config/components/ui/MockDataIndicator'
 import { Button } from '@payload-config/components/ui/button'
 import { Input } from '@payload-config/components/ui/input'
+import { Badge } from '@payload-config/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@payload-config/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@payload-config/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@payload-config/components/ui/dropdown-menu'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@payload-config/components/ui/dialog'
 import { Label } from '@payload-config/components/ui/label'
-import { 
-  Plus, 
-  Shield, 
-  UserCheck, 
-  UserX, 
-  Edit2, 
-  Key, 
-  Smartphone,
+import {
+  Plus,
+  Search,
+  Users,
   Mail,
-  CheckCircle,
-  XCircle,
+  Phone,
+  Building2,
+  Shield,
   Eye,
-  EyeOff,
-  AlertTriangle
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Key,
+  UserPlus,
+  Download,
+  Upload,
+  Lock,
+  Unlock,
+  History,
+  User,
 } from 'lucide-react'
 
-interface User {
-  id: number
-  name: string
-  email: string
-  role: string
-  active: boolean
-  linkedStaff: string | null
-  twoFactorEnabled: boolean
-  lastLogin?: string
+// Mock data de usuarios
+const usuariosData = [
+  {
+    id: '1',
+    nombre: 'Carlos Pérez',
+    email: 'admin@cepformacion.com',
+    telefono: '+34 612 345 001',
+    rol: 'Admin',
+    sede: 'Todas',
+    activo: true,
+    verificado: true,
+    dosFactor: true,
+    ultimoAcceso: '2024-12-07 10:30',
+    fechaCreacion: '2024-01-15',
+  },
+  {
+    id: '2',
+    nombre: 'María García López',
+    email: 'maria.garcia@cepformacion.com',
+    telefono: '+34 612 345 002',
+    rol: 'Gestor',
+    sede: 'CEP Norte',
+    activo: true,
+    verificado: true,
+    dosFactor: true,
+    ultimoAcceso: '2024-12-07 09:15',
+    fechaCreacion: '2024-03-20',
+  },
+  {
+    id: '3',
+    nombre: 'Juan Martínez Ruiz',
+    email: 'juan.martinez@cepformacion.com',
+    telefono: '+34 612 345 003',
+    rol: 'Marketing',
+    sede: 'CEP Santa Cruz',
+    activo: true,
+    verificado: true,
+    dosFactor: false,
+    ultimoAcceso: '2024-12-06 18:30',
+    fechaCreacion: '2024-05-10',
+  },
+  {
+    id: '4',
+    nombre: 'Ana Rodríguez Sánchez',
+    email: 'ana.rodriguez@cepformacion.com',
+    telefono: '+34 612 345 004',
+    rol: 'Asesor',
+    sede: 'CEP Norte',
+    activo: true,
+    verificado: true,
+    dosFactor: false,
+    ultimoAcceso: '2024-12-07 10:45',
+    fechaCreacion: '2024-06-01',
+  },
+  {
+    id: '5',
+    nombre: 'Carlos Fernández Torres',
+    email: 'carlos.fernandez@cepformacion.com',
+    telefono: '+34 612 345 005',
+    rol: 'Asesor',
+    sede: 'CEP Sur',
+    activo: false,
+    verificado: true,
+    dosFactor: false,
+    ultimoAcceso: '2024-11-28 14:20',
+    fechaCreacion: '2024-04-15',
+  },
+  {
+    id: '6',
+    nombre: 'Laura Pérez Gómez',
+    email: 'laura.perez@cepformacion.com',
+    telefono: '+34 612 345 006',
+    rol: 'Lectura',
+    sede: 'CEP Santa Cruz',
+    activo: true,
+    verificado: false,
+    dosFactor: false,
+    ultimoAcceso: '2024-12-05 16:00',
+    fechaCreacion: '2024-11-20',
+  },
+  {
+    id: '7',
+    nombre: 'Pedro Sánchez López',
+    email: 'pedro.sanchez@cepformacion.com',
+    telefono: '+34 612 345 007',
+    rol: 'Gestor',
+    sede: 'CEP Norte',
+    activo: true,
+    verificado: true,
+    dosFactor: true,
+    ultimoAcceso: '2024-12-07 08:30',
+    fechaCreacion: '2024-02-10',
+  },
+  {
+    id: '8',
+    nombre: 'Elena Torres Ruiz',
+    email: 'elena.torres@cepformacion.com',
+    telefono: '+34 612 345 008',
+    rol: 'Marketing',
+    sede: 'Todas',
+    activo: true,
+    verificado: true,
+    dosFactor: true,
+    ultimoAcceso: '2024-12-06 17:45',
+    fechaCreacion: '2024-07-01',
+  },
+]
+
+const rolConfig: Record<string, { color: string; bgColor: string; icon: React.ReactNode }> = {
+  Admin: { color: 'text-red-800', bgColor: 'bg-red-100', icon: <Shield className="h-3 w-3" /> },
+  Gestor: { color: 'text-blue-800', bgColor: 'bg-blue-100', icon: <Users className="h-3 w-3" /> },
+  Marketing: { color: 'text-purple-800', bgColor: 'bg-purple-100', icon: <Users className="h-3 w-3" /> },
+  Asesor: { color: 'text-amber-800', bgColor: 'bg-amber-100', icon: <User className="h-3 w-3" /> },
+  Lectura: { color: 'text-gray-800', bgColor: 'bg-gray-100', icon: <Eye className="h-3 w-3" /> },
 }
 
 export default function UsuariosPage() {
-  const [users, setUsers] = useState<User[]>([
-    { 
-      id: 1, 
-      name: 'Admin User', 
-      email: 'admin@cepcomunicacion.com', 
-      role: 'Admin', 
-      active: true, 
-      linkedStaff: null,
-      twoFactorEnabled: true,
-      lastLogin: '2025-01-15 14:30'
-    },
-    { 
-      id: 2, 
-      name: 'Juan García', 
-      email: 'juan@cepcomunicacion.com', 
-      role: 'Gestor', 
-      active: true, 
-      linkedStaff: 'STAFF-001',
-      twoFactorEnabled: false,
-      lastLogin: '2025-01-15 10:15'
-    },
-    { 
-      id: 3, 
-      name: 'María López', 
-      email: 'maria@cepcomunicacion.com', 
-      role: 'Marketing', 
-      active: true, 
-      linkedStaff: 'STAFF-002',
-      twoFactorEnabled: true,
-      lastLogin: '2025-01-14 16:45'
-    },
-  ])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [rolFilter, setRolFilter] = useState('todos')
+  const [sedeFilter, setSedeFilter] = useState('todas')
+  const [estadoFilter, setEstadoFilter] = useState('todos')
+  const [dialogOpen, setDialogOpen] = useState(false)
 
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [showPasswordModal, setShowPasswordModal] = useState(false)
-  const [show2FAModal, setShow2FAModal] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
-
-  const [newUser, setNewUser] = useState({
-    name: '',
-    email: '',
-    role: 'Lectura',
-    password: '',
-    confirmPassword: '',
+  const filteredUsuarios = usuariosData.filter((usuario) => {
+    const matchesSearch =
+      usuario.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usuario.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesRol = rolFilter === 'todos' || usuario.rol === rolFilter
+    const matchesSede = sedeFilter === 'todas' || usuario.sede === sedeFilter || usuario.sede === 'Todas'
+    const matchesEstado =
+      estadoFilter === 'todos' ||
+      (estadoFilter === 'activo' && usuario.activo) ||
+      (estadoFilter === 'inactivo' && !usuario.activo)
+    return matchesSearch && matchesRol && matchesSede && matchesEstado
   })
 
-  const [passwordForm, setPasswordForm] = useState({
-    current: '',
-    new: '',
-    confirm: '',
-    showCurrent: false,
-    showNew: false,
-    showConfirm: false,
-  })
-
-  const [qrCode] = useState('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/CEPAdmin:user@example.com?secret=BASE32SECRET&issuer=CEPAdmin')
-  const [verificationCode, setVerificationCode] = useState('')
-
-  const roles = ['Admin', 'Gestor', 'Marketing', 'Asesor', 'Lectura']
-
-  const handleCreateUser = () => {
-    if (newUser.password !== newUser.confirmPassword) {
-      alert('Las contraseñas no coinciden')
-      return
-    }
-
-    const user: User = {
-      id: users.length + 1,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
-      active: true,
-      linkedStaff: null,
-      twoFactorEnabled: false,
-    }
-    setUsers([...users, user])
-    setShowCreateModal(false)
-    setNewUser({ name: '', email: '', role: 'Lectura', password: '', confirmPassword: '' })
-    showSuccessToast('Usuario creado correctamente')
-  }
-
-  const handleEditUser = () => {
-    if (!selectedUser) return
-    setUsers(users.map(u => u.id === selectedUser.id ? selectedUser : u))
-    setShowEditModal(false)
-    setSelectedUser(null)
-    showSuccessToast('Usuario actualizado correctamente')
-  }
-
-  const handleChangePassword = () => {
-    if (passwordForm.new !== passwordForm.confirm) {
-      alert('Las contraseñas no coinciden')
-      return
-    }
-    // TODO: Validate current password and update
-    setShowPasswordModal(false)
-    setPasswordForm({ current: '', new: '', confirm: '', showCurrent: false, showNew: false, showConfirm: false })
-    showSuccessToast('Contraseña actualizada correctamente')
-  }
-
-  const handleEnable2FA = () => {
-    if (!selectedUser) return
-    if (verificationCode.length !== 6) {
-      alert('Ingresa el código de 6 dígitos')
-      return
-    }
-    setUsers(users.map(u => 
-      u.id === selectedUser.id ? { ...u, twoFactorEnabled: true } : u
-    ))
-    setShow2FAModal(false)
-    setSelectedUser(null)
-    setVerificationCode('')
-    showSuccessToast('2FA activado correctamente')
-  }
-
-  const handleDisable2FA = (user: User) => {
-    if (confirm('¿Estás seguro de desactivar la autenticación de dos factores?')) {
-      setUsers(users.map(u => 
-        u.id === user.id ? { ...u, twoFactorEnabled: false } : u
-      ))
-      showSuccessToast('2FA desactivado')
-    }
-  }
-
-  const showSuccessToast = (message: string) => {
-    setSuccessMessage(message)
-    setShowSuccess(true)
-    setTimeout(() => setShowSuccess(false), 3000)
+  const estadisticas = {
+    total: usuariosData.length,
+    activos: usuariosData.filter((u) => u.activo).length,
+    con2FA: usuariosData.filter((u) => u.dosFactor).length,
+    pendientesVerificacion: usuariosData.filter((u) => !u.verificado).length,
   }
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="flex justify-between items-start">
+    <div className="space-y-6">
+      <MockDataIndicator />
+
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
-          <p className="text-muted-foreground">Administra usuarios, roles, permisos y seguridad</p>
+          <h1 className="text-3xl font-bold tracking-tight">Usuarios</h1>
+          <p className="text-muted-foreground">
+            Gestión de usuarios y control de acceso
+          </p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Crear Usuario
-        </Button>
-      </div>
-
-      {showSuccess && (
-        <div className="bg-success/10 border border-success/20 text-success px-4 py-3 rounded-lg flex items-center gap-2">
-          <CheckCircle className="h-5 w-5" />
-          <span>{successMessage}</span>
-        </div>
-      )}
-
-      {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.length}</div>
-            <p className="text-xs text-muted-foreground">Total Usuarios</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.filter(u => u.active).length}</div>
-            <p className="text-xs text-muted-foreground">Usuarios Activos</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.filter(u => u.linkedStaff).length}</div>
-            <p className="text-xs text-muted-foreground">Vinculados a Staff</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{users.filter(u => u.twoFactorEnabled).length}</div>
-            <p className="text-xs text-muted-foreground">Con 2FA Activo</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Users List */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {users.map((user) => (
-          <Card key={user.id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="flex items-center gap-2">
-                    {user.name}
-                    {user.active ? (
-                      <CheckCircle className="h-5 w-5 text-success" />
-                    ) : (
-                      <XCircle className="h-5 w-5 text-muted-foreground" />
-                    )}
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">{user.email}</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-primary" />
-                  <span className="font-medium">{user.role}</span>
-                </div>
-                {user.linkedStaff && (
-                  <div className="flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                    <UserCheck className="h-3 w-3" />
-                    {user.linkedStaff}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <Smartphone className="h-4 w-4" />
-                  <span className="text-muted-foreground">2FA:</span>
-                  {user.twoFactorEnabled ? (
-                    <span className="text-success font-medium">Activado</span>
-                  ) : (
-                    <span className="text-warning font-medium">Desactivado</span>
-                  )}
-                </div>
-                {user.lastLogin && (
-                  <span className="text-xs text-muted-foreground">
-                    Último acceso: {user.lastLogin}
-                  </span>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 pt-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    setSelectedUser(user)
-                    setShowEditModal(true)
-                  }}
-                >
-                  <Edit2 className="mr-2 h-4 w-4" />
-                  Editar
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    setSelectedUser(user)
-                    setShowPasswordModal(true)
-                  }}
-                >
-                  <Key className="mr-2 h-4 w-4" />
-                  Contraseña
-                </Button>
-              </div>
-
-              <Button 
-                variant={user.twoFactorEnabled ? 'outline' : 'default'}
-                size="sm"
-                className="w-full"
-                onClick={() => {
-                  if (user.twoFactorEnabled) {
-                    handleDisable2FA(user)
-                  } else {
-                    setSelectedUser(user)
-                    setShow2FAModal(true)
-                  }
-                }}
-              >
-                <Smartphone className="mr-2 h-4 w-4" />
-                {user.twoFactorEnabled ? 'Desactivar 2FA' : 'Activar 2FA'}
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <Upload className="mr-2 h-4 w-4" />
+            Importar
+          </Button>
+          <Button variant="outline">
+            <Download className="mr-2 h-4 w-4" />
+            Exportar
+          </Button>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button style={{ backgroundColor: '#F2014B' }}>
+                <UserPlus className="mr-2 h-4 w-4" />
+                Nuevo Usuario
               </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Create User Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Crear Nuevo Usuario</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="create-name">Nombre Completo</Label>
-                <Input
-                  id="create-name"
-                  value={newUser.name}
-                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                  placeholder="Juan Pérez"
-                />
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Crear Nuevo Usuario</DialogTitle>
+                <DialogDescription>
+                  Añade un nuevo usuario al sistema. Se enviará un email de verificación automáticamente.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="nombre">Nombre completo</Label>
+                    <Input id="nombre" placeholder="Nombre Apellidos" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder="usuario@academia.com" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rol">Rol</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar rol" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="gestor">Gestor</SelectItem>
+                        <SelectItem value="marketing">Marketing</SelectItem>
+                        <SelectItem value="asesor">Asesor</SelectItem>
+                        <SelectItem value="lectura">Lectura</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="sede">Sede</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar sede" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todas">Todas las sedes</SelectItem>
+                        <SelectItem value="norte">CEP Norte</SelectItem>
+                        <SelectItem value="santacruz">CEP Santa Cruz</SelectItem>
+                        <SelectItem value="sur">CEP Sur</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="telefono">Teléfono (opcional)</Label>
+                  <Input id="telefono" placeholder="+34 600 000 000" />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="create-email">Email</Label>
-                <Input
-                  id="create-email"
-                  type="email"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  placeholder="usuario@cepcomunicacion.com"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="create-role">Rol</Label>
-                <select
-                  id="create-role"
-                  value={newUser.role}
-                  onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                  className="w-full h-10 px-3 rounded border bg-card"
-                >
-                  {roles.map(role => (
-                    <option key={role} value={role}>{role}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="create-password">Contraseña</Label>
-                <Input
-                  id="create-password"
-                  type="password"
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                  placeholder="Mínimo 8 caracteres"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="create-confirm">Confirmar Contraseña</Label>
-                <Input
-                  id="create-confirm"
-                  type="password"
-                  value={newUser.confirmPassword}
-                  onChange={(e) => setNewUser({ ...newUser, confirmPassword: e.target.value })}
-                />
-              </div>
-              <div className="flex gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowCreateModal(false)} className="flex-1">
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancelar
                 </Button>
-                <Button 
-                  onClick={handleCreateUser} 
-                  className="flex-1"
-                  disabled={!newUser.name || !newUser.email || !newUser.password || newUser.password !== newUser.confirmPassword}
-                >
+                <Button onClick={() => setDialogOpen(false)} style={{ backgroundColor: '#F2014B' }}>
                   Crear Usuario
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
-      )}
+      </div>
 
-      {/* Edit User Modal */}
-      {showEditModal && selectedUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Editar Usuario</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-name">Nombre Completo</Label>
-                <Input
-                  id="edit-name"
-                  value={selectedUser.name}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-email">Email</Label>
-                <Input
-                  id="edit-email"
-                  type="email"
-                  value={selectedUser.email}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-role">Rol</Label>
-                <select
-                  id="edit-role"
-                  value={selectedUser.role}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                  className="w-full h-10 px-3 rounded border bg-card"
-                >
-                  {roles.map(role => (
-                    <option key={role} value={role}>{role}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
-                <input
-                  type="checkbox"
-                  id="edit-active"
-                  checked={selectedUser.active}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, active: e.target.checked })}
-                  className="rounded"
-                />
-                <Label htmlFor="edit-active" className="cursor-pointer">Usuario activo</Label>
-              </div>
-              <div className="flex gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowEditModal(false)} className="flex-1">
-                  Cancelar
-                </Button>
-                <Button onClick={handleEditUser} className="flex-1">
-                  Guardar Cambios
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* Estadísticas */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Usuarios</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{estadisticas.total}</div>
+            <p className="text-xs text-muted-foreground">en el sistema</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Usuarios Activos</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{estadisticas.activos}</div>
+            <p className="text-xs text-muted-foreground">con acceso habilitado</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Con 2FA</CardTitle>
+            <Key className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">{estadisticas.con2FA}</div>
+            <p className="text-xs text-muted-foreground">autenticación doble</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pendientes</CardTitle>
+            <Clock className="h-4 w-4 text-amber-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-amber-600">{estadisticas.pendientesVerificacion}</div>
+            <p className="text-xs text-muted-foreground">sin verificar email</p>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Change Password Modal */}
-      {showPasswordModal && selectedUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Cambiar Contraseña - {selectedUser.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="current-password">Contraseña Actual</Label>
-                <div className="relative">
-                  <Input
-                    id="current-password"
-                    type={passwordForm.showCurrent ? 'text' : 'password'}
-                    value={passwordForm.current}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setPasswordForm({ ...passwordForm, showCurrent: !passwordForm.showCurrent })}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                  >
-                    {passwordForm.showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+      {/* Filtros */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por nombre o email..."
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Select value={rolFilter} onValueChange={setRolFilter}>
+              <SelectTrigger className="w-full md:w-[180px]">
+                <SelectValue placeholder="Rol" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos los roles</SelectItem>
+                <SelectItem value="Admin">Admin</SelectItem>
+                <SelectItem value="Gestor">Gestor</SelectItem>
+                <SelectItem value="Marketing">Marketing</SelectItem>
+                <SelectItem value="Asesor">Asesor</SelectItem>
+                <SelectItem value="Lectura">Lectura</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sedeFilter} onValueChange={setSedeFilter}>
+              <SelectTrigger className="w-full md:w-[180px]">
+                <SelectValue placeholder="Sede" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todas">Todas las sedes</SelectItem>
+                <SelectItem value="CEP Norte">CEP Norte</SelectItem>
+                <SelectItem value="CEP Santa Cruz">CEP Santa Cruz</SelectItem>
+                <SelectItem value="CEP Sur">CEP Sur</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={estadoFilter} onValueChange={setEstadoFilter}>
+              <SelectTrigger className="w-full md:w-[150px]">
+                <SelectValue placeholder="Estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos</SelectItem>
+                <SelectItem value="activo">Activos</SelectItem>
+                <SelectItem value="inactivo">Inactivos</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tabla de usuarios */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" style={{ color: '#F2014B' }} />
+            Listado de Usuarios ({filteredUsuarios.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Usuario</TableHead>
+                <TableHead>Rol</TableHead>
+                <TableHead>Sede</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>2FA</TableHead>
+                <TableHead>Último Acceso</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredUsuarios.map((usuario) => {
+                const config = rolConfig[usuario.rol]
+                return (
+                  <TableRow key={usuario.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                          <User className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{usuario.nombre}</span>
+                          <span className="text-sm text-muted-foreground flex items-center gap-1">
+                            <Mail className="h-3 w-3" />
+                            {usuario.email}
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={`${config.bgColor} ${config.color} hover:${config.bgColor} flex items-center gap-1 w-fit`}>
+                        {config.icon}
+                        {usuario.rol}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="flex items-center gap-1">
+                        <Building2 className="h-4 w-4 text-muted-foreground" />
+                        {usuario.sede}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {usuario.activo ? (
+                        <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Activo
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Inactivo
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {usuario.dosFactor ? (
+                        <Badge variant="outline" className="text-green-600 border-green-300">
+                          <Lock className="h-3 w-3 mr-1" />
+                          Activo
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-muted-foreground">
+                          <Unlock className="h-3 w-3 mr-1" />
+                          No
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        {usuario.ultimoAcceso}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Eye className="mr-2 h-4 w-4" />
+                            Ver perfil
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Key className="mr-2 h-4 w-4" />
+                            Resetear contraseña
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <History className="mr-2 h-4 w-4" />
+                            Ver actividad
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          {usuario.activo ? (
+                            <DropdownMenuItem className="text-amber-600">
+                              <XCircle className="mr-2 h-4 w-4" />
+                              Desactivar
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem className="text-green-600">
+                              <CheckCircle2 className="mr-2 h-4 w-4" />
+                              Activar
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem className="text-destructive">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Eliminar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Info Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Distribución por Rol</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-5">
+            {Object.entries(rolConfig).map(([rol, config]) => {
+              const count = usuariosData.filter((u) => u.rol === rol).length
+              return (
+                <div key={rol} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                  <div className={`h-8 w-8 rounded-full ${config.bgColor} flex items-center justify-center`}>
+                    {config.icon}
+                  </div>
+                  <div>
+                    <p className="font-medium">{rol}</p>
+                    <p className="text-sm text-muted-foreground">{count} usuarios</p>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="new-password">Nueva Contraseña</Label>
-                <div className="relative">
-                  <Input
-                    id="new-password"
-                    type={passwordForm.showNew ? 'text' : 'password'}
-                    value={passwordForm.new}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })}
-                    placeholder="Mínimo 8 caracteres"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setPasswordForm({ ...passwordForm, showNew: !passwordForm.showNew })}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                  >
-                    {passwordForm.showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirmar Nueva Contraseña</Label>
-                <div className="relative">
-                  <Input
-                    id="confirm-password"
-                    type={passwordForm.showConfirm ? 'text' : 'password'}
-                    value={passwordForm.confirm}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setPasswordForm({ ...passwordForm, showConfirm: !passwordForm.showConfirm })}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                  >
-                    {passwordForm.showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-              {passwordForm.new && passwordForm.confirm && passwordForm.new !== passwordForm.confirm && (
-                <div className="bg-destructive/10 border border-destructive/20 p-3 rounded-lg flex items-start gap-2">
-                  <AlertTriangle className="h-4 w-4 text-destructive mt-0.5" />
-                  <p className="text-sm text-destructive">Las contraseñas no coinciden</p>
-                </div>
-              )}
-              <div className="flex gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowPasswordModal(false)} className="flex-1">
-                  Cancelar
-                </Button>
-                <Button 
-                  onClick={handleChangePassword} 
-                  className="flex-1"
-                  disabled={!passwordForm.current || !passwordForm.new || passwordForm.new !== passwordForm.confirm}
-                >
-                  Cambiar Contraseña
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* 2FA Setup Modal */}
-      {show2FAModal && selectedUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Activar Autenticación de Dos Factores</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-sm text-muted-foreground space-y-2">
-                <p>1. Instala una app de autenticación como Google Authenticator o Authy</p>
-                <p>2. Escanea el código QR con la app</p>
-                <p>3. Ingresa el código de 6 dígitos para verificar</p>
-              </div>
-
-              <div className="flex justify-center p-4 bg-white rounded-lg">
-                <img src={qrCode} alt="QR Code" className="w-48 h-48" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="verification-code">Código de Verificación</Label>
-                <Input
-                  id="verification-code"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  placeholder="123456"
-                  className="text-center text-2xl tracking-widest"
-                  maxLength={6}
-                />
-              </div>
-
-              <div className="flex gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShow2FAModal(false)} className="flex-1">
-                  Cancelar
-                </Button>
-                <Button 
-                  onClick={handleEnable2FA} 
-                  className="flex-1"
-                  disabled={verificationCode.length !== 6}
-                >
-                  Activar 2FA
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+              )
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

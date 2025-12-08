@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
-/* Prevent iOS/macOS elastic bounce (rubber-banding) on scroll */
-html,
-body {
+/*
+ * IMPORTANT: Payload Admin uses its own CSS variables and styles.
+ * Custom styles here should NOT apply to /admin routes.
+ * Payload Admin will handle its own theming.
+ */
+
+/* Prevent iOS/macOS elastic bounce - ONLY for custom dashboard pages */
+html:not([data-payload-admin]),
+body:not([data-payload-admin]) {
   overscroll-behavior: none;
-  overflow: hidden;
-  height: 100%;
 }
 
+/* Custom Dashboard styles - scoped to avoid Payload Admin conflicts */
 @layer base {
-  :root {
+  :root:not([data-payload-admin]) {
     /* CSS variables for runtime theming - CEP FORMACIÓN */
     --background: 0 0% 97%;
     --foreground: 222.2 84% 4.9%;
@@ -52,7 +57,7 @@ body {
     --chart-5: 27 87% 67%;
   }
 
-  .dark {
+  .dark:not([data-payload-admin]) {
     /* Base backgrounds - neutral grays with proper hierarchy */
     --background: 0 0% 6%; /* Extremely dark base (#0f0f0f) */
     --foreground: 0 0% 95%; /* Light gray text (#f2f2f2) */
@@ -111,12 +116,19 @@ body {
   }
 }
 
+/*
+ * NOTE: The following styles are SCOPED to avoid conflicts with Payload Admin.
+ * Payload Admin (/admin/*) uses its own CSS variables and styling system.
+ * These custom styles only apply to dashboard pages outside /admin.
+ */
 @layer base {
-  * {
+  /* Only apply border color outside Payload Admin */
+  body:not(.payload-admin) * {
     border-color: hsl(var(--border));
   }
 
-  body {
+  /* Body styles for custom dashboard - NOT for Payload Admin */
+  body.custom-dashboard {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings:
